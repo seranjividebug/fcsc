@@ -1,0 +1,96 @@
+{
+  "version": "2026.05.18",
+  "lastUpdated": "2026-05-18T08:00:00Z",
+  "indicators": [
+    {
+      "id": "population",
+      "dataflowId": "DF_POP_ALL",
+      "dataflowVersion": "2.7.0",
+      "agencyId": "FCSA",
+      "name": { "en": "Population Estimates", "ar": "تقديرات السكان" },
+      "category": "demography",
+      "subCategory": "population",
+      "unit": { "en": "Persons", "ar": "أشخاص" },
+      "unitCode": "PS",
+      "frequency": "A",
+      "sourceCode": "FCSC",
+      "sourceName": {
+        "en": "Federal Competitiveness and Statistics Centre",
+        "ar": "الهيئة الاتحادية للتنافسية والإحصاء"
+      },
+      "coverageStart": "1970",
+      "coverageEnd": "2024",
+      "seedFile": "assets/data/seeds/population_seed.json",
+      "tileVariant": "A",
+      "navDirect": true
+    },
+    {
+      "id": "births",
+      "dataflowId": "DF_BIRTHS",
+      "dataflowVersion": "1.9.0",
+      "agencyId": "FCSA",
+      "name": { "en": "Births", "ar": "المواليد" },
+      "category": "demography",
+      "subCategory": "vitals",
+      "unit": { "en": "Persons", "ar": "أشخاص" },
+      "unitCode": "PS",
+      "frequency": "A",
+      "sourceCode": "MHP",
+      "sourceName": {
+        "en": "Ministry of Health and Prevention",
+        "ar": "وزارة الصحة ووقاية المجتمع"
+      },
+      "coverageStart": "2015",
+      "coverageEnd": "2024",
+      "seedFile": "assets/data/seeds/births_seed.json",
+      "tileVariant": "B",
+      "navDirect": false,
+      "parentSheet": "vitals"
+    },
+    {
+      "id": "deaths",
+      "dataflowId": null,
+      "name": { "en": "Deaths", "ar": "الوفيات" },
+      "category": "demography",
+      "subCategory": "vitals",
+      "unit": { "en": "Persons", "ar": "أشخاص" },
+      "comingSoon": true,
+      "tileVariant": "B",
+      "parentSheet": "vitals"
+    },
+    {
+      "id": "marriages",
+      "dataflowId": null,
+      "name": { "en": "Marriages", "ar": "الزيجات" },
+      "category": "demography",
+      "subCategory": "vitals",
+      "unit": { "en": "Persons", "ar": "أشخاص" },
+      "comingSoon": true,
+      "tileVariant": "B",
+      "parentSheet": "vitals"
+    },
+    {
+      "id": "divorces",
+      "dataflowId": "DF_DV_NA",
+      "dataflowVersion": "1.5.0",
+      "agencyId": "FCSA",
+      "name": { "en": "Divorces", "ar": "الطلاق" },
+      "category": "demography",
+      "subCategory": "vitals",
+      "unit": { "en": "Cases", "ar": "حالة" },
+      "unitCode": "CASES",
+      "frequency": "A",
+      "sourceCode": "FCSC",
+      "sourceName": {
+        "en": "Federal Competitiveness and Statistics Centre",
+        "ar": "الهيئة الاتحادية للتنافسية والإحصاء"
+      },
+      "coverageStart": "2015",
+      "coverageEnd": "2021",
+      "seedFile": "",
+      "tileVariant": "B",
+      "navDirect": false,
+      "parentSheet": "vitals"
+    }
+  ]
+}

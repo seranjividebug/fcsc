@@ -1,0 +1,70 @@
+name: uae_stats
+description: UAE Stats — Official Statistics App by FCSC
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.5.0 <4.0.0'
+  flutter: '>=3.24.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # State management
+  flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
+
+  # Models
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
+
+  # Navigation
+  go_router: ^14.2.0
+
+  # Charts
+  fl_chart: ^0.69.0
+
+  # SVG assets (for FCSC logos)
+  flutter_svg: ^2.0.10+1
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # Network
+  dio: ^5.7.0
+
+  # Cache
+  hive_flutter: ^1.1.0
+
+  # Storage (user prefs — language, bookmarks)
+  shared_preferences: ^2.3.0
+
+  # Utilities
+  intl: ^0.20.2
+  connectivity_plus: ^6.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.11
+  freezed: ^3.0.0
+  json_serializable: ^6.8.0
+  riverpod_generator: ^2.6.5
+  custom_lint: ^0.7.3
+  riverpod_lint: ^2.6.5
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/images/
+    - assets/data/
+    - assets/data/translations/
+
+  fonts: []
+  # Fonts served via google_fonts package (no bundling needed)
