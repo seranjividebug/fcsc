@@ -73,40 +73,67 @@ class IndicatorData {
   ///      to all area+gender+citizenship matched points — better to show data
   ///      than show zero.
   List<DataPoint> get uaeTotalSeries {
-    // Step 1: area / gender / citizenship base filter.
-    final base = allPoints.where((p) {
-      final areaOk = p.refArea == 'AE' || p.refArea == null;
-      final genderOk = p.gender == '_T' || p.gender == null;
-      final citizenOk = p.citizenship == null ||
-          p.citizenship == '_T' ||
-          p.citizenship == '_Z';
-      return areaOk && genderOk && citizenOk;
-    }).toList();
-
-    if (base.isEmpty) return base;
-
-    // Step 2: apply known measure codes per indicator.
     final Set<String> allowedMeasures = switch (meta.id) {
-      'population' => {'POP'},
-      'births'     => {'B'},
-      'deaths'     => {'DEATHS', 'D', 'D_TOTAL'},
-      'marriages'  => {'MARRIAGES', 'M', 'MR'},
-      'divorces'   => {'DIVORCES', 'DV', 'DV_TOTAL'},
-      _            => {},
+      'population'        => {'POP'},
+      'births'            => {'B'},
+      'deaths'            => {'DEATHS', 'D', 'D_TOTAL'},
+      'marriages'         => {'MARRIAGES', 'M', 'MR'},
+      'divorces'          => {'DIVORCES', 'DV', 'DV_TOTAL'},
+      'student_enrolment'      => {'GENERAL', 'TOTAL', 'ENR'},
+      'teaching_staff'         => {'GENERAL', 'TOTAL', 'STAFF'},
+      'higher_education'       => {'HIGHER', 'TOTAL', 'HE'},
+      'hospitals'              => {'HOSPITALS', 'TOTAL', 'FAC'},
+      'health_services'        => {'HSP'},
+      'health_clinics_centers' => {'CAH'},
+      'health_hospital_beds'   => {'BED'},
+      'health_professionals'   => {},
+      _                   => {},
     };
 
-    if (allowedMeasures.isNotEmpty) {
-      final filtered = base
-          .where((p) => p.measure == null || allowedMeasures.contains(p.measure))
-          .toList();
-      // Step 3: fallback — if measure filter removes everything, return base.
-      final result = filtered.isNotEmpty ? filtered : base;
-      result.sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
-      return result;
+    bool measureOk(DataPoint p) =>
+        allowedMeasures.isEmpty ||
+        p.measure == null ||
+        allowedMeasures.contains(p.measure);
+
+    // Step 1: sum GENDER=_T, CITIZENSHIP=_T from the 7 emirate codes only.
+    // This correctly aggregates datasets that publish per-emirate rows (Births, Deaths).
+    const emirateCodes = {
+      'AE-AZ', 'AE-DU', 'AE-SH', 'AE-AJ', 'AE-RK', 'AE-FJ', 'AE-UQ',
+    };
+    final emirateSums = <String, double>{};
+    DataPoint? tmpl;
+    for (final p in allPoints) {
+      if (!emirateCodes.contains(p.refArea)) continue;
+      if (p.gender != '_T' && p.gender != null) continue;
+      if (p.citizenship != '_T' && p.citizenship != null && p.citizenship != '_Z') continue;
+      if (!measureOk(p)) continue;
+      tmpl ??= p;
+      emirateSums[p.timePeriod] = (emirateSums[p.timePeriod] ?? 0) + p.value;
+    }
+    if (emirateSums.isNotEmpty && tmpl != null) {
+      return emirateSums.entries
+          .map((e) => tmpl!.copyWith(refArea: 'AE', value: e.value, timePeriod: e.key))
+          .toList()
+        ..sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
     }
 
-    base.sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
-    return base;
+    // Step 2: no emirate rows — use REF_AREA=AE national total directly.
+    // Datasets like Marriages and Divorces only publish AE-level rows.
+    final national = <String, DataPoint>{};
+    for (final p in allPoints) {
+      if (p.refArea != 'AE' && p.refArea != null) continue;
+      if (p.gender != '_T' && p.gender != null) continue;
+      if (p.citizenship != '_T' && p.citizenship != null && p.citizenship != '_Z') continue;
+      if (!measureOk(p)) continue;
+      final existing = national[p.timePeriod];
+      if (existing == null) {
+        national[p.timePeriod] = p;
+      } else if (p.citizenship == '_T' && existing.citizenship != '_T') {
+        national[p.timePeriod] = p;
+      }
+    }
+    return national.values.toList()
+      ..sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
   }
 
   /// By-emirate breakdown (UAE total gender, total citizenship).

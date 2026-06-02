@@ -53,7 +53,7 @@ class KpiSdmxService {
 
   final Dio _dio;
 
-  static const String _boxName = 'kpi_cache';
+  static const String _boxName = 'kpi_cache_v5';
   static const Duration _ttl = ApiConstants.cacheTtl;
 
   // ─── Public API ───────────────────────────────────────────────────────────
@@ -163,7 +163,12 @@ class KpiSdmxService {
             as Map<String, dynamic>?;
     if (observations == null || observations.isEmpty) return null;
 
-    final obs = <_Obs>[];
+    const emirateSet = {
+      'AE-AZ', 'AE-DU', 'AE-SH', 'AE-AJ', 'AE-RK', 'AE-FJ', 'AE-UQ'
+    };
+    final emirateSums = <String, double>{};
+    final nationalMap = <String, double>{};
+
     for (final entry in observations.entries) {
       final indices = entry.key.split(':');
       final valueArr = entry.value as List?;
@@ -178,21 +183,31 @@ class KpiSdmxService {
         }
       }
 
-      final area = dmap['REF_AREA'];
-      final gender = dmap['GENDER'];
-      final period = dmap['TIME_PERIOD'] ?? '';
-      final measure = dmap['MEASURE'] ?? dmap['INDICATOR'];
+      final area        = dmap['REF_AREA'];
+      final gender      = dmap['GENDER'];
+      final citizenship = dmap['CITIZENSHIP'] ?? dmap['NATIONALITY'] ?? dmap['CIVIL_STATUS'] ?? dmap['CITIZEN'];
+      final period      = dmap['TIME_PERIOD'] ?? '';
+      final measure     = dmap['MEASURE'] ?? dmap['INDICATOR'];
 
-      if (area != null && area != 'AE') continue;
       if (gender != null && gender != '_T') continue;
+      if (citizenship != null && citizenship != '_T' && citizenship != '_Z') continue;
       if (measureFilter != null && measure != null && measure != measureFilter) continue;
 
-      obs.add(_Obs(period: period, value: val));
+      if (area != null && emirateSet.contains(area)) {
+        emirateSums[period] = (emirateSums[period] ?? 0) + val;
+      } else if (area == 'AE' || area == null) {
+        nationalMap[period] ??= val;
+      }
     }
 
+    // Prefer emirate sum; fall back to AE national row.
+    final source = emirateSums.isNotEmpty ? emirateSums : nationalMap;
+    final obs = source.entries
+        .map((e) => _Obs(period: e.key, value: e.value))
+        .toList();
     if (obs.isEmpty) return null;
 
-    // Sort chronologically oldest→newest for sparkline
+    // Sort chronologically oldest→newest for sparkline.
     obs.sort((a, b) => a.period.compareTo(b.period));
 
     final historical = obs.map((o) => o.value).toList();
@@ -243,15 +258,18 @@ class KpiSdmxService {
             as Map<String, dynamic>?;
     if (observations == null || observations.isEmpty) return null;
 
-    // Parse all observations and keep ones matching UAE total + optional measure
-    final obs = <_Obs>[];
+    const emirateSetL = {
+      'AE-AZ', 'AE-DU', 'AE-SH', 'AE-AJ', 'AE-RK', 'AE-FJ', 'AE-UQ'
+    };
+    final emirateSumsL = <String, double>{};
+    final nationalMapL = <String, double>{};
+
     for (final entry in observations.entries) {
       final indices = entry.key.split(':');
       final valueArr = entry.value as List?;
       if (valueArr == null || valueArr.isEmpty || valueArr[0] == null) continue;
       final val = (valueArr[0] as num).toDouble();
 
-      // Build dim map
       final dmap = <String, String>{};
       for (int i = 0; i < dims.length && i < indices.length; i++) {
         final idx = int.tryParse(indices[i]);
@@ -260,25 +278,31 @@ class KpiSdmxService {
         }
       }
 
-      final area = dmap['REF_AREA'];
-      final gender = dmap['GENDER'];
-      final period = dmap['TIME_PERIOD'] ?? '';
-      final measure = dmap['MEASURE'] ?? dmap['INDICATOR'];
+      final area        = dmap['REF_AREA'];
+      final gender      = dmap['GENDER'];
+      final citizenship = dmap['CITIZENSHIP'] ?? dmap['NATIONALITY'] ?? dmap['CIVIL_STATUS'] ?? dmap['CITIZEN'];
+      final period      = dmap['TIME_PERIOD'] ?? '';
+      final measure     = dmap['MEASURE'] ?? dmap['INDICATOR'];
 
-      // Filter to UAE national total
-      if (area != null && area != 'AE') continue;
       if (gender != null && gender != '_T') continue;
-      if (measureFilter != null && measure != null && measure != measureFilter) {
-        continue;
-      }
+      if (citizenship != null && citizenship != '_T' && citizenship != '_Z') continue;
+      if (measureFilter != null && measure != null && measure != measureFilter) continue;
 
-      obs.add(_Obs(period: period, value: val));
+      if (area != null && emirateSetL.contains(area)) {
+        emirateSumsL[period] = (emirateSumsL[period] ?? 0) + val;
+      } else if (area == 'AE' || area == null) {
+        nationalMapL[period] ??= val;
+      }
     }
 
-    if (obs.isEmpty) return null;
+    final sourceL = emirateSumsL.isNotEmpty ? emirateSumsL : nationalMapL;
+    if (sourceL.isEmpty) return null;
 
-    // Sort by period descending and take latest two
-    obs.sort((a, b) => b.period.compareTo(a.period));
+    // Sort by period descending and take latest two.
+    final obs = sourceL.entries
+        .map((e) => _Obs(period: e.key, value: e.value))
+        .toList()
+      ..sort((a, b) => b.period.compareTo(a.period));
 
     final latest = obs.first;
     final prev = obs.length > 1 ? obs[1] : null;

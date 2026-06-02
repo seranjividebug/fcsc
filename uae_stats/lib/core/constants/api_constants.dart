@@ -54,7 +54,7 @@ abstract final class ApiConstants {
   /// Data endpoint for Divorces (DF_DV_NA 1.5.0).
   static String get divorcesDataUrl =>
       '$restBase/data/$_agencyId,$dfDivorces,$dfDivorcesVersion/.A....'
-      '?startPeriod=2015&endPeriod=2021&$flatDimension';
+      '?startPeriod=2015&$flatDimension';
 
   /// Data endpoint for Deaths (DF_DEATHS 2.9.0).
   /// Filter: ...A...... → all dimension slots, frequency=Annual
@@ -96,17 +96,58 @@ abstract final class ApiConstants {
 
   // ─── Social dataflows ────────────────────────────────────────────────────
   // Population reuses DF_POP (already defined above)
-  static const String dfEducation       = 'DF_EDU_STUD';
-  static const String dfEducationVersion= '1.3.0';
+  static const String dfEducation        = 'DF_EDU_STUD';
+  static const String dfEducationVersion = '1.3.0';
+  static const String dfEduTeach         = 'DF_EDU_TEACH';
+  static const String dfEduTeachVersion  = '1.3.0';
+  static const String dfEduHigh          = 'DF_HE_STUDENTS_ARG';
+  static const String dfEduHighVersion   = '2.3.0';
 
   /// General Education Students — canonical endpoint.
   /// Filter: ...A..... → all dimension slots, frequency=Annual
   static String get educationDataUrl =>
       '$restBase/data/$_agencyId,$dfEducation,$dfEducationVersion/...A.....'
-      '?startPeriod=2022&$flatDimension';
+      '?startPeriod=2018&$flatDimension';
 
-  static const String dfHealth          = 'DF_HEALTH_FACILITIES';
-  static const String dfHealthVersion   = '3.1.0';
+  /// General Education Teaching Staff (DF_EDU_TEACH).
+  static String get educationTeachingStaffUrl =>
+      '$restBase/data/$_agencyId,$dfEduTeach,$dfEduTeachVersion/...A.....'
+      '?startPeriod=2018&$flatDimension';
+
+  /// Higher Education Students (DF_HE_STUDENTS_ARG).
+  static String get educationHigherUrl =>
+      '$restBase/data/$_agencyId,$dfEduHigh,$dfEduHighVersion/all'
+      '?startPeriod=2018&$flatDimension';
+
+  static const String dfHealth               = 'DF_HEALTH_FACILITIES';
+  static const String dfHealthVersion        = '3.1.0';
+  static const String dfHealthWorkforce      = 'DF_HEALTH_WORKFORCE';
+  static const String dfHealthWorkforceVersion = '3.1.0';
+
+  /// Health Facilities — all types.
+  static String get healthDataUrl =>
+      '$restBase/data/$_agencyId,$dfHealth,$dfHealthVersion/all'
+      '?startPeriod=2018&$flatDimension';
+
+  /// Hospitals only (HSP filter).
+  static String get hospitalServicesDataUrl =>
+      '$restBase/data/$_agencyId,$dfHealth,$dfHealthVersion/HSP...A....'
+      '?startPeriod=2018&$flatDimension';
+
+  /// Clinics & Health Centres only (CAH filter).
+  static String get clinicsDataUrl =>
+      '$restBase/data/$_agencyId,$dfHealth,$dfHealthVersion/CAH...A....'
+      '?startPeriod=2018&$flatDimension';
+
+  /// Hospital Beds only (BED filter).
+  static String get hospitalBedsDataUrl =>
+      '$restBase/data/$_agencyId,$dfHealth,$dfHealthVersion/BED...A....'
+      '?startPeriod=2018&$flatDimension';
+
+  /// Health Workforce professionals.
+  static String get healthWorkforceDataUrl =>
+      '$restBase/data/$_agencyId,$dfHealthWorkforce,$dfHealthWorkforceVersion/...A.....'
+      '?startPeriod=2018&$flatDimension';
   static const String dfLabour          = 'DF_LF_ALL';
   static const String dfLabourVersion   = '2.0.0';
 

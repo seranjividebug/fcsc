@@ -19,19 +19,23 @@ import 'package:uae_stats/shared/providers/locale_provider.dart';
 import 'package:uae_stats/shared/widgets/app_logo.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
+import 'package:uae_stats/shared/widgets/language_toggle_button.dart';
 import 'package:uae_stats/shared/widgets/shimmer_box.dart';
 
-// ── Design tokens (exact from HTML spec) ─────────────────────────────────────
-const _kGreen     = AppColors.emiratesGreen;  // #00594C
-const _kForest    = AppColors.deepForest;     // #003D33
-const _kGold      = AppColors.champagneGold;  // #C8973A
-const _kSage      = AppColors.sageMist;       // #E8F1EE
+// ── Design tokens — AE Gold theme (hero + economy + home chrome) ─────────────
+const _kGreen     = AppColors.aeGold;         // #92722A  primary brand gold
+const _kForest    = AppColors.aeGoldDeep;     // #7C5E24  deep gold
+const _kGold      = AppColors.aeGoldAccent;   // #B68A35  accent gold
+const _kSage      = AppColors.aeGoldBg;       // #F9F7ED  light gold background
 const _kOffWhite  = AppColors.offWhite;       // #FAFBFC
 const _kPearl     = AppColors.pearlGray;      // #F3F5F7
 const _kSilver    = AppColors.silver;         // #E5E7EB
 const _kSlate400  = AppColors.slate400;       // #9CA3AF
 const _kSlate600  = AppColors.slate600;       // #4B5563
 const _kSlate900  = AppColors.slate900;       // #0F172A
+// ── Demography (vitals sheet) — blue ─────────────────────────────────────────
+const _kDemBlue    = AppColors.demBlue;       // #0073AB
+const _kDemBlueBg  = AppColors.demBlueTint;   // #EFFAFF
 
 
 // ── HomeScreen ────────────────────────────────────────────────────────────────
@@ -65,10 +69,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     // Population tile — live from API, fallback to seed while loading/error
     final demography = ref.watch(demographyKpisProvider);
-    final popKpi = demography.valueOrNull?.firstOrNull?.cards.firstOrNull;
+    final popKpi    = demography.valueOrNull?.firstOrNull?.cards.firstOrNull;
     final popValue  = popKpi?.displayValue ?? '—';
     final popChange = popKpi?.trendPercent ?? 0.0;
     final popYear   = popKpi?.year ?? '—';
+    final popSparkline = popKpi?.sparklinePoints ?? const [];
 
     return Scaffold(
       backgroundColor: _kOffWhite,
@@ -89,7 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700,
                   color: _kSlate900, letterSpacing: -0.34)),
               Spacer(),
-              Icon(Icons.notifications_outlined, size: 22, color: _kSlate600),
+              LanguageToggleButton(foregroundColor: _kSlate600),
             ]),
           ),
         ),
@@ -150,18 +155,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: _CategorySection(
                     sectionKey: _demographyKey,
                     icon: Icons.people_rounded,
-                    iconColor: _kGreen,
-                    iconBg: _kSage,
+                    iconColor: AppColors.demBlue,
+                    iconBg: AppColors.demBlueTint,
                     title: isArabic ? 'الديموغرافيا' : 'Demography',
                     subtitle: isArabic ? 'السكان · الأحوال الحيوية · التعليم · الصحة · العمل · الشؤون الاجتماعية' : 'Population · Vitals · Education · Health · Labor · Social',
                     tiles: [
-                      _TileData.metric(id: 'population', icon: Icons.people_outline, label: 'Population', value: popValue, change: popChange, year: popYear),
-                      const _TileData.group(icon: Icons.favorite_border, label: 'Vitals', subtitle: 'Births, Deaths, Marriages…', count: 4),
-                      const _TileData.group(icon: Icons.school_outlined, label: 'Education', subtitle: 'General, Higher', count: 2),
-                      const _TileData.metric(id: 'health', icon: Icons.local_hospital_outlined, label: 'Health', value: '2.81/1k', change: 0.8, year: '2024'),
-                      const _TileData.group(icon: Icons.security_outlined, label: 'Security & Justice', subtitle: '', count: 0, value: '94.2%', change: 0.6, year: '2024'),
-                      const _TileData.group(icon: Icons.groups_outlined, label: 'Social', subtitle: 'Families, Culture, Worship…', count: 6),
-                      const _TileData.fullWidth(icon: Icons.work_outline, label: 'Labor Force', subtitle: 'Total active workforce', value: '6.42M', change: 3.1, year: '2024'),
+                      _TileData.metric(id: 'population', icon: Icons.people_outline, label: 'Population', value: popValue, change: popChange, year: popYear, sparklinePoints: popSparkline),
+                      const _TileData.group(icon: Icons.monitor_heart_outlined, label: 'Vitals', subtitle: 'Births, Deaths, Marriages…', count: 4),
+                      const _TileData.group(icon: Icons.school_outlined, label: 'Education', subtitle: 'Students, Teachers', count: 3),
+                      const _TileData.group(icon: Icons.monitor_heart_outlined, label: 'Health', subtitle: 'Hospitals, Healthcare Professionals…', count: 4),
+                      const _TileData.fullWidth(icon: Icons.work_outline, label: 'Labor Force', subtitle: 'Employment, Unemployment…', value: '', change: 0, year: '', count: 2),
                     ],
                   ),
                 ),
@@ -175,7 +178,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     sectionKey: _economyKey,
                     icon: Icons.business_rounded,
                     iconColor: _kGold,
-                    iconBg: AppColors.royalSand,
+                    iconBg: _kSage,
                     title: isArabic ? 'الاقتصاد' : 'Economy',
                     subtitle: isArabic ? 'الناتج المحلي · التجارة · الصناعة · الأسعار · السياحة' : 'GDP · Trade · Industry · Prices · Tourism',
                     tiles: const [
@@ -204,8 +207,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: _CategorySection(
                     sectionKey: _environmentKey,
                     icon: Icons.eco_rounded,
-                    iconColor: AppColors.teal,
-                    iconBg: AppColors.tealTint,
+                    iconColor: AppColors.envGreen,
+                    iconBg: AppColors.envGreenTint,
                     title: isArabic ? 'البيئة' : 'Environment',
                     subtitle: isArabic ? 'الزراعة · الطاقة · المناخ · الموارد' : 'Agriculture · Energy · Climate · Resources',
                     tiles: const [
@@ -251,6 +254,7 @@ class _TileData {
   final int count;
   final bool isFullWidth;
   final bool isMetric;
+  final List<double> sparklinePoints;
 
   const _TileData._({
     this.id,
@@ -263,6 +267,7 @@ class _TileData {
     this.count = 0,
     this.isFullWidth = false,
     this.isMetric = false,
+    this.sparklinePoints = const [],
   });
 
   const _TileData.metric({
@@ -272,8 +277,10 @@ class _TileData {
     required String value,
     required double change,
     required String year,
+    List<double> sparklinePoints = const [],
   }) : this._(id: id, icon: icon, label: label, value: value,
-               change: change, year: year, isMetric: true);
+               change: change, year: year, isMetric: true,
+               sparklinePoints: sparklinePoints);
 
   const _TileData.group({
     required IconData icon,
@@ -414,9 +421,9 @@ class _KeyFiguresCarousel extends ConsumerWidget {
       label: ['Population', 'CPI Inflation', 'Air Passengers', 'Renewable Energy', 'Yearly GDP'][i],
       icon: [Icons.people_rounded, Icons.price_change_outlined, Icons.flight_rounded,
              Icons.wb_sunny_outlined, Icons.trending_up_rounded][i],
-      iconColor: [_kGreen, _kGold, _kGold, AppColors.teal, _kGold][i],
-      iconBg: [_kSage, AppColors.royalSand, AppColors.royalSand, AppColors.tealTint, AppColors.royalSand][i],
-      categoryColor: [_kGreen, _kGold, _kGold, AppColors.teal, _kGold][i],
+      iconColor: [AppColors.demBlue, _kGold, _kGold, AppColors.envGreen, _kGold][i],
+      iconBg: [AppColors.demBlueTint, _kSage, _kSage, AppColors.envGreenTint, _kSage][i],
+      categoryColor: [AppColors.demBlue, _kGold, _kGold, AppColors.envGreen, _kGold][i],
     ),
   );
 }
@@ -655,7 +662,7 @@ class _CategorySectionState extends ConsumerState<_CategorySection> {
                   Text(widget.subtitle,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, color: _kSlate400, height: 1.3)),
+                    style: const TextStyle(fontSize: 12, color: _kSlate600, height: 1.3)),
                 ],
               )),
               Icon(_expanded ? Icons.expand_less_rounded : Icons.expand_more_rounded,
@@ -741,6 +748,10 @@ class _TileState extends State<_Tile> {
       onTap: () {
         if (d.label == 'Vitals') {
           _showVitalsSheet(context);
+        } else if (d.label == 'Education') {
+          _showEducationSheet(context);
+        } else if (d.label == 'Health') {
+          _showHealthSheet(context);
         } else if (d.id != null) { context.push(AppRoutes.indicatorPath(d.id!)); }
       },
       child: AnimatedContainer(
@@ -748,7 +759,7 @@ class _TileState extends State<_Tile> {
         transform: Matrix4.identity()..scaleByDouble(_pressed ? 0.98 : 1.0, _pressed ? 0.98 : 1.0, 1.0, 1.0),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: _kPearl,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           border: _pressed
             ? Border.all(color: widget.accentColor.withValues(alpha: 0.4), width: 1.5)
@@ -777,50 +788,79 @@ class _TileState extends State<_Tile> {
             const SizedBox(height: 2),
             Text(d.subtitle,
               maxLines: 1, overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 11, color: _kSlate400)),
+              style: const TextStyle(fontSize: 11, color: _kSlate600)),
             const SizedBox(height: 4),
-            Row(children: [
-              Flexible(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: widget.accentBg,
-                    borderRadius: BorderRadius.circular(999),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Flexible(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: widget.accentBg,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text('${d.count} Indicators',
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
+                        color: widget.accentColor)),
                   ),
-                  child: Text('${d.count} indicators',
-                    maxLines: 1, overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
-                      color: widget.accentColor)),
                 ),
-              ),
-            ]),
+                const Icon(Icons.grid_view_rounded, size: 14, color: _kSlate400),
+              ],
+            ),
           ],
           if (hasValue) ...[
             const SizedBox(height: 2),
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(d.value,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700,
-                  color: widget.accentColor, height: 1.1,
-                  fontFeatures: const [FontFeature.tabularFigures()])),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(d.value,
+                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700,
+                            color: widget.accentColor, height: 1.1,
+                            fontFeatures: const [FontFeature.tabularFigures()])),
+                      ),
+                      const SizedBox(height: 2),
+                      Row(children: [
+                        Icon(d.change >= 0 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+                          size: 10, color: d.change >= 0 ? AppColors.success : AppColors.error),
+                        const SizedBox(width: 2),
+                        Flexible(
+                          child: Text('${d.change.toStringAsFixed(1)}%',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
+                              color: d.change >= 0 ? AppColors.success : AppColors.error)),
+                        ),
+                        const Spacer(),
+                        Text(d.year,
+                          style: const TextStyle(fontSize: 9, color: _kSlate400)),
+                      ]),
+                    ],
+                  ),
+                ),
+                if (d.sparklinePoints.isNotEmpty) ...[
+                  const SizedBox(width: 4),
+                  SizedBox(
+                    width: 52,
+                    height: 32,
+                    child: CustomPaint(
+                      painter: _SparklinePainter(
+                        points: d.sparklinePoints,
+                        isUp: d.change >= 0,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
             ),
-            const SizedBox(height: 2),
-            Row(children: [
-              Icon(d.change >= 0 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
-                size: 10, color: d.change >= 0 ? AppColors.success : AppColors.error),
-              const SizedBox(width: 2),
-              Flexible(
-                child: Text('${d.change.toStringAsFixed(1)}%',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
-                    color: d.change >= 0 ? AppColors.success : AppColors.error)),
-              ),
-              const Spacer(),
-              Text(d.year,
-                style: const TextStyle(fontSize: 9, color: _kSlate400)),
-            ]),
           ],
         ]),
       ),
@@ -855,7 +895,7 @@ class _FullWidthTileState extends State<_FullWidthTile> {
         transform: Matrix4.identity()..scaleByDouble(_pressed ? 0.98 : 1.0, _pressed ? 0.98 : 1.0, 1.0, 1.0),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: _kPearl,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           boxShadow: _pressed ? [] : AppColors.shadowCard,
         ),
@@ -876,7 +916,7 @@ class _FullWidthTileState extends State<_FullWidthTile> {
             if (d.subtitle.isNotEmpty) ...[
               const SizedBox(height: 2),
               Text(d.subtitle,
-                style: const TextStyle(fontSize: 12, color: _kSlate400)),
+                style: const TextStyle(fontSize: 12, color: _kSlate600)),
             ],
             if (hasValue) ...[
               const SizedBox(height: 6),
@@ -899,15 +939,21 @@ class _FullWidthTileState extends State<_FullWidthTile> {
             ],
             if (!hasValue && d.count > 0) ...[
               const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(
-                  color: widget.accentBg,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text('${d.count} indicators',
-                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600,
-                    color: widget.accentColor)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: widget.accentBg,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text('${d.count} Indicators',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600,
+                        color: widget.accentColor)),
+                  ),
+                  const Icon(Icons.grid_view_rounded, size: 14, color: _kSlate400),
+                ],
               ),
             ],
           ])),
@@ -980,8 +1026,8 @@ class _VitalsSheet extends ConsumerWidget {
             child: Row(children: [
               Container(
                 width: 40, height: 40,
-                decoration: BoxDecoration(color: _kSage, borderRadius: BorderRadius.circular(10)),
-                child: const Icon(Icons.favorite_border, size: 20, color: _kGreen),
+                decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.monitor_heart_outlined, size: 20, color: _kDemBlue),
               ),
               const SizedBox(width: 12),
               const Expanded(child: Column(
@@ -989,8 +1035,8 @@ class _VitalsSheet extends ConsumerWidget {
                 children: [
                   Text('Vitals',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
-                  Text('Demography · 4 indicators',
-                    style: TextStyle(fontSize: 12, color: _kSlate400)),
+                  Text('Demography · 4 Indicators',
+                    style: TextStyle(fontSize: 12, color: _kSlate600)),
                 ],
               )),
               GestureDetector(
@@ -1027,7 +1073,7 @@ class _VitalsSheet extends ConsumerWidget {
                     summary: summary,
                     onTap: () {
                       Navigator.pop(context);
-                      Navigator.of(context).pushNamed('/indicator/$id');
+                      context.push(AppRoutes.indicatorPath(id));
                     },
                   ),
                 );
@@ -1047,7 +1093,7 @@ class _VitalsSheet extends ConsumerWidget {
                 child: ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _kGreen,
+                    backgroundColor: _kDemBlue,
                     foregroundColor: AppColors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
@@ -1062,7 +1108,7 @@ class _VitalsSheet extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 8),
-              const Text('Data source: FCSC · Updated monthly',
+              const Text('Data source: FCSA · Updated annually',
                 style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
@@ -1097,8 +1143,8 @@ class _VitalRow extends StatelessWidget {
         child: Row(children: [
           Container(
             width: 36, height: 36,
-            decoration: BoxDecoration(color: _kSage, borderRadius: BorderRadius.circular(8)),
-            child: Icon(icon, size: 18, color: _kGreen),
+            decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(8)),
+            child: Icon(icon, size: 18, color: _kDemBlue),
           ),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1158,7 +1204,7 @@ class _VitalRowShimmer extends StatelessWidget {
       child: Row(children: [
         Container(
           width: 36, height: 36,
-          decoration: BoxDecoration(color: _kSage, borderRadius: BorderRadius.circular(8)),
+          decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(8)),
         ),
         const SizedBox(width: 12),
         const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1190,8 +1236,8 @@ class _VitalRowEmpty extends StatelessWidget {
       child: Row(children: [
         Container(
           width: 36, height: 36,
-          decoration: BoxDecoration(color: _kSage, borderRadius: BorderRadius.circular(8)),
-          child: Icon(icon, size: 18, color: _kGreen),
+          decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, size: 18, color: _kDemBlue),
         ),
         const SizedBox(width: 12),
         Expanded(child: Text(label,
@@ -1205,7 +1251,346 @@ class _VitalRowEmpty extends StatelessWidget {
 }
 
 
+// ── Education bottom sheet ────────────────────────────────────────────────────
+void _showEducationSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _EducationSheet(),
+  );
+}
+
+class _EducationSheet extends ConsumerWidget {
+  const _EducationSheet();
+
+  static const _ids = ['student_enrolment', 'teaching_staff', 'higher_education'];
+
+  static const _icons = {
+    'student_enrolment': Icons.school_outlined,
+    'teaching_staff':    Icons.person_outline_rounded,
+    'higher_education':  Icons.account_balance_outlined,
+  };
+  static const _labels = {
+    'student_enrolment': 'General Education – Students',
+    'teaching_staff':    'General Education – Teachers',
+    'higher_education':  'Higher Education – Students',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.75,
+      minChildSize: 0.50,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          // Handle
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW, height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(color: _kSilver, borderRadius: BorderRadius.circular(999)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.school_outlined, size: 20, color: _kDemBlue),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Education',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
+                  Text('Demography · 3 Indicators',
+                    style: TextStyle(fontSize: 12, color: _kSlate600)),
+                ],
+              )),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: const BoxDecoration(color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          // Rows
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                    summary: summary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          // Footer
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: _kPearl)),
+            ),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kDemBlue,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
+                    elevation: 0,
+                  ),
+                  child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                    Text('View All Education Data',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                    SizedBox(width: 6),
+                    Icon(Icons.arrow_forward_rounded, size: 16),
+                  ]),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Data source: FCSA · Updated annually',
+                style: TextStyle(fontSize: 11, color: _kSlate400)),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
 // ── Sparkline painter ─────────────────────────────────────────────────────────
+void _showHealthSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _HealthSheet(),
+  );
+}
+
+class _HealthSheet extends ConsumerWidget {
+  const _HealthSheet();
+
+  static const _ids = [
+    'hospitals',
+    'health_clinics_centers',
+    'health_hospital_beds',
+    'health_professionals',
+  ];
+
+  static const _icons = {
+    'hospitals': Icons.local_hospital_outlined,
+    'health_clinics_centers': Icons.healing,
+    'health_hospital_beds': Icons.bed_outlined,
+    'health_professionals': Icons.medical_services_outlined,
+  };
+
+  static const _labels = {
+    'hospitals': 'Hospitals',
+    'health_clinics_centers': 'Clinics and Centers',
+    'health_hospital_beds': 'Hospital Beds',
+    'health_professionals': 'Healthcare Professionals',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries =
+        _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.75,
+      minChildSize: 0.50,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius:
+              BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW,
+              height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(
+                color: _kSilver,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: _kDemBlueBg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.monitor_heart_outlined,
+                  size: 20,
+                  color: _kDemBlue,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Health',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                        color: _kSlate900,
+                      ),
+                    ),
+                    Text(
+                      'Demography · 4 Indicators',
+                      style: TextStyle(fontSize: 12, color: _kSlate600),
+                    ),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration:
+                      const BoxDecoration(color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                    summary: summary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: _kPearl)),
+            ),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kDemBlue,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'View All Health Data',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(width: 6),
+                      Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Data source: FCSA · Updated annually',
+                style: TextStyle(fontSize: 11, color: _kSlate400),
+              ),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
 class _SparklinePainter extends CustomPainter {
   const _SparklinePainter({required this.points, required this.isUp});
   final List<double> points;
@@ -1397,11 +1782,11 @@ class _FcscFooter extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
       ),
       child: const Column(children: [
-        Text('FCSC',
+        Text('FCSA',
           style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700,
             color: _kGreen, letterSpacing: 1.0)),
         SizedBox(height: 4),
-        Text('Federal Competitiveness and Statistics Centre',
+        Text('Federal Competitiveness and Statistics Authority',
           textAlign: TextAlign.center,
           style: TextStyle(fontSize: 12, color: _kSlate600, height: 1.4)),
         SizedBox(height: 4),

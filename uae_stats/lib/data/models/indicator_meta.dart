@@ -102,12 +102,12 @@ class IndicatorMeta {
           : const LocalizedString(en: 'Persons', ar: 'أشخاص'),
       unitCode: json['unitCode'] as String? ?? 'PS',
       frequency: json['frequency'] as String? ?? 'A',
-      sourceCode: json['sourceCode'] as String? ?? 'FCSC',
+      sourceCode: json['sourceCode'] as String? ?? 'FCSA',
       sourceName: json['sourceName'] != null
           ? LocalizedString.fromJson(
               json['sourceName'] as Map<String, dynamic>)
           : const LocalizedString(
-              en: 'Federal Competitiveness and Statistics Centre',
+              en: 'Federal Competitiveness and Statistics Authority',
               ar: 'الهيئة الاتحادية للتنافسية والإحصاء',
             ),
       coverageStart: json['coverageStart'] as String? ?? '2015',

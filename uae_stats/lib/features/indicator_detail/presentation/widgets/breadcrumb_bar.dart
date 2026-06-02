@@ -51,7 +51,7 @@ class BreadcrumbBar extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.emiratesGreen,
+                      color: AppColors.demBlue,
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -70,7 +70,7 @@ class BreadcrumbBar extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.emiratesGreen,
+                      color: AppColors.demBlue,
                       decoration: TextDecoration.underline,
                     ),
                   ),

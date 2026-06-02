@@ -7,9 +7,13 @@
 //   2. Shows blank '—' card on failure (no static fallback data)
 //   3. Returns List<KpiSectionGroup> ready for the UI
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/constants/api_constants.dart';
+import 'package:uae_stats/data/models/home_kpi_item.dart';
 import 'package:uae_stats/data/models/kpi_card_data.dart';
 import 'package:uae_stats/data/services/kpi_sdmx_service.dart';
 
@@ -262,7 +266,7 @@ const _divorces = KpiConfig(
 );
 
 const _generalEducation = KpiConfig(
-  id: 'general_education',
+  id: 'general_education_v2',
   nameEn: 'General Education',
   nameAr: 'التعليم العام',
   unitEn: 'Students',
@@ -272,23 +276,21 @@ const _generalEducation = KpiConfig(
   dataflowId: ApiConstants.dfEducation,
   dataflowVersion: ApiConstants.dfEducationVersion,
   filter: '...A.....',
-  measure: 'GENERAL',
-  startPeriod: '2022',
+  startPeriod: '2018',
 );
 
 const _higherEducation = KpiConfig(
-  id: 'higher_education',
+  id: 'higher_education_v2',
   nameEn: 'Higher Education',
   nameAr: 'التعليم العالي',
   unitEn: 'Students',
   unitAr: 'طالب',
   displayUnit: KpiDisplayUnit.millions,
   icon: Icons.account_balance_outlined,
-  dataflowId: ApiConstants.dfEducation,
-  dataflowVersion: ApiConstants.dfEducationVersion,
-  filter: '...A.....',
-  measure: 'HIGHER',
-  startPeriod: '2022',
+  dataflowId: ApiConstants.dfEduHigh,
+  dataflowVersion: ApiConstants.dfEduHighVersion,
+  filter: 'all',
+  startPeriod: '2018',
 );
 
 const _hospitals = KpiConfig(
@@ -474,17 +476,22 @@ const _crudeOilProduction = KpiConfig(
 
 Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
   try {
-    final result = await svc.fetchKpi(cfg);
+    final result = await svc.fetchKpiSeries(cfg);
     if (result != null) {
+      final raw = result.historicalValues;
+      final last8 = raw.length > 8 ? raw.sublist(raw.length - 8) : raw;
       return KpiCardData.fromLive(
         cfg: cfg,
         value: result.value,
         year: result.year,
         trendPercent: result.trendPercent,
         fromCache: result.fromCache,
+        sparklinePoints: normalizePoints(last8),
       );
     }
   } catch (_) {}
+  final seed = await _resolveSeed(cfg);
+  if (seed != null) return seed;
   return KpiCardData(
     id: cfg.id,
     nameEn: cfg.nameEn,
@@ -495,6 +502,48 @@ Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
     year: '—',
     icon: cfg.icon,
   );
+}
+
+Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
+  final seedPath = switch (cfg.id) {
+    'hospitals' => 'assets/data/seeds/hospitals_seed.json',
+    'clinics_centers' => 'assets/data/seeds/health_clinics_centers_seed.json',
+    _ => null,
+  };
+  if (seedPath == null) return null;
+
+  try {
+    final raw = await rootBundle.loadString(seedPath);
+    final rows = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
+    final totals = rows
+        .where((row) =>
+            (row['refArea'] as String?) == 'AE' &&
+            (row['gender'] as String?) == '_T')
+        .toList()
+      ..sort((a, b) =>
+          (a['timePeriod'] as String).compareTo(b['timePeriod'] as String));
+    if (totals.isEmpty) return null;
+
+    final values =
+        totals.map((row) => (row['value'] as num).toDouble()).toList();
+    final latest = totals.last;
+    final previous = values.length > 1 ? values[values.length - 2] : null;
+    final trend = previous != null && previous != 0
+        ? ((values.last - previous) / previous) * 100
+        : null;
+    final last8 = values.length > 8 ? values.sublist(values.length - 8) : values;
+
+    return KpiCardData.fromLive(
+      cfg: cfg,
+      value: values.last,
+      year: latest['timePeriod'] as String,
+      trendPercent: trend,
+      fromCache: true,
+      sparklinePoints: normalizePoints(last8),
+    );
+  } catch (_) {
+    return null;
+  }
 }
 
 // ─── Economy provider ─────────────────────────────────────────────────────────

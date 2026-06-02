@@ -15,7 +15,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appNameAr => 'إحصاءات الإمارات';
 
   @override
-  String get fcscNameEn => 'Federal Competitiveness and Statistics Centre';
+  String get fcscNameEn => 'Federal Competitiveness and Statistics Authority';
 
   @override
   String get fcscNameAr => 'الهيئة الاتحادية للتنافسية والإحصاء';
@@ -235,7 +235,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get birthsSource => 'Ministry of Health and Prevention';
 
   @override
-  String get popSource => 'Federal Competitiveness and Statistics Centre';
+  String get popSource => 'Federal Competitiveness and Statistics Authority';
 
   @override
   String get annualFrequency => 'Annual';

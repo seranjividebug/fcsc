@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/images/
     - assets/data/
+    - assets/data/seeds/
     - assets/data/translations/
 
   fonts: []

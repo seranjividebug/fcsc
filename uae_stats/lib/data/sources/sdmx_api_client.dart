@@ -64,6 +64,41 @@ class SdmxApiClient {
     return _fetch(ApiConstants.marriagesDataUrl);
   }
 
+  /// Fetches General Education Students (DF_EDU_STUD).
+  Future<SdmxResult> fetchEducationStudents() async {
+    return _fetch(ApiConstants.educationDataUrl);
+  }
+
+  /// Fetches General Education Teaching Staff (DF_EDU_TEACH).
+  Future<SdmxResult> fetchEducationTeachers() async {
+    return _fetch(ApiConstants.educationTeachingStaffUrl);
+  }
+
+  /// Fetches Higher Education Students (DF_HE_STUDENTS_ARG).
+  Future<SdmxResult> fetchEducationHigher() async {
+    return _fetch(ApiConstants.educationHigherUrl);
+  }
+
+  /// Fetches Health Services / Hospitals (DF_HEALTH_FACILITIES, HSP filter).
+  Future<SdmxResult> fetchHealthServices() async {
+    return _fetch(ApiConstants.hospitalServicesDataUrl);
+  }
+
+  /// Fetches Clinics and Centers (DF_HEALTH_FACILITIES, CAH filter).
+  Future<SdmxResult> fetchHealthClinics() async {
+    return _fetch(ApiConstants.clinicsDataUrl);
+  }
+
+  /// Fetches Hospital Beds (DF_HEALTH_FACILITIES, BED filter).
+  Future<SdmxResult> fetchHospitalBeds() async {
+    return _fetch(ApiConstants.hospitalBedsDataUrl);
+  }
+
+  /// Fetches Healthcare Professionals (DF_HEALTH_WORKFORCE).
+  Future<SdmxResult> fetchHealthProfessionals() async {
+    return _fetch(ApiConstants.healthWorkforceDataUrl);
+  }
+
   // ─── Core fetch + parse ───────────────────────────────────────────────────
 
   Future<SdmxResult> _fetch(String url) async {

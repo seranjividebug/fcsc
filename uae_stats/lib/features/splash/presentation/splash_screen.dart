@@ -414,8 +414,8 @@ class _EmblemPainter extends CustomPainter {
   }
 
   void _drawArcText(Canvas canvas, Size size, double cx, double cy) {
-    // Draw "FCSC · UAE" along a bottom arc (matches HTML textPath)
-    const text = 'FCSC · UAE';
+    // Draw "FCSA · UAE" along a bottom arc (matches HTML textPath)
+    const text = 'FCSA · UAE';
     const fontSize = 7.0;
     final tp = TextPainter(
       text: const TextSpan(

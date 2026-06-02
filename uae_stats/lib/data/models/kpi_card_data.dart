@@ -90,6 +90,7 @@ class KpiCardData {
     this.isLoading = false,
     this.fromCache = false,
     this.icon,
+    this.sparklinePoints = const [],
   });
 
   final String id;
@@ -114,6 +115,9 @@ class KpiCardData {
   /// Material icon for the card's icon badge (null in loading skeletons).
   final IconData? icon;
 
+  /// Normalized 0.0–1.0 sparkline points (empty = no sparkline).
+  final List<double> sparklinePoints;
+
   // ─── Loading placeholder ─────────────────────────────────────────────────
 
   factory KpiCardData.loading(KpiConfig cfg) => KpiCardData(
@@ -136,6 +140,7 @@ class KpiCardData {
     required String year,
     double? trendPercent,
     bool fromCache = false,
+    List<double> sparklinePoints = const [],
   }) =>
       KpiCardData(
         id: cfg.id,
@@ -148,6 +153,7 @@ class KpiCardData {
         trendPercent: trendPercent,
         fromCache: fromCache,
         icon: cfg.icon,
+        sparklinePoints: sparklinePoints,
       );
 
   // ─── Formatting ──────────────────────────────────────────────────────────

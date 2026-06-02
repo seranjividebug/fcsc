@@ -127,10 +127,10 @@ class _ActionChipState extends State<_ActionChip> {
           height: 40,
           decoration: BoxDecoration(
             color: active
-                ? AppColors.emiratesGreen
+                ? AppColors.aeGold
                 : Colors.transparent,
             border: Border.all(
-              color: AppColors.emiratesGreen,
+              color: AppColors.aeGold,
               width: 1.5,
             ),
             borderRadius: BorderRadius.circular(999),
@@ -141,7 +141,7 @@ class _ActionChipState extends State<_ActionChip> {
               Icon(
                 widget.icon,
                 size: 14,
-                color: active ? AppColors.white : AppColors.emiratesGreen,
+                color: active ? AppColors.white : AppColors.aeGold,
               ),
               const SizedBox(width: 4),
               Text(
@@ -149,7 +149,7 @@ class _ActionChipState extends State<_ActionChip> {
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
-                  color: active ? AppColors.white : AppColors.emiratesGreen,
+                  color: active ? AppColors.white : AppColors.aeGold,
                 ),
               ),
             ],

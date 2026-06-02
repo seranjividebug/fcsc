@@ -1,0 +1,12 @@
+[
+  { "timePeriod": "2015", "value": 9700.0,  "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2016", "value": 9800.0,  "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2017", "value": 10100.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2018", "value": 10300.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2019", "value": 10600.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2020", "value": 11200.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2021", "value": 10900.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2022", "value": 10400.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2023", "value": 10600.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
+  { "timePeriod": "2024", "value": 25482.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" }
+]

@@ -8,10 +8,10 @@ abstract final class AppConstants {
   static const String bundleId     = 'ae.gov.fcsc.uaestats';
 
   // ─── Organisation ────────────────────────────────────────────────────────
-  static const String fcscNameEn = 'Federal Competitiveness and Statistics Centre';
+  static const String fcscNameEn = 'Federal Competitiveness and Statistics Authority';
   static const String fcscNameAr = 'الهيئة الاتحادية للتنافسية والإحصاء';
-  static const String fcscWebsite = 'uaestat.fcsc.gov.ae';
-  static const String fcscUrl     = 'https://uaestat.fcsc.gov.ae';
+  static const String fcscWebsite = 'uaestat.fcsa.gov.ae';
+  static const String fcscUrl     = 'https://uaestat.fcsa.gov.ae';
 
   // ─── Asset paths ─────────────────────────────────────────────────────────
   static const String logoFcscDark     = 'assets/images/uae_stats_logo_mark.svg';

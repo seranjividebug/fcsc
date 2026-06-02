@@ -44,9 +44,9 @@ const _carouselConfigs = <_CarouselEntry>[
       measure: 'POP',
     ),
     category: 'Demography',
-    iconColor: AppColors.emiratesGreen,
-    iconBg: AppColors.sageMist,
-    categoryColor: AppColors.emiratesGreen,
+    iconColor: AppColors.demBlue,
+    iconBg: AppColors.demBlueTint,
+    categoryColor: AppColors.demBlue,
   ),
   _CarouselEntry(
     cfg: KpiConfig(
@@ -56,7 +56,7 @@ const _carouselConfigs = <_CarouselEntry>[
       unitEn: '%',
       unitAr: '٪',
       displayUnit: KpiDisplayUnit.percent,
-      icon: Icons.price_change_outlined,
+      icon: Icons.trending_up_rounded,
       dataflowId: ApiConstants.dfCpi,
       dataflowVersion: ApiConstants.dfCpiVersion,
       filter: '...A..',
@@ -101,9 +101,9 @@ const _carouselConfigs = <_CarouselEntry>[
       startPeriod: '2015',
     ),
     category: 'Environment',
-    iconColor: AppColors.teal,
-    iconBg: AppColors.tealTint,
-    categoryColor: AppColors.teal,
+    iconColor: AppColors.envGreen,
+    iconBg: AppColors.envGreenTint,
+    categoryColor: AppColors.envGreen,
   ),
   _CarouselEntry(
     cfg: KpiConfig(

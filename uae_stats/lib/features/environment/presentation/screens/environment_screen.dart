@@ -1,6 +1,6 @@
 // lib/features/environment/presentation/screens/environment_screen.dart
 //
-// Environment section screen — light theme, teal accent.
+// Environment section screen — Green theme (#3F8E50).
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +15,8 @@ import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
 import 'package:uae_stats/shared/widgets/kpi_stat_card.dart';
 
-const _kAccent   = AppColors.teal;
-const _kAccentBg = AppColors.tealTint;
+const _kAccent   = AppColors.envGreen;
+const _kAccentBg = AppColors.envGreenTint;
 const _kIcon     = Icons.eco_rounded;
 
 class EnvironmentScreen extends ConsumerStatefulWidget {
@@ -145,7 +145,7 @@ class _LangToggle extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: AppColors.pearlGray,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           border: Border.all(color: AppColors.silver),
         ),
@@ -256,7 +256,7 @@ class _SectionHeader extends StatelessWidget {
                       'Agriculture · Environment · Energy',
                       style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.slate400,
+                          color: AppColors.slate600,
                           height: 1.3),
                     ),
                   ],

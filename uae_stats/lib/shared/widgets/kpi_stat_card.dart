@@ -11,7 +11,16 @@ import 'package:uae_stats/core/theme/app_spacing.dart';
 import 'package:uae_stats/data/models/kpi_card_data.dart';
 
 // Indicator IDs that have a live detail page.
-const _kNavigableIds = {'population', 'births', 'population_growth'};
+const _kNavigableIds = {
+  'population',
+  'births',
+  'population_growth',
+  'hospitals',
+  'clinics_centers',
+  'health_clinics_centers',
+  'health_hospital_beds',
+  'health_professionals',
+};
 
 // ─── 2-column grid card ───────────────────────────────────────────────────────
 
@@ -39,14 +48,14 @@ class KpiStatCard extends StatelessWidget {
     final card = Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.pearlGray,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         boxShadow: AppColors.shadowCard,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Icon badge ───────────────────────────────────────────────────
+          // ── Icon badge row ───────────────────────────────────────────────
           Row(
             children: [
               Container(
@@ -90,24 +99,50 @@ class KpiStatCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          // ── Value ─────────────────────────────────────────────────────────
-          data.isLoading
-              ? _ShimmerBar(color: accentColor)
-              : Text(
-                  data.displayValue,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    color: accentColor,
-                    height: 1.1,
-                    fontFeatures: const [FontFeature.tabularFigures()],
+          // ── Value + sparkline row ────────────────────────────────────────
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    data.isLoading
+                        ? _ShimmerBar(color: accentColor)
+                        : Text(
+                            data.displayValue,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                              color: accentColor,
+                              height: 1.1,
+                              fontFeatures: const [FontFeature.tabularFigures()],
+                            ),
+                          ),
+                    if (data.trendPercent != null && !data.isLoading) ...[
+                      const SizedBox(height: 4),
+                      _TrendRow(percent: data.trendPercent!),
+                    ],
+                  ],
+                ),
+              ),
+              if (data.sparklinePoints.isNotEmpty && !data.isLoading)
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: SizedBox(
+                    width: 52,
+                    height: 32,
+                    child: CustomPaint(
+                      painter: _KpiSparklinePainter(
+                        points: data.sparklinePoints,
+                        isUp: (data.trendPercent ?? 0) >= 0,
+                        color: accentColor,
+                      ),
+                    ),
                   ),
                 ),
-          // ── Trend ─────────────────────────────────────────────────────────
-          if (data.trendPercent != null && !data.isLoading) ...[
-            const SizedBox(height: 4),
-            _TrendRow(percent: data.trendPercent!),
-          ],
+            ],
+          ),
         ],
       ),
     );
@@ -147,7 +182,7 @@ class KpiStatCardWide extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.pearlGray,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         boxShadow: AppColors.shadowCard,
       ),
@@ -235,7 +270,7 @@ class KpiSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 8),
       child: Text(
         isArabic ? titleAr : titleEn,
         style: const TextStyle(
@@ -269,6 +304,8 @@ class KpiCardGrid extends StatelessWidget {
     if (!_kNavigableIds.contains(id)) return null;
     return switch (id) {
       'population_growth' => () => context.push(AppRoutes.populationGrowth),
+      'clinics_centers' => () =>
+          context.push(AppRoutes.indicatorPath('health_clinics_centers')),
       _ => () => context.push(AppRoutes.indicatorPath(id)),
     };
   }
@@ -408,4 +445,52 @@ class _TrendRow extends StatelessWidget {
       ],
     );
   }
+}
+
+// ─── Sparkline painter ────────────────────────────────────────────────────────
+
+class _KpiSparklinePainter extends CustomPainter {
+  const _KpiSparklinePainter({
+    required this.points,
+    required this.isUp,
+    required this.color,
+  });
+  final List<double> points;
+  final bool isUp;
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (points.length < 2) return;
+
+    final linePaint = Paint()
+      ..color = color
+      ..strokeWidth = 1.5
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round;
+
+    final path = Path();
+    for (int i = 0; i < points.length; i++) {
+      final x = (i / (points.length - 1)) * size.width;
+      final y = size.height - points[i] * size.height;
+      i == 0 ? path.moveTo(x, y) : path.lineTo(x, y);
+    }
+    canvas.drawPath(path, linePaint);
+
+    final fillPath = Path.from(path)
+      ..lineTo(size.width, size.height)
+      ..lineTo(0, size.height)
+      ..close();
+    canvas.drawPath(
+      fillPath,
+      Paint()
+        ..color = color.withValues(alpha: 0.10)
+        ..style = PaintingStyle.fill,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _KpiSparklinePainter old) =>
+      old.points != points || old.isUp != isUp;
 }

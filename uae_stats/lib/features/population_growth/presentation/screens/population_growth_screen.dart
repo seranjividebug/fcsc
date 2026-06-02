@@ -21,6 +21,7 @@ import 'package:uae_stats/data/models/indicator_data.dart';
 import 'package:uae_stats/data/providers/indicator_providers.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
+import 'package:uae_stats/shared/widgets/language_toggle_button.dart';
 import 'package:uae_stats/shared/widgets/shimmer_box.dart';
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -89,14 +90,7 @@ class _PopulationGrowthScreenState
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.notifications_none_rounded,
-                      size: 22,
-                      color: AppColors.slate900,
-                    ),
-                  ),
+                  const LanguageToggleButton(),
                 ],
               ),
             ),
@@ -121,7 +115,7 @@ class _PopulationGrowthScreenState
               ),
               data: (data) => RefreshIndicator(
                 onRefresh: _handleRefresh,
-                color: AppColors.emiratesGreen,
+                color: AppColors.demBlue,
                 child: SingleChildScrollView(
                   controller: _scrollController,
                   padding: EdgeInsets.zero,
@@ -167,7 +161,7 @@ class _BreadcrumbBar extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.emiratesGreen,
+                      color: AppColors.demBlue,
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -185,7 +179,7 @@ class _BreadcrumbBar extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: AppColors.emiratesGreen,
+                      color: AppColors.demBlue,
                       decoration: TextDecoration.underline,
                     ),
                   ),
@@ -211,7 +205,7 @@ class _BreadcrumbBar extends StatelessWidget {
           ),
           const SizedBox(width: 8),
           const Text(
-            'Source: FCSC',
+            'Source: FCSA',
             style: TextStyle(fontSize: 11, color: AppColors.slate400),
           ),
         ],
@@ -248,7 +242,7 @@ class _ActionToolbar extends StatelessWidget {
                 final text =
                     'Population Growth in UAE — ${data!.latestPeriod}: '
                     '${_computeGrowthPercent(data!).toStringAsFixed(2)}%\n'
-                    'Source: FCSC / uaestat.fcsc.gov.ae';
+                    'Source: FCSA / uaestat.fcsa.gov.ae';
                 Clipboard.setData(ClipboardData(text: text));
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
@@ -392,7 +386,7 @@ class _GrowthBody extends StatelessWidget {
                   onPressed: () =>
                       context.push(AppRoutes.indicatorPath('population')),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.emiratesGreen,
+                    backgroundColor: AppColors.demBlue,
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
@@ -420,9 +414,9 @@ class _GrowthBody extends StatelessWidget {
                 child: OutlinedButton(
                   onPressed: () => context.go(AppRoutes.demography),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: AppColors.emiratesGreen,
+                    foregroundColor: AppColors.demBlue,
                     side: const BorderSide(
-                      color: AppColors.emiratesGreen,
+                      color: AppColors.demBlue,
                       width: 1.5,
                     ),
                     shape: RoundedRectangleBorder(
@@ -529,7 +523,7 @@ class _GrowthHeroCardState extends State<_GrowthHeroCard>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [AppColors.emiratesGreen, AppColors.deepForest],
+            colors: [AppColors.demBlue, AppColors.aeGoldDeep],
           ),
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
@@ -859,10 +853,10 @@ class _WideLayout extends StatelessWidget {
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: AppColors.sageMist,
+            color: AppColors.demBlueTint,
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Icon(icon, size: 20, color: AppColors.emiratesGreen),
+          child: Icon(icon, size: 20, color: AppColors.demBlue),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -891,7 +885,7 @@ class _WideLayout extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
-                  color: AppColors.emiratesGreen,
+                  color: AppColors.demBlue,
                   fontFeatures: [FontFeature.tabularFigures()],
                 ),
               ),
@@ -946,10 +940,10 @@ class _NarrowLayout extends StatelessWidget {
           width: 32,
           height: 32,
           decoration: BoxDecoration(
-            color: AppColors.sageMist,
+            color: AppColors.demBlueTint,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, size: 16, color: AppColors.emiratesGreen),
+          child: Icon(icon, size: 16, color: AppColors.demBlue),
         ),
         const SizedBox(height: 10),
         Text(title,
@@ -973,7 +967,7 @@ class _NarrowLayout extends StatelessWidget {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: AppColors.emiratesGreen,
+              color: AppColors.demBlue,
               fontFeatures: [FontFeature.tabularFigures()],
             ),
           ),
@@ -1031,7 +1025,7 @@ class _PopulationGrowthChartState extends State<_PopulationGrowthChart> {
     return _ChartCard(
       title: 'Population Growth Over Time (Persons)',
       subLabel: series.isNotEmpty
-          ? '${series.first.timePeriod} – ${series.last.timePeriod} · Source: FCSC'
+          ? '${series.first.timePeriod} – ${series.last.timePeriod} · Source: FCSA'
           : '',
       range: _range,
       onRangeChanged: (r) => setState(() => _range = r),
@@ -1064,7 +1058,7 @@ class _PopulationGrowthChartState extends State<_PopulationGrowthChart> {
               spots: spots,
               isCurved: true,
               curveSmoothness: 0.35,
-              color: AppColors.emiratesGreen,
+              color: AppColors.demBlue,
               barWidth: 3,
               isStrokeCapRound: true,
               belowBarData: BarAreaData(
@@ -1073,8 +1067,8 @@ class _PopulationGrowthChartState extends State<_PopulationGrowthChart> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    AppColors.emiratesGreen.withValues(alpha: 0.20),
-                    AppColors.emiratesGreen.withValues(alpha: 0.0),
+                    AppColors.demBlue.withValues(alpha: 0.20),
+                    AppColors.demBlue.withValues(alpha: 0.0),
                   ],
                 ),
               ),
@@ -1082,7 +1076,7 @@ class _PopulationGrowthChartState extends State<_PopulationGrowthChart> {
                 show: true,
                 getDotPainter: (spot, pct, bar, idx) => FlDotCirclePainter(
                   radius: 4,
-                  color: AppColors.emiratesGreen,
+                  color: AppColors.demBlue,
                   strokeWidth: 2,
                   strokeColor: AppColors.white,
                 ),
@@ -1514,7 +1508,7 @@ class _YoyGrowthChartState extends State<_YoyGrowthChart> {
             final rods = <BarChartRodData>[
               BarChartRodData(
                 toY: pt.total,
-                color: AppColors.emiratesGreen.withValues(alpha: 0.85),
+                color: AppColors.demBlue.withValues(alpha: 0.85),
                 width: barW,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(4),
@@ -2008,7 +2002,7 @@ class _RangeChips extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 18),
             decoration: BoxDecoration(
               color: active
-                  ? AppColors.emiratesGreen
+                  ? AppColors.demBlue
                   : AppColors.pearlGray,
               borderRadius: BorderRadius.circular(999),
             ),
@@ -2038,7 +2032,7 @@ class _MetadataCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final sourceLabel = data.meta.sourceName.en.isNotEmpty
         ? data.meta.sourceName.en
-        : 'Federal Competitiveness and Statistics Centre (FCSC)';
+        : 'Federal Competitiveness and Statistics Authority (FCSA)';
     final freqLabel = data.meta.frequencyLabel;
     final rows = [
       ('Data Source', sourceLabel),
@@ -2055,7 +2049,7 @@ class _MetadataCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.sageMist,
+        color: AppColors.demBlueTint,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
       ),
       child: Column(
@@ -2088,7 +2082,7 @@ class _MetaRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 9),
       decoration: const BoxDecoration(
         border: Border(
-          bottom: BorderSide(color: Color(0x1A00594C), width: 1),
+          bottom: BorderSide(color: Color(0x1A0073AB), width: 1),
         ),
       ),
       child: Row(
@@ -2149,9 +2143,9 @@ class _CitationFooter extends StatelessWidget {
     final fetched = data.fetchedAt;
     final retrievedStr = '${_monthName(fetched.month)} ${fetched.year}';
     final citation =
-        "Federal Competitiveness and Statistics Centre (FCSC), "
+        "Federal Competitiveness and Statistics Authority (FCSA), "
         "'Population Growth Rate in the UAE — $dataYear', "
-        "Retrieved $retrievedStr from uaestat.fcsc.gov.ae";
+        "Retrieved $retrievedStr from uaestat.fcsa.gov.ae";
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -2188,14 +2182,14 @@ class _CitationFooter extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.copy_rounded,
-                    size: 13, color: AppColors.emiratesGreen),
+                    size: 13, color: AppColors.demBlue),
                 SizedBox(width: 4),
                 Text(
                   'Copy Citation',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.emiratesGreen,
+                    color: AppColors.demBlue,
                   ),
                 ),
               ],
@@ -2222,7 +2216,7 @@ class _LoadingSkeleton extends StatelessWidget {
           Container(
             height: 200,
             decoration: BoxDecoration(
-              color: AppColors.emiratesGreen.withValues(alpha: 0.15),
+              color: AppColors.demBlue.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(24),
             ),
           ),
@@ -2245,7 +2239,7 @@ class _LoadingSkeleton extends StatelessWidget {
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                color: AppColors.emiratesGreen,
+                color: AppColors.demBlue,
                 strokeWidth: 2,
               ),
             ),
@@ -2292,7 +2286,7 @@ class _ErrorView extends StatelessWidget {
             ElevatedButton(
               onPressed: onRetry,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.emiratesGreen,
+                backgroundColor: AppColors.demBlue,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

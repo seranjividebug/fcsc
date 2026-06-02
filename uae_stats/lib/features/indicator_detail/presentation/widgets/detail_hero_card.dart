@@ -95,7 +95,7 @@ class _DetailHeroCardState extends State<DetailHeroCard>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             stops: [0.0, 1.0],
-            colors: [AppColors.emiratesGreen, AppColors.deepForest],
+            colors: [Color(0xFF005A8E), AppColors.demBlue],
           ),
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
@@ -160,9 +160,7 @@ class _DetailHeroCardState extends State<DetailHeroCard>
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            widget.data.fromCache
-                                ? 'Cached data'
-                                : 'Live · ${_fmtDate(widget.data.fetchedAt)}',
+                            'Live · ${_fmtDate(widget.data.fetchedAt)}',
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.white.withValues(alpha: 0.7),

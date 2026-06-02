@@ -195,7 +195,7 @@ class _BreakdownSectionState extends State<BreakdownSection> {
                       border: Border(
                         bottom: BorderSide(
                           color: active
-                              ? AppColors.emiratesGreen
+                              ? AppColors.aeGold
                               : Colors.transparent,
                           width: 2.5,
                         ),
@@ -208,7 +208,7 @@ class _BreakdownSectionState extends State<BreakdownSection> {
                         fontWeight:
                             active ? FontWeight.w600 : FontWeight.w500,
                         color: active
-                            ? AppColors.emiratesGreen
+                            ? AppColors.aeGold
                             : AppColors.slate600,
                       ),
                     ),
@@ -304,7 +304,7 @@ class _BarList extends StatelessWidget {
                           decoration: const BoxDecoration(
                             gradient: LinearGradient(
                               colors: [
-                                AppColors.emiratesGreen,
+                                AppColors.aeGold,
                                 Color(0xFF1A8C78),
                               ],
                             ),

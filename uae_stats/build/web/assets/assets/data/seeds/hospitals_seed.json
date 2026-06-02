@@ -1,0 +1,12 @@
+[
+  { "timePeriod": "2015", "value": 133.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2016", "value": 140.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2017", "value": 147.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2018", "value": 155.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2019", "value": 162.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2020", "value": 167.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2021", "value": 172.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2022", "value": 178.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2023", "value": 183.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2024", "value": 188.0, "measure": "HOSPITALS", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" }
+]

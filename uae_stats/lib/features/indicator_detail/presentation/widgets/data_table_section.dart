@@ -14,6 +14,9 @@ class DataTableSection extends StatelessWidget {
   const DataTableSection({super.key, required this.data});
   final IndicatorData data;
 
+  bool get _hasGender =>
+      data.byGender.containsKey('M') && data.byGender.containsKey('F');
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,15 +27,28 @@ class DataTableSection extends StatelessWidget {
 
         // ── Data table section ─────────────────────────────────────────
         const SizedBox(height: 20),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Text(
-            'Detailed Data',
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-              color: AppColors.slate900,
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Detailed Data',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: AppColors.slate900,
+                ),
+              ),
+              Text(
+                'Export →',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.demBlue,
+                ),
+              ),
+            ],
           ),
         ),
 
@@ -40,7 +56,13 @@ class DataTableSection extends StatelessWidget {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _FullDataTable(series: data.uaeTotalSeries),
+          child: _hasGender
+              ? _GenderDataTable(
+                  total: data.uaeTotalSeries,
+                  male: data.byGender['M']!,
+                  female: data.byGender['F']!,
+                )
+              : _FullDataTable(series: data.uaeTotalSeries),
         ),
       ],
     );
@@ -53,28 +75,30 @@ class _StatsChipsRow extends StatelessWidget {
   const _StatsChipsRow({required this.data});
   final IndicatorData data;
 
+  // Use 3Y slice when ≤3 data points available, else 5Y
+  static int _sliceN(List<DataPoint> series) =>
+      series.length <= 3 ? 3 : 5;
+
   @override
   Widget build(BuildContext context) {
     final series = data.uaeTotalSeries;
-    final fiveSlice = series.length > 5
-        ? series.sublist(series.length - 5)
-        : series;
-    final fiveVals = fiveSlice.map((p) => p.value).toList();
+    final n = _sliceN(series);
+    final slice = series.length > n ? series.sublist(series.length - n) : series;
+    final vals = slice.map((p) => p.value).toList();
+    final label = '${n}Y';
 
     double min = 0, max = 0, avg = 0, growth = 0;
     String minYear = '', maxYear = '';
 
-    if (fiveVals.isNotEmpty) {
-      min = fiveVals.reduce((a, b) => a < b ? a : b);
-      max = fiveVals.reduce((a, b) => a > b ? a : b);
-      avg = fiveVals.reduce((a, b) => a + b) / fiveVals.length;
-      if (fiveVals.first != 0) {
-        growth = ((fiveVals.last - fiveVals.first) / fiveVals.first) * 100;
+    if (vals.isNotEmpty) {
+      min = vals.reduce((a, b) => a < b ? a : b);
+      max = vals.reduce((a, b) => a > b ? a : b);
+      avg = vals.reduce((a, b) => a + b) / vals.length;
+      if (vals.first != 0) {
+        growth = ((vals.last - vals.first) / vals.first) * 100;
       }
-      final minIdx = fiveVals.indexOf(min);
-      final maxIdx = fiveVals.indexOf(max);
-      minYear = fiveSlice[minIdx].timePeriod;
-      maxYear = fiveSlice[maxIdx].timePeriod;
+      minYear = slice[vals.indexOf(min)].timePeriod;
+      maxYear = slice[vals.indexOf(max)].timePeriod;
     }
 
     return SizedBox(
@@ -87,24 +111,25 @@ class _StatsChipsRow extends StatelessWidget {
         itemBuilder: (context, index) {
           return switch (index) {
             0 => _StatChip(
-                overline: '5Y MIN',
+                overline: '$label MIN',
                 value: NumberFormatter.compact(min),
                 caption: minYear,
               ),
             1 => _StatChip(
-                overline: '5Y MAX',
+                overline: '$label MAX',
                 value: NumberFormatter.compact(max),
                 caption: maxYear,
               ),
             2 => _StatChip(
-                overline: '5Y AVG',
+                overline: '$label AVG',
                 value: NumberFormatter.compact(avg),
                 caption: 'annual',
               ),
             _ => _StatChip(
-                overline: '5Y GROWTH',
+                overline: '$label GROWTH',
                 value: NumberFormatter.percent(growth),
                 caption: 'total',
+                valueColor: AppColors.success,
               ),
           };
         },
@@ -118,11 +143,13 @@ class _StatChip extends StatelessWidget {
     required this.overline,
     required this.value,
     required this.caption,
+    this.valueColor,
   });
 
   final String overline;
   final String value;
   final String caption;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
@@ -150,11 +177,11 @@ class _StatChip extends StatelessWidget {
           const SizedBox(height: 5),
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w700,
-              color: AppColors.slate900,
-              fontFeatures: [FontFeature.tabularFigures()],
+              color: valueColor ?? AppColors.slate900,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
           const SizedBox(height: 3),
@@ -201,7 +228,7 @@ class _FullDataTable extends StatelessWidget {
             child: const Row(
               children: [
                 SizedBox(
-                  width: 56,
+                  width: 48,
                   child: Text('YEAR',
                       style: TextStyle(
                           fontSize: 11,
@@ -211,18 +238,17 @@ class _FullDataTable extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text('VALUE',
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
                           color: AppColors.slate600)),
                 ),
-                SizedBox(width: 12),
                 SizedBox(
-                  width: 96,
+                  width: 60,
                   child: Text('YoY',
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -254,7 +280,7 @@ class _FullDataTable extends StatelessWidget {
                 children: [
                   // Year — fixed width, left aligned
                   SizedBox(
-                    width: 56,
+                    width: 48,
                     child: Text(
                       pt.timePeriod,
                       style: const TextStyle(
@@ -265,11 +291,11 @@ class _FullDataTable extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Value — flex, right aligned
+                  // Value — flex, center aligned
                   Expanded(
                     child: Text(
                       NumberFormatter.full(pt.value),
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -278,12 +304,11 @@ class _FullDataTable extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  // YoY badge — fixed width, right aligned
+                  // YoY badge — fixed width, center aligned
                   SizedBox(
-                    width: 96,
+                    width: 60,
                     child: Align(
-                      alignment: Alignment.centerRight,
+                      alignment: Alignment.center,
                       child: yoy == null
                           ? const Text('—',
                               style: TextStyle(
@@ -326,13 +351,135 @@ class _FullDataTable extends StatelessWidget {
               border: Border(top: BorderSide(color: AppColors.pearlGray)),
             ),
             child: const Text(
-              'Data from Federal Competitiveness and Statistics Centre (FCSC). '
+              'Data from Federal Competitiveness and Statistics Authority (FCSA). '
               'Values represent official registered figures for the UAE.',
               style: TextStyle(
                 fontSize: 12,
                 color: AppColors.slate400,
                 fontStyle: FontStyle.italic,
                 height: 1.5,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Gender data table (Year | Male | Female | Total) ─────────────────────────
+
+class _GenderDataTable extends StatelessWidget {
+  const _GenderDataTable({
+    required this.total,
+    required this.male,
+    required this.female,
+  });
+
+  final List<DataPoint> total;
+  final List<DataPoint> male;
+  final List<DataPoint> female;
+
+  @override
+  Widget build(BuildContext context) {
+    final maleMap = {for (final p in male) p.timePeriod: p.value};
+    final femaleMap = {for (final p in female) p.timePeriod: p.value};
+
+    final seen = <String>{};
+    final rows = total.reversed.where((p) => seen.add(p.timePeriod)).toList();
+
+    const headerStyle = TextStyle(
+      fontSize: 11, fontWeight: FontWeight.w600,
+      letterSpacing: 0.4, color: AppColors.slate600,
+    );
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+        boxShadow: AppColors.shadowCard,
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Column(
+        children: [
+          Container(
+            color: AppColors.pearlGray,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: const Row(
+              children: [
+                SizedBox(width: 44, child: Text('YEAR', style: headerStyle)),
+                Expanded(child: Text('MALE', textAlign: TextAlign.right, style: headerStyle)),
+                Expanded(child: Text('FEMALE', textAlign: TextAlign.right, style: headerStyle)),
+                Expanded(child: Text('TOTAL', textAlign: TextAlign.right, style: headerStyle)),
+              ],
+            ),
+          ),
+          ...rows.asMap().entries.map((e) {
+            final idx = e.key;
+            final pt = e.value;
+            final m = maleMap[pt.timePeriod];
+            final f = femaleMap[pt.timePeriod];
+            return Container(
+              color: idx.isOdd ? AppColors.offWhite : AppColors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 48,
+                    child: Text(pt.timePeriod,
+                        style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w600,
+                          color: AppColors.slate900,
+                          fontFeatures: [FontFeature.tabularFigures()],
+                        )),
+                  ),
+                  Expanded(
+                    child: Text(
+                      m != null ? NumberFormatter.full(m) : '—',
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w500,
+                        color: AppColors.slate600,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      f != null ? NumberFormatter.full(f) : '—',
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 13, fontWeight: FontWeight.w500,
+                        color: AppColors.slate600,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      NumberFormatter.full(pt.value),
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.w700,
+                        color: AppColors.demBlue,
+                        fontFeatures: [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          Container(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: AppColors.pearlGray)),
+            ),
+            child: const Text(
+              'Unit: Persons · Source: Federal Competitiveness and Statistics Centre (FCSC)',
+              style: TextStyle(
+                fontSize: 12, color: AppColors.slate400,
+                fontStyle: FontStyle.italic, height: 1.5,
               ),
             ),
           ),

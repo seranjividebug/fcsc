@@ -1,0 +1,11 @@
+[
+  { "timePeriod": "2022", "value": 1624057.0, "measure": "GENERAL", "refArea": "AE", "gender": "_T", "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2023", "value": 1747827.0, "measure": "GENERAL", "refArea": "AE", "gender": "_T", "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2024", "value": 1811145.0, "measure": "GENERAL", "refArea": "AE", "gender": "_T", "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2022", "value": 819934.0,  "measure": "GENERAL", "refArea": "AE", "gender": "M",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2023", "value": 881635.0,  "measure": "GENERAL", "refArea": "AE", "gender": "M",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2024", "value": 920804.0,  "measure": "GENERAL", "refArea": "AE", "gender": "M",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2022", "value": 804123.0,  "measure": "GENERAL", "refArea": "AE", "gender": "F",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2023", "value": 866192.0,  "measure": "GENERAL", "refArea": "AE", "gender": "F",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
+  { "timePeriod": "2024", "value": 890341.0,  "measure": "GENERAL", "refArea": "AE", "gender": "F",  "unitMeasure": "STU", "sourceDetail": "FCSC" }
+]

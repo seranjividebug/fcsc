@@ -14,18 +14,18 @@ import 'package:uae_stats/data/models/data_point.dart';
 
 enum _ChartType { line, bar, table }
 
-enum _ChartRange { y2, y5, y10, max }
+enum _ChartRange { y3, y5, y10, max }
 
 extension _RangeLabel on _ChartRange {
   String get label => switch (this) {
-        _ChartRange.y2 => '2Y',
+        _ChartRange.y3 => '3Y',
         _ChartRange.y5 => '5Y',
         _ChartRange.y10 => '10Y',
         _ChartRange.max => 'MAX',
       };
 
   int? get years => switch (this) {
-        _ChartRange.y2 => 2,
+        _ChartRange.y3 => 3,
         _ChartRange.y5 => 5,
         _ChartRange.y10 => 10,
         _ChartRange.max => null,
@@ -38,11 +38,17 @@ class IndicatorChart extends StatefulWidget {
     required this.allSeries,
     required this.indicatorName,
     this.unitCode = 'PS',
+    this.accentColor = AppColors.demBlue,
+    this.femaleSeries = const [],
+    this.maleSeries = const [],
   });
 
   final List<DataPoint> allSeries;
   final String indicatorName;
   final String unitCode;
+  final Color accentColor;
+  final List<DataPoint> femaleSeries;
+  final List<DataPoint> maleSeries;
 
   @override
   State<IndicatorChart> createState() => _IndicatorChartState();
@@ -50,7 +56,10 @@ class IndicatorChart extends StatefulWidget {
 
 class _IndicatorChartState extends State<IndicatorChart> {
   _ChartType _type = _ChartType.line;
-  _ChartRange _range = _ChartRange.y5;
+  _ChartRange _range = _ChartRange.y3;
+
+  bool get _hasGender =>
+      widget.femaleSeries.isNotEmpty && widget.maleSeries.isNotEmpty;
 
   List<DataPoint> get _series {
     final all = widget.allSeries;
@@ -60,10 +69,18 @@ class _IndicatorChartState extends State<IndicatorChart> {
     return all.sublist(all.length - n);
   }
 
+  List<DataPoint> _slice(List<DataPoint> src) {
+    if (src.isEmpty) return src;
+    final n = _range.years;
+    if (n == null || src.length <= n) return src;
+    return src.sublist(src.length - n);
+  }
+
   String get _chartSubLabel {
     final s = _series;
     if (s.isEmpty) return '';
-    return '${s.first.timePeriod} — ${s.last.timePeriod} · Source: FCSC';
+    final genderTag = _hasGender ? ' · By Gender' : '';
+    return '${s.first.timePeriod} — ${s.last.timePeriod} · Source: FCSC$genderTag';
   }
 
   @override
@@ -113,6 +130,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: _ChartTypeToggle(
             selected: _type,
+            accentColor: widget.accentColor,
             onChanged: (t) => setState(() => _type = t),
           ),
         ),
@@ -165,10 +183,26 @@ class _IndicatorChartState extends State<IndicatorChart> {
                         : _buildBarChart(),
                   ),
 
+                  // Gender legend (only for multi-series)
+                  if (_hasGender && _type == _ChartType.line) ...[
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _LegendDot(color: widget.accentColor, label: 'Total'),
+                        const SizedBox(width: 14),
+                        _LegendDot(color: const Color(0xFFC8973A), label: 'Female'),
+                        const SizedBox(width: 14),
+                        _LegendDot(color: const Color(0xFF1A6FA8), label: 'Male'),
+                      ],
+                    ),
+                  ],
+
                   // Range chips
                   const SizedBox(height: 14),
                   _RangeChips(
                     selected: _range,
+                    accentColor: widget.accentColor,
                     onChanged: (r) => setState(() => _range = r),
                   ),
                 ],
@@ -186,15 +220,55 @@ class _IndicatorChartState extends State<IndicatorChart> {
     final series = _series;
     if (series.isEmpty) return const _EmptyChart();
 
-    final spots = series
+    final fSeries = _slice(widget.femaleSeries);
+    final mSeries = _slice(widget.maleSeries);
+
+    List<FlSpot> toSpots(List<DataPoint> pts) => pts
         .asMap()
         .entries
         .map((e) => FlSpot(e.key.toDouble(), e.value.value))
         .toList();
 
-    final minY = series.map((p) => p.value).reduce((a, b) => a < b ? a : b);
-    final maxY = series.map((p) => p.value).reduce((a, b) => a > b ? a : b);
+    final spots = toSpots(series);
+    final fSpots = toSpots(fSeries);
+    final mSpots = toSpots(mSeries);
+
+    final allValues = [
+      ...series.map((p) => p.value),
+      if (_hasGender) ...fSeries.map((p) => p.value),
+      if (_hasGender) ...mSeries.map((p) => p.value),
+    ];
+    final minY = allValues.reduce((a, b) => a < b ? a : b);
+    final maxY = allValues.reduce((a, b) => a > b ? a : b);
     final pad = (maxY - minY) * 0.12;
+
+    LineChartBarData _bar(List<FlSpot> s, Color c, {bool fill = false, bool dashed = false}) =>
+        LineChartBarData(
+          spots: s,
+          isCurved: true,
+          curveSmoothness: 0.35,
+          color: c,
+          barWidth: fill ? 3 : 2.5,
+          isStrokeCapRound: true,
+          dashArray: dashed ? [6, 3] : null,
+          belowBarData: BarAreaData(
+            show: fill,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [c.withValues(alpha: 0.18), c.withValues(alpha: 0.0)],
+            ),
+          ),
+          dotData: FlDotData(
+            show: true,
+            getDotPainter: (_, __, ___, ____) => FlDotCirclePainter(
+              radius: fill ? 5 : 4,
+              color: c,
+              strokeWidth: 2,
+              strokeColor: AppColors.white,
+            ),
+          ),
+        );
 
     return LineChart(
       LineChartData(
@@ -202,35 +276,9 @@ class _IndicatorChartState extends State<IndicatorChart> {
         maxY: maxY + pad,
         clipData: const FlClipData.all(),
         lineBarsData: [
-          LineChartBarData(
-            spots: spots,
-            isCurved: true,
-            curveSmoothness: 0.35,
-            color: AppColors.emiratesGreen,
-            barWidth: 3,
-            isStrokeCapRound: true,
-            belowBarData: BarAreaData(
-              show: true,
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  AppColors.emiratesGreen.withValues(alpha: 0.20),
-                  AppColors.emiratesGreen.withValues(alpha: 0.0),
-                ],
-              ),
-            ),
-            dotData: FlDotData(
-              show: true,
-              getDotPainter: (spot, pct, barData, idx) =>
-                  FlDotCirclePainter(
-                    radius: 5,
-                    color: AppColors.emiratesGreen,
-                    strokeWidth: 2.5,
-                    strokeColor: AppColors.white,
-                  ),
-            ),
-          ),
+          _bar(spots, widget.accentColor, fill: true),
+          if (_hasGender) _bar(fSpots, const Color(0xFFC8973A), dashed: true),
+          if (_hasGender) _bar(mSpots, const Color(0xFF1A6FA8), dashed: true),
         ],
         gridData: FlGridData(
           show: true,
@@ -360,7 +408,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
             barRods: [
               BarChartRodData(
                 toY: e.value.value,
-                color: AppColors.emiratesGreen.withValues(alpha: 0.85),
+                color: widget.accentColor.withValues(alpha: 0.85),
                 width: barW,
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(6),
@@ -469,8 +517,13 @@ class _IndicatorChartState extends State<IndicatorChart> {
 // ─── Chart type toggle ────────────────────────────────────────────────────────
 
 class _ChartTypeToggle extends StatelessWidget {
-  const _ChartTypeToggle({required this.selected, required this.onChanged});
+  const _ChartTypeToggle({
+    required this.selected,
+    required this.accentColor,
+    required this.onChanged,
+  });
   final _ChartType selected;
+  final Color accentColor;
   final ValueChanged<_ChartType> onChanged;
 
   @override
@@ -488,6 +541,7 @@ class _ChartTypeToggle extends StatelessWidget {
             icon: Icons.show_chart_rounded,
             label: 'Line',
             active: selected == _ChartType.line,
+            accentColor: accentColor,
             onTap: () => onChanged(_ChartType.line),
           ),
           const SizedBox(width: 3),
@@ -495,6 +549,7 @@ class _ChartTypeToggle extends StatelessWidget {
             icon: Icons.bar_chart_rounded,
             label: 'Bar',
             active: selected == _ChartType.bar,
+            accentColor: accentColor,
             onTap: () => onChanged(_ChartType.bar),
           ),
           const SizedBox(width: 3),
@@ -502,6 +557,7 @@ class _ChartTypeToggle extends StatelessWidget {
             icon: Icons.table_rows_outlined,
             label: 'Table',
             active: selected == _ChartType.table,
+            accentColor: accentColor,
             onTap: () => onChanged(_ChartType.table),
           ),
         ],
@@ -515,12 +571,14 @@ class _Tab extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.active,
+    required this.accentColor,
     required this.onTap,
   });
 
   final IconData icon;
   final String label;
   final bool active;
+  final Color accentColor;
   final VoidCallback onTap;
 
   @override
@@ -550,7 +608,7 @@ class _Tab extends StatelessWidget {
               Icon(
                 icon,
                 size: 14,
-                color: active ? AppColors.emiratesGreen : AppColors.slate600,
+                color: active ? accentColor : AppColors.slate600,
               ),
               const SizedBox(width: 5),
               Text(
@@ -558,7 +616,7 @@ class _Tab extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
-                  color: active ? AppColors.emiratesGreen : AppColors.slate600,
+                  color: active ? accentColor : AppColors.slate600,
                 ),
               ),
             ],
@@ -572,8 +630,13 @@ class _Tab extends StatelessWidget {
 // ─── Range chips ──────────────────────────────────────────────────────────────
 
 class _RangeChips extends StatelessWidget {
-  const _RangeChips({required this.selected, required this.onChanged});
+  const _RangeChips({
+    required this.selected,
+    required this.accentColor,
+    required this.onChanged,
+  });
   final _ChartRange selected;
+  final Color accentColor;
   final ValueChanged<_ChartRange> onChanged;
 
   @override
@@ -591,7 +654,7 @@ class _RangeChips extends StatelessWidget {
             height: 32,
             padding: const EdgeInsets.symmetric(horizontal: 18),
             decoration: BoxDecoration(
-              color: active ? AppColors.emiratesGreen : AppColors.pearlGray,
+              color: active ? accentColor : AppColors.pearlGray,
               borderRadius: BorderRadius.circular(999),
             ),
             alignment: Alignment.center,
@@ -638,7 +701,7 @@ class _DataTableCard extends StatelessWidget {
             child: const Row(
               children: [
                 SizedBox(
-                  width: 52,
+                  width: 48,
                   child: Text('YEAR',
                       style: TextStyle(
                           fontSize: 11,
@@ -648,7 +711,7 @@ class _DataTableCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text('VALUE',
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
@@ -656,7 +719,7 @@ class _DataTableCard extends StatelessWidget {
                           color: AppColors.slate600)),
                 ),
                 SizedBox(
-                  width: 76,
+                  width: 60,
                   child: Text('YOY',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -689,7 +752,7 @@ class _DataTableCard extends StatelessWidget {
               child: Row(
                 children: [
                   SizedBox(
-                    width: 52,
+                    width: 48,
                     child: Text(
                       pt.timePeriod,
                       style: const TextStyle(
@@ -702,7 +765,7 @@ class _DataTableCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       NumberFormatter.full(pt.value),
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -712,7 +775,7 @@ class _DataTableCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 76,
+                    width: 60,
                     child: Center(
                       child: yoy == null
                           ? const Text('—',
@@ -749,6 +812,30 @@ class _DataTableCard extends StatelessWidget {
           }),
         ],
       ),
+    );
+  }
+}
+
+// ─── Legend dot ──────────────────────────────────────────────────────────────
+
+class _LegendDot extends StatelessWidget {
+  const _LegendDot({required this.color, required this.label});
+  final Color color;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 8, height: 8,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 5),
+        Text(label,
+            style: const TextStyle(fontSize: 11, color: AppColors.slate600)),
+      ],
     );
   }
 }

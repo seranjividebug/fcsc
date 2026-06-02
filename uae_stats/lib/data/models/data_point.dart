@@ -85,11 +85,14 @@ class DataPoint {
     return DataPoint(
       timePeriod: dimMap['TIME_PERIOD'] ?? '',
       value: value,
-      refArea: dimMap['REF_AREA'],
-      gender: dimMap['GENDER'],
-      citizenship: dimMap['CITIZENSHIP'],
-      measure: dimMap['MEASURE'],
-      unitMeasure: dimMap['UNIT_MEASURE'],
+      refArea: dimMap['REF_AREA'] ?? dimMap['AREA'] ?? dimMap['EMIRATE'],
+      gender: dimMap['GENDER'] ?? dimMap['SEX'],
+      citizenship: dimMap['CITIZENSHIP'] ??
+          dimMap['NATIONALITY'] ??
+          dimMap['CIVIL_STATUS'] ??
+          dimMap['CITIZEN'],
+      measure: dimMap['MEASURE'] ?? dimMap['INDICATOR'],
+      unitMeasure: dimMap['UNIT_MEASURE'] ?? dimMap['UNIT'],
       obsStatus: obsStatus,
     );
   }

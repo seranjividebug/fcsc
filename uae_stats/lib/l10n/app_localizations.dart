@@ -113,7 +113,7 @@ abstract class AppLocalizations {
   /// No description provided for @fcscNameEn.
   ///
   /// In en, this message translates to:
-  /// **'Federal Competitiveness and Statistics Centre'**
+  /// **'Federal Competitiveness and Statistics Authority'**
   String get fcscNameEn;
 
   /// No description provided for @fcscNameAr.
@@ -551,7 +551,7 @@ abstract class AppLocalizations {
   /// No description provided for @popSource.
   ///
   /// In en, this message translates to:
-  /// **'Federal Competitiveness and Statistics Centre'**
+  /// **'Federal Competitiveness and Statistics Authority'**
   String get popSource;
 
   /// No description provided for @annualFrequency.

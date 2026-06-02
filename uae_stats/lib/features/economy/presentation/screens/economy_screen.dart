@@ -145,7 +145,7 @@ class _LangToggle extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: AppColors.pearlGray,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           border: Border.all(color: AppColors.silver),
         ),
@@ -256,7 +256,7 @@ class _SectionHeader extends StatelessWidget {
                       'GDP · Trade · Prices · Tourism · Air Transport',
                       style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.slate400,
+                          color: AppColors.slate600,
                           height: 1.3),
                     ),
                   ],

@@ -7,12 +7,26 @@ import 'package:flutter/material.dart';
 /// All color constants for the UAE Stats app.
 /// Never use raw hex values in widgets — always reference AppColors.
 abstract final class AppColors {
-  // ─── Primary ────────────────────────────────────────────────────────────
-  static const Color emiratesGreen = Color(0xFF00594C);
-  static const Color deepForest    = Color(0xFF003D33);
-  static const Color sageMist      = Color(0xFFE8F1EE);
-  static const Color champagneGold = Color(0xFFC8973A);
-  static const Color royalSand     = Color(0xFFF5E9D3);
+  // ─── Primary brand — AEGold (used for nav, hero, chips, buttons) ────────
+  static const Color emiratesGreen = Color(0xFF92722A); // AEGold 600 — primary brand
+  static const Color deepForest    = Color(0xFF5D3B26); // AEGold dark — hero gradient start
+  static const Color sageMist      = Color(0xFFF9F7ED); // AEGold 50 — light gold bg
+  static const Color champagneGold = Color(0xFFB68A35); // AEGold 500 — accent
+  static const Color royalSand     = Color(0xFFF9F7ED); // AEGold 50 — card tint bg
+
+  // ─── Home / AE Gold theme ────────────────────────────────────────────────
+  static const Color aeGold        = Color(0xFF92722A); // primary brand
+  static const Color aeGoldDeep    = Color(0xFF7C5E24); // deep gold
+  static const Color aeGoldAccent  = Color(0xFFB68A35); // accent gold
+  static const Color aeGoldBg      = Color(0xFFF9F7ED); // light gold background
+
+  // ─── Demography — Blue theme ─────────────────────────────────────────────
+  static const Color demBlue       = Color(0xFF0073AB); // primary blue
+  static const Color demBlueTint   = Color(0xFFEFFAFF); // light blue tint
+
+  // ─── Environment — Green theme ───────────────────────────────────────────
+  static const Color envGreen      = Color(0xFF3F8E50); // primary green
+  static const Color envGreenTint  = Color(0xFFF3FAF4); // light green tint
 
   // ─── Neutrals ────────────────────────────────────────────────────────────
   static const Color white         = Color(0xFFFFFFFF);
@@ -44,28 +58,28 @@ abstract final class AppColors {
   static const Color tealTint      = Color(0xFFE0F2FE);
 
   // ─── Charts (sequential palette) ─────────────────────────────────────────
-  static const Color chart01       = Color(0xFF00594C); // Demography / primary
+  static const Color chart01       = Color(0xFF0073AB); // Demography blue
   static const Color chart02       = Color(0xFF1A6FA8);
-  static const Color chart03       = Color(0xFFC8973A); // Economy
+  static const Color chart03       = Color(0xFF92722A); // Home/Economy gold
   static const Color chart04       = Color(0xFFB45309);
   static const Color chart05       = Color(0xFF7C3AED);
   static const Color chart06       = Color(0xFFDC2626);
-  static const Color chart07       = Color(0xFF0891B2); // Environment
+  static const Color chart07       = Color(0xFF3F8E50); // Environment green
   static const Color chart08       = Color(0xFF65A30D);
 
   // ─── Gradients ───────────────────────────────────────────────────────────
   static const LinearGradient heroGradient = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    stops: [0.0, 1.0],
-    colors: [deepForest, emiratesGreen],
+    stops: [0.0, 0.55, 1.0],
+    colors: [deepForest, aeGoldDeep, aeGold],
   );
 
   static const LinearGradient heroGradientDetail = LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
-    stops: [0.0, 1.0],
-    colors: [emiratesGreen, deepForest],
+    stops: [0.0, 0.55, 1.0],
+    colors: [deepForest, aeGoldDeep, aeGold],
   );
 
   // ─── Dark mode surfaces (Economy / Social / Environment pages) ───────────

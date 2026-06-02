@@ -12,14 +12,14 @@ abstract final class AppTheme {
 
     return base.copyWith(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.emiratesGreen,
-        primary: AppColors.emiratesGreen,
+        seedColor: AppColors.aeGold,
+        primary: AppColors.aeGold,
         secondary: AppColors.champagneGold,
         surface: AppColors.offWhite,
         onPrimary: AppColors.white,
         onSurface: AppColors.slate900,
         error: AppColors.error,
-      ),
+      ).copyWith(surfaceTint: Colors.transparent),
       scaffoldBackgroundColor: AppColors.offWhite,
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.white,
@@ -48,6 +48,8 @@ abstract final class AppTheme {
       cardTheme: CardThemeData(
         color: AppColors.white,
         elevation: 0,
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         ),

@@ -1,0 +1,12 @@
+[
+  { "timePeriod": "2015", "value": 874.0,  "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2016", "value": 902.0,  "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2017", "value": 936.0,  "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2018", "value": 968.0,  "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2019", "value": 1004.0, "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2020", "value": 1038.0, "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2021", "value": 1075.0, "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2022", "value": 1112.0, "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2023", "value": 1150.0, "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" },
+  { "timePeriod": "2024", "value": 1188.0, "measure": "CAH", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "MOH" }
+]

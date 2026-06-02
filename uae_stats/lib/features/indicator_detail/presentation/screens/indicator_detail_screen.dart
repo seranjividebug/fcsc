@@ -16,6 +16,7 @@ import 'package:uae_stats/features/indicator_detail/presentation/widgets/detail_
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/indicator_chart.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
+import 'package:uae_stats/shared/widgets/language_toggle_button.dart';
 import 'package:uae_stats/shared/widgets/shimmer_box.dart';
 
 // ─── Indicator nav items ──────────────────────────────────────────────────────
@@ -32,11 +33,20 @@ class _NavItem {
 
 const _navItems = [
   // Vitals
-  _NavItem(id: 'population', label: 'Population Estimates', group: 'vitals'),
-  _NavItem(id: 'births', label: 'Births', group: 'vitals'),
-  _NavItem(id: 'deaths', label: 'Deaths', group: 'vitals'),
-  _NavItem(id: 'marriages', label: 'Marriages', group: 'vitals'),
-  _NavItem(id: 'divorces', label: 'Divorces', group: 'vitals'),
+  _NavItem(id: 'population',         label: 'Population Estimates',    group: 'vitals'),
+  _NavItem(id: 'births',             label: 'Births',                  group: 'vitals'),
+  _NavItem(id: 'deaths',             label: 'Deaths',                  group: 'vitals'),
+  _NavItem(id: 'marriages',          label: 'Marriages',               group: 'vitals'),
+  _NavItem(id: 'divorces',           label: 'Divorces',                group: 'vitals'),
+  // Education
+  _NavItem(id: 'student_enrolment',  label: 'Student Enrolment',       group: 'education'),
+  _NavItem(id: 'teaching_staff',     label: 'Teaching Staff',          group: 'education'),
+  _NavItem(id: 'higher_education',   label: 'Higher Education Students', group: 'education'),
+  // Health
+  _NavItem(id: 'hospitals',          label: 'Hospitals',               group: 'health'),
+  _NavItem(id: 'health_clinics_centers', label: 'Clinics and Centers', group: 'health'),
+  _NavItem(id: 'health_hospital_beds', label: 'Hospital Beds',         group: 'health'),
+  _NavItem(id: 'health_professionals', label: 'Healthcare Professionals', group: 'health'),
 ];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -106,14 +116,7 @@ class _IndicatorDetailScreenState
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.notifications_none_rounded,
-                      size: 22,
-                      color: AppColors.slate900,
-                    ),
-                  ),
+                  const LanguageToggleButton(),
                 ],
               ),
             ),
@@ -147,7 +150,7 @@ class _IndicatorDetailScreenState
               ),
               data: (data) => RefreshIndicator(
                 onRefresh: _handleRefresh,
-                color: AppColors.emiratesGreen,
+                color: AppColors.demBlue,
                 child: SingleChildScrollView(
                 controller: _scrollController,
                 padding: EdgeInsets.zero,
@@ -163,6 +166,8 @@ class _IndicatorDetailScreenState
                       child: IndicatorChart(
                         allSeries: data.uaeTotalSeries,
                         indicatorName: data.meta.name.en,
+                        femaleSeries: data.byGender['F'] ?? [],
+                        maleSeries: data.byGender['M'] ?? [],
                       ),
                     ),
 
@@ -200,7 +205,7 @@ class _IndicatorDetailScreenState
                             child: ElevatedButton.icon(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.emiratesGreen,
+                                backgroundColor: AppColors.demBlue,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
@@ -233,9 +238,9 @@ class _IndicatorDetailScreenState
                             child: OutlinedButton(
                               onPressed: () => context.go(AppRoutes.home),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: AppColors.emiratesGreen,
+                                foregroundColor: AppColors.demBlue,
                                 side: const BorderSide(
-                                  color: AppColors.emiratesGreen,
+                                  color: AppColors.demBlue,
                                   width: 1.5,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -274,14 +279,13 @@ class _IndicatorDetailScreenState
   }
 
   String _labelFor(String id) {
-    switch (id) {
-      case 'births':
-        return 'Births';
-      case 'population':
-        return 'Population Estimates';
-      default:
-        return id[0].toUpperCase() + id.substring(1);
-    }
+    return _navItems
+        .firstWhere((n) => n.id == id,
+            orElse: () => _NavItem(
+                id: id,
+                label: id[0].toUpperCase() + id.substring(1).replaceAll('_', ' '),
+                group: ''))
+        .label;
   }
 
   Future<void> _handleRefresh() async {
@@ -333,12 +337,12 @@ class _IndicatorNavStrip extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
                     color: active
-                        ? AppColors.emiratesGreen
+                        ? AppColors.demBlue
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(999),
                     border: Border.all(
                       color: active
-                          ? AppColors.emiratesGreen
+                          ? AppColors.demBlue
                           : AppColors.silver,
                       width: 1.5,
                     ),
@@ -439,7 +443,7 @@ class _MetadataCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.sageMist,
+        color: AppColors.pearlGray,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
       ),
       child: Column(
@@ -478,7 +482,7 @@ class _MetaRowWidget extends StatelessWidget {
       decoration: const BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Color(0x1A00594C),
+            color: Color(0x1A0073AB),
             width: 1,
           ),
         ),
@@ -535,16 +539,16 @@ class _RelatedIndicators extends ConsumerWidget {
 
   final String currentId;
 
-  static const _ids = ['deaths', 'marriages', 'population'];
+  static const _ids = ['student_enrolment', 'higher_education', 'population'];
 
   static const _configs = {
-    'deaths': _RelatedConfig(
-      label: 'Deaths',
-      iconColor: AppColors.emiratesGreen,
-      bgColor: AppColors.sageMist,
+    'student_enrolment': _RelatedConfig(
+      label: 'Student Enrolment',
+      iconColor: AppColors.demBlue,
+      bgColor: AppColors.demBlueTint,
     ),
-    'marriages': _RelatedConfig(
-      label: 'Marriages',
+    'higher_education': _RelatedConfig(
+      label: 'Higher Education',
       iconColor: AppColors.champagneGold,
       bgColor: AppColors.royalSand,
     ),
@@ -582,7 +586,7 @@ class _RelatedIndicators extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.emiratesGreen,
+                    color: AppColors.demBlue,
                   ),
                 ),
               ),
@@ -711,9 +715,9 @@ class _CitationFooter extends StatelessWidget {
     final fetched = data.fetchedAt as DateTime;
     final retrievedStr = '${_monthName(fetched.month)} ${fetched.year}';
     final citation =
-        "Federal Competitiveness and Statistics Centre (FCSC), "
+        "Federal Competitiveness and Statistics Authority (FCSA), "
         "'${data.meta.name.en} in the UAE — $dataYear', "
-        "Retrieved $retrievedStr from uaestat.fcsc.gov.ae";
+        "Retrieved $retrievedStr from uaestat.fcsa.gov.ae";
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -750,14 +754,14 @@ class _CitationFooter extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.copy_rounded,
-                    size: 13, color: AppColors.emiratesGreen),
+                    size: 13, color: AppColors.demBlue),
                 SizedBox(width: 4),
                 Text(
                   'Copy Citation',
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.emiratesGreen,
+                    color: AppColors.demBlue,
                   ),
                 ),
               ],
@@ -784,7 +788,7 @@ class _LoadingSkeleton extends StatelessWidget {
           Container(
             height: 200,
             decoration: BoxDecoration(
-              color: AppColors.emiratesGreen.withValues(alpha: 0.15),
+              color: AppColors.aeGoldDeep.withValues(alpha: 0.25),
               borderRadius: BorderRadius.circular(24),
             ),
           ),
@@ -798,7 +802,7 @@ class _LoadingSkeleton extends StatelessWidget {
             ),
             child: const Center(
               child: CircularProgressIndicator(
-                color: AppColors.emiratesGreen,
+                color: AppColors.demBlue,
                 strokeWidth: 2,
               ),
             ),
@@ -851,7 +855,7 @@ class _ErrorView extends StatelessWidget {
             ElevatedButton(
               onPressed: onRetry,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.emiratesGreen,
+                backgroundColor: AppColors.demBlue,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),

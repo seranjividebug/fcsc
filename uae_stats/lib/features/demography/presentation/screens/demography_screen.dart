@@ -1,6 +1,6 @@
 // lib/features/demography/presentation/screens/demography_screen.dart
 //
-// Demography section screen — light theme, emiratesGreen accent.
+// Demography section screen — Blue theme (#0073AB).
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +15,8 @@ import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
 import 'package:uae_stats/shared/widgets/kpi_stat_card.dart';
 
-const _kAccent    = AppColors.emiratesGreen;
-const _kAccentBg  = AppColors.sageMist;
+const _kAccent    = AppColors.demBlue;
+const _kAccentBg  = AppColors.demBlueTint;
 const _kIcon      = Icons.people_rounded;
 
 class DemographyScreen extends ConsumerStatefulWidget {
@@ -51,7 +51,7 @@ class _DemographyScreenState extends ConsumerState<DemographyScreen> {
               onRefresh: () => ref.refresh(demographyKpisProvider.future),
               child: CustomScrollView(
                 slivers: [
-                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -68,7 +68,7 @@ class _DemographyScreenState extends ConsumerState<DemographyScreen> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.fromLTRB(
-                            AppSpacing.lg, 12, AppSpacing.lg, AppSpacing.xl),
+                            AppSpacing.lg, 8, AppSpacing.lg, 12),
                         child: kpisAsync.when(
                           loading: () => const _SectionsSkeleton(),
                           error: (_, __) => _ErrorRetry(
@@ -82,7 +82,7 @@ class _DemographyScreenState extends ConsumerState<DemographyScreen> {
                         ),
                       ),
                     ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
                 ],
               ),
             ),
@@ -145,7 +145,7 @@ class _LangToggle extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
         decoration: BoxDecoration(
-          color: AppColors.pearlGray,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
           border: Border.all(color: AppColors.silver),
         ),
@@ -256,7 +256,7 @@ class _SectionHeader extends StatelessWidget {
                       'Population · Vitals · Education · Health · Labour',
                       style: TextStyle(
                           fontSize: 12,
-                          color: AppColors.slate400,
+                          color: AppColors.slate600,
                           height: 1.3),
                     ),
                   ],
@@ -294,7 +294,7 @@ class _SectionsContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (int i = 0; i < groups.length; i++) ...[
-          if (i > 0) const SizedBox(height: 24),
+          if (i > 0) const SizedBox(height: 14),
           KpiSectionTitle(
             titleEn: groups[i].titleEn,
             titleAr: groups[i].titleAr,
@@ -331,7 +331,7 @@ class _SectionsSkeleton extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (int s = 0; s < _placeholder.length; s++) ...[
-          if (s > 0) const SizedBox(height: 24),
+          if (s > 0) const SizedBox(height: 14),
           KpiSectionTitle(
             titleEn: _placeholder[s].title,
             titleAr: _placeholder[s].titleAr,

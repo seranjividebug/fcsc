@@ -1,11 +1,11 @@
 {
-    "name": "uae_stats",
-    "short_name": "uae_stats",
+    "name": "UAE Stats",
+    "short_name": "UAE Stats",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#00594C",
+    "theme_color": "#00594C",
+    "description": "UAE Official Government Statistics",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
