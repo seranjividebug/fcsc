@@ -50,7 +50,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   final _demographyKey  = GlobalKey();
   final _economyKey     = GlobalKey();
   final _environmentKey = GlobalKey();
-  String _activeFilter  = 'All';
+  String _activeFilter  = 'Demography';
 
   void _scrollTo(GlobalKey key) {
     final ctx = key.currentContext;
@@ -164,7 +164,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       const _TileData.group(icon: Icons.monitor_heart_outlined, label: 'Vitals', subtitle: 'Births, Deaths, Marriages…', count: 4),
                       const _TileData.group(icon: Icons.school_outlined, label: 'Education', subtitle: 'Students, Teachers', count: 3),
                       const _TileData.group(icon: Icons.monitor_heart_outlined, label: 'Health', subtitle: 'Hospitals, Healthcare Professionals…', count: 4),
-                      const _TileData.fullWidth(icon: Icons.work_outline, label: 'Labor Force', subtitle: 'Employment, Unemployment…', value: '', change: 0, year: '', count: 2),
+                      const _TileData.fullWidth(icon: Icons.work_outline, label: 'Labor Force', subtitle: 'Economic Activity, Employment, Unemployment…', value: '', change: 0, year: '', count: 7),
                     ],
                   ),
                 ),
@@ -180,23 +180,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     iconColor: _kGold,
                     iconBg: _kSage,
                     title: isArabic ? 'الاقتصاد' : 'Economy',
-                    subtitle: isArabic ? 'الناتج المحلي · التجارة · الصناعة · الأسعار · السياحة' : 'GDP · Trade · Industry · Prices · Tourism',
+                    subtitle: isArabic ? 'الناتج المحلي · التجارة · الصناعة · الأسعار' : 'GDP · Trade · Industry · Prices',
                     tiles: const [
-                      _TileData.group(icon: Icons.account_balance_outlined, label: 'National Accounts', subtitle: 'GDP, Foreign Investment', count: 3),
-                      _TileData.group(icon: Icons.swap_horiz_rounded, label: 'International Trade', subtitle: 'Commodities, Services…', count: 4),
-                      _TileData.group(icon: Icons.factory_outlined, label: 'Industry & Business', subtitle: 'ICT, Banking, Insurance…', count: 4),
-                      _TileData.group(icon: Icons.price_change_outlined, label: 'Prices', subtitle: 'CPI & PPI', count: 2),
-                      _TileData.fullWidth(icon: Icons.flight_outlined, label: 'Tourism', subtitle: 'Hotels & Air Transport', value: '', change: 0, year: '', count: 2),
+                      _TileData.group(icon: Icons.account_balance_outlined, label: 'National Accounts', subtitle: 'GDP Current & Constant, Quarterly GDP', count: 4),
+                      _TileData.group(icon: Icons.swap_horiz_rounded, label: 'International Trade', subtitle: 'Total Trade, Exports, Imports, Re-Exports…', count: 6),
+                      _TileData.group(icon: Icons.flight_rounded, label: 'Air Transport', subtitle: 'Aircraft Operations, Airports, Aviation…', count: 1),
+                      _TileData.group(icon: Icons.price_change_outlined, label: 'Prices', subtitle: 'CPI Annual, Hotel Arrivals, Establishments…', count: 4),
                     ],
                   ),
-                ),
-              ),
-              // Latest releases
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: _LatestReleases(),
                 ),
               ),
               // Environment section
@@ -217,14 +208,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       _TileData.fullWidth(icon: Icons.park_outlined, label: 'Environment', subtitle: 'Air Quality, Reserves, Climate, Waste…', value: '', change: 0, year: '', count: 7),
                     ],
                   ),
-                ),
-              ),
-              // Onboarding hint + latest releases (env)
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-              const SliverToBoxAdapter(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: _LatestReleasesEnv(),
                 ),
               ),
               // FCSC Footer
@@ -519,26 +502,29 @@ class _SearchBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isArabic = ref.watch(localeProvider).languageCode == 'ar';
-    return Container(
-      height: AppSpacing.searchBarHeight,
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-        border: Border.all(color: _kSilver),
-        boxShadow: AppColors.shadowCard,
-      ),
-      child: Row(children: [
-        const SizedBox(width: 14),
-        const Icon(Icons.search, size: 20, color: _kSlate400),
-        const SizedBox(width: 10),
-        Expanded(
-          child: Text(
-            isArabic ? 'ابحث عن المؤشرات والموضوعات والبيانات…' : 'Search any indicator or topic…',
-            style: const TextStyle(fontSize: 14, color: _kSlate400, height: 1.0)),
+    return GestureDetector(
+      onTap: () => context.push(AppRoutes.search),
+      child: Container(
+        height: AppSpacing.searchBarHeight,
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          border: Border.all(color: _kSilver),
+          boxShadow: AppColors.shadowCard,
         ),
-        const Icon(Icons.mic_none_rounded, size: 20, color: _kSlate400),
-        const SizedBox(width: 14),
-      ]),
+        child: Row(children: [
+          const SizedBox(width: 14),
+          const Icon(Icons.search, size: 20, color: _kSlate400),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              isArabic ? 'ابحث عن المؤشرات والموضوعات والبيانات…' : 'Search any indicator or topic…',
+              style: const TextStyle(fontSize: 14, color: _kSlate400, height: 1.0)),
+          ),
+          const Icon(Icons.mic_none_rounded, size: 20, color: _kSlate400),
+          const SizedBox(width: 14),
+        ]),
+      ),
     );
   }
 }
@@ -549,12 +535,12 @@ class _FilterChips extends ConsumerWidget {
   final String selected;
   final ValueChanged<String> onSelected;
 
-  static const _chips = ['All', 'Demography', 'Economy', 'Environment', 'Latest'];
+  static const _chips = ['Demography', 'Economy', 'Environment'];
 
   static String _label(String key, bool isArabic) {
     if (!isArabic) return key;
-    const ar = {'All': 'الكل', 'Demography': 'الديموغرافيا',
-      'Economy': 'الاقتصاد', 'Environment': 'البيئة', 'Latest': 'الأحدث'};
+    const ar = {'Demography': 'الديموغرافيا',
+      'Economy': 'الاقتصاد', 'Environment': 'البيئة'};
     return ar[key] ?? key;
   }
 
@@ -752,6 +738,18 @@ class _TileState extends State<_Tile> {
           _showEducationSheet(context);
         } else if (d.label == 'Health') {
           _showHealthSheet(context);
+        } else if (d.label == 'Air Transport') {
+          _showAirTransportSheet(context);
+        } else if (d.label == 'National Accounts') {
+          _showNationalAccountsSheet(context);
+        } else if (d.label == 'International Trade') {
+          _showInternationalTradeSheet(context);
+        } else if (d.label == 'Prices') {
+          _showPricesSheet(context);
+        } else if (d.label == 'Tourism') {
+          _showTourismSheet(context);
+        } else if (d.label == 'Labor Force') {
+          _showLaborSheet(context);
         } else if (d.id != null) { context.push(AppRoutes.indicatorPath(d.id!)); }
       },
       child: AnimatedContainer(
@@ -890,6 +888,16 @@ class _FullWidthTileState extends State<_FullWidthTile> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
+      onTap: () {
+        final d = widget.data;
+        if (d.label == 'Labor Force') {
+          _showLaborSheet(context);
+        } else if (d.label == 'Tourism') {
+          _showTourismSheet(context);
+        } else if (d.label == 'Environment') {
+          // placeholder for future Environment sheet
+        }
+      },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         transform: Matrix4.identity()..scaleByDouble(_pressed ? 0.98 : 1.0, _pressed ? 0.98 : 1.0, 1.0, 1.0),
@@ -1591,6 +1599,834 @@ class _HealthSheet extends ConsumerWidget {
   }
 }
 
+// ── Air Transport bottom sheet ────────────────────────────────────────────────
+
+void _showAirTransportSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _AirTransportSheet(),
+  );
+}
+
+class _AirTransportSheet extends ConsumerWidget {
+  const _AirTransportSheet();
+
+  static const _ids    = ['aircraft_movement'];
+  static const _icons  = {'aircraft_movement': Icons.flight_rounded};
+  static const _labels = {'aircraft_movement': 'Aircraft Movement'};
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+    return _EconomySheet(
+      title: 'Air Transport',
+      subtitle: 'Economy · 1 Indicator',
+      icon: Icons.flight_rounded,
+      ids: _ids,
+      icons: _icons,
+      labels: _labels,
+      summaries: summaries,
+      buttonLabel: 'View All Air Transport Data',
+      accentColor: _kGold,
+      accentBg: _kSage,
+    );
+  }
+}
+
+// ── Prices bottom sheet ───────────────────────────────────────────────────────
+
+void _showPricesSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _PricesSheet(),
+  );
+}
+
+class _PricesSheet extends ConsumerWidget {
+  const _PricesSheet();
+
+  static const _ids = [
+    'prices_cpi_annual',
+    'tourism_hotel_arrivals',
+    'tourism_hotel_establishments',
+    'tourism_main_indicators',
+  ];
+  static const _icons = {
+    'prices_cpi_annual':             Icons.price_change_outlined,
+    'tourism_hotel_arrivals':        Icons.flight_land_rounded,
+    'tourism_hotel_establishments':  Icons.hotel_outlined,
+    'tourism_main_indicators':       Icons.bar_chart_rounded,
+  };
+  static const _labels = {
+    'prices_cpi_annual':             'CPI Annual',
+    'tourism_hotel_arrivals':        'Hotel Guest Arrivals by Nationality',
+    'tourism_hotel_establishments':  'Hotel Establishments',
+    'tourism_main_indicators':       'Main Indicators',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+    return _EconomySheet(
+      title: 'Prices',
+      subtitle: 'Economy · 4 Indicators',
+      icon: Icons.price_change_outlined,
+      ids: _ids,
+      icons: _icons,
+      labels: _labels,
+      summaries: summaries,
+      buttonLabel: 'View All Prices & Tourism Data',
+      accentColor: _kGold,
+      accentBg: _kSage,
+    );
+  }
+}
+
+// ── Tourism bottom sheet ──────────────────────────────────────────────────────
+
+void _showTourismSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _TourismSheet(),
+  );
+}
+
+class _TourismSheet extends ConsumerWidget {
+  const _TourismSheet();
+
+  static const _ids = [
+    'tourism_hotel_arrivals',
+    'tourism_hotel_establishments',
+    'tourism_main_indicators',
+  ];
+  static const _icons = {
+    'tourism_hotel_arrivals':       Icons.flight_land_rounded,
+    'tourism_hotel_establishments': Icons.hotel_outlined,
+    'tourism_main_indicators':      Icons.bar_chart_rounded,
+  };
+  static const _labels = {
+    'tourism_hotel_arrivals':       'Hotel Guest Arrivals by Nationality',
+    'tourism_hotel_establishments': 'Hotel Establishments',
+    'tourism_main_indicators':      'Main Indicators',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+    return _EconomySheet(
+      title: 'Tourism',
+      subtitle: 'Economy · 3 Indicators',
+      icon: Icons.flight_outlined,
+      ids: _ids,
+      icons: _icons,
+      labels: _labels,
+      summaries: summaries,
+      buttonLabel: 'View All Tourism Data',
+      accentColor: _kGold,
+      accentBg: _kSage,
+    );
+  }
+}
+
+// ── Shared economy sheet widget ───────────────────────────────────────────────
+
+class _EconomySheet extends ConsumerWidget {
+  const _EconomySheet({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.ids,
+    required this.icons,
+    required this.labels,
+    required this.summaries,
+    required this.buttonLabel,
+    this.accentColor = _kDemBlue,
+    this.accentBg = _kDemBlueBg,
+  });
+
+  final String title, subtitle, buttonLabel;
+  final IconData icon;
+  final List<String> ids;
+  final Map<String, IconData> icons;
+  final Map<String, String> labels;
+  final List<AsyncValue<IndicatorSummary>> summaries;
+  final Color accentColor;
+  final Color accentBg;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return DraggableScrollableSheet(
+      initialChildSize: ids.length <= 2 ? 0.55 : 0.75,
+      minChildSize: 0.40,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW,
+              height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(
+                  color: _kSilver, borderRadius: BorderRadius.circular(999)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(
+                    color: accentBg,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Icon(icon, size: 20, color: accentColor),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: const TextStyle(fontSize: 18,
+                            fontWeight: FontWeight.w700, color: _kSlate900)),
+                    Text(subtitle,
+                        style: const TextStyle(fontSize: 12, color: _kSlate600)),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: const BoxDecoration(
+                      color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: ids.length,
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                      icon: icons[id]!, label: labels[id]!),
+                  data: (summary) => _VitalRow(
+                    icon: icons[id]!,
+                    label: labels[id]!,
+                    summary: summary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: _kPearl)),
+            ),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: accentColor,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
+                    elevation: 0,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(buttonLabel,
+                          style: const TextStyle(fontSize: 14,
+                              fontWeight: FontWeight.w600)),
+                      const SizedBox(width: 6),
+                      const Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Data source: FCSA · Updated annually',
+                  style: TextStyle(fontSize: 11, color: _kSlate400)),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── International Trade bottom sheet ─────────────────────────────────────────
+
+void _showInternationalTradeSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _InternationalTradeSheet(),
+  );
+}
+
+class _InternationalTradeSheet extends ConsumerWidget {
+  const _InternationalTradeSheet();
+
+  static const _ids = [
+    'trade_total',
+    'trade_imports_hs',
+    'trade_non_oil_exports',
+    'trade_sector_country',
+    'trade_reexports_annual',
+    'trade_reexports_monthly',
+  ];
+
+  static const _icons = {
+    'trade_total':             Icons.swap_horiz_rounded,
+    'trade_imports_hs':        Icons.download_rounded,
+    'trade_non_oil_exports':   Icons.upload_rounded,
+    'trade_sector_country':    Icons.public_rounded,
+    'trade_reexports_annual':  Icons.sync_rounded,
+    'trade_reexports_monthly': Icons.calendar_month_outlined,
+  };
+
+  static const _labels = {
+    'trade_total':             'Total Trade',
+    'trade_imports_hs':        'Imports by HS Section',
+    'trade_non_oil_exports':   'Non-Oil Exports',
+    'trade_sector_country':    'Sector & Country',
+    'trade_reexports_annual':  'Annual Re-Exports',
+    'trade_reexports_monthly': 'Monthly Re-Exports',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries =
+        _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.75,
+      minChildSize: 0.50,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW,
+              height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(
+                color: _kSilver,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(
+                  color: _kSage,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.swap_horiz_rounded,
+                    size: 20, color: _kGold),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('International Trade',
+                        style: TextStyle(fontSize: 18,
+                            fontWeight: FontWeight.w700, color: _kSlate900)),
+                    Text('Economy · 6 Indicators',
+                        style: TextStyle(fontSize: 12, color: _kSlate600)),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: const BoxDecoration(
+                      color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                    summary: summary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: _kPearl)),
+            ),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kGold,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('View All Trade Data',
+                          style: TextStyle(fontSize: 14,
+                              fontWeight: FontWeight.w600)),
+                      SizedBox(width: 6),
+                      Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Data source: FCSA · Updated annually',
+                  style: TextStyle(fontSize: 11, color: _kSlate400)),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── National Accounts bottom sheet ───────────────────────────────────────────
+
+void _showNationalAccountsSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _NationalAccountsSheet(),
+  );
+}
+
+class _NationalAccountsSheet extends ConsumerWidget {
+  const _NationalAccountsSheet();
+
+  static const _ids = [
+    'gdp_current',
+    'gdp_constant',
+    'gdp_quarterly_current',
+    'gdp_quarterly_constant',
+  ];
+
+  static const _icons = {
+    'gdp_current':            Icons.account_balance_outlined,
+    'gdp_constant':           Icons.show_chart_rounded,
+    'gdp_quarterly_current':  Icons.calendar_today_outlined,
+    'gdp_quarterly_constant': Icons.calendar_month_outlined,
+  };
+
+  static const _labels = {
+    'gdp_current':            'GDP (Current Prices)',
+    'gdp_constant':           'GDP (Constant Prices)',
+    'gdp_quarterly_current':  'Quarterly GDP (Current)',
+    'gdp_quarterly_constant': 'Quarterly GDP (Constant)',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries =
+        _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.65,
+      minChildSize: 0.50,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW,
+              height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(
+                color: _kSilver,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: _kSage,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.account_balance_outlined,
+                    size: 20, color: _kGold),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('National Accounts',
+                        style: TextStyle(fontSize: 18,
+                            fontWeight: FontWeight.w700, color: _kSlate900)),
+                    Text('Economy · 4 Indicators',
+                        style: TextStyle(fontSize: 12, color: _kSlate600)),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(
+                      color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                    summary: summary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: _kPearl)),
+            ),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kGold,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('View All National Accounts Data',
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600)),
+                      SizedBox(width: 6),
+                      Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Data source: FCSA · Updated annually',
+                  style: TextStyle(fontSize: 11, color: _kSlate400)),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── Labor Force bottom sheet ──────────────────────────────────────────────────
+
+void _showLaborSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _LaborSheet(),
+  );
+}
+
+class _LaborSheet extends ConsumerWidget {
+  const _LaborSheet();
+
+  static const _ids = [
+    'labour_economic_activity',
+    'labour_employed_age_gender',
+    'labour_employed_education',
+    'labour_employment_sector',
+    'labour_unemployment_education',
+    'labour_workforce_occupation',
+    'labour_unemployment_age_gender',
+  ];
+
+  static const _icons = {
+    'labour_economic_activity':       Icons.trending_up_rounded,
+    'labour_employed_age_gender':     Icons.people_outline,
+    'labour_employed_education':      Icons.school_outlined,
+    'labour_employment_sector':       Icons.business_outlined,
+    'labour_unemployment_education':  Icons.school_outlined,
+    'labour_workforce_occupation':    Icons.work_outline,
+    'labour_unemployment_age_gender': Icons.person_search_outlined,
+  };
+
+  static const _labels = {
+    'labour_economic_activity':       'Economic Activity',
+    'labour_employed_age_gender':     'Employed by Age & Gender',
+    'labour_employed_education':      'Employed by Education Status',
+    'labour_employment_sector':       'Employment by Sector',
+    'labour_unemployment_education':  'Unemployment by Education',
+    'labour_workforce_occupation':    'Workforce by Occupation',
+    'labour_unemployment_age_gender': 'Unemployment by Age & Gender',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries =
+        _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+
+    return DraggableScrollableSheet(
+      initialChildSize: 0.75,
+      minChildSize: 0.50,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW,
+              height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(
+                color: _kSilver,
+                borderRadius: BorderRadius.circular(999),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: _kDemBlueBg,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(Icons.work_outline, size: 20, color: _kDemBlue),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Labor Force',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
+                    Text('Demography · 7 Indicators',
+                        style: TextStyle(fontSize: 12, color: _kSlate600)),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) =>
+                  const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!,
+                    label: _labels[id]!,
+                    summary: summary,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: _kPearl)),
+            ),
+            child: Column(children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _kDemBlue,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('View All Labor Force Data',
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                      SizedBox(width: 6),
+                      Icon(Icons.arrow_forward_rounded, size: 16),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text('Data source: FCSA · Updated annually',
+                  style: TextStyle(fontSize: 11, color: _kSlate400)),
+            ]),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
 class _SparklinePainter extends CustomPainter {
   const _SparklinePainter({required this.points, required this.isUp});
   final List<double> points;
@@ -1602,7 +2438,7 @@ class _SparklinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final pts = points.isNotEmpty ? points : (isUp ? _fallbackUp : _fallbackDown);
-    final drawColor = isUp ? AppColors.success : AppColors.error;
+    final drawColor = isUp ? const Color(0xFF00594C) : AppColors.error;
 
     final paint = Paint()
       ..color = drawColor
@@ -1632,142 +2468,6 @@ class _SparklinePainter extends CustomPainter {
 }
 
 // ── Latest releases ───────────────────────────────────────────────────────────
-class _LatestReleases extends ConsumerWidget {
-  const _LatestReleases();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = ref.watch(localeProvider).languageCode == 'ar';
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        boxShadow: AppColors.shadowCard,
-      ),
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
-          child: Row(children: [
-            Text(isArabic ? 'أحدث الإصدارات' : 'Latest Releases',
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kSlate900)),
-            const Spacer(),
-            Row(children: [
-              Text(isArabic ? 'عرض الكل' : 'View all',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _kGreen)),
-              const SizedBox(width: 2),
-              const Icon(Icons.arrow_forward_rounded, size: 14, color: _kGreen),
-            ]),
-          ]),
-        ),
-        const Divider(height: 1, color: _kPearl),
-        const _ReleaseRow(isNew: true,  tag: 'Economy',     date: '15 May 2026',
-          title: 'Consumer Price Index — April 2026'),
-        const Divider(height: 1, indent: 16, color: _kPearl),
-        const _ReleaseRow(isNew: false, tag: 'Economy',     date: '11 May 2026',
-          title: 'Tourism Statistics Q1 2026 — Hotels & Air'),
-      ]),
-    );
-  }
-}
-
-class _LatestReleasesEnv extends ConsumerWidget {
-  const _LatestReleasesEnv();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isArabic = ref.watch(localeProvider).languageCode == 'ar';
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        boxShadow: AppColors.shadowCard,
-      ),
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
-          child: Row(children: [
-            Text(isArabic ? 'أحدث الإصدارات' : 'Latest Releases',
-              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: _kSlate900)),
-            const Spacer(),
-            Row(children: [
-              Text(isArabic ? 'عرض الكل' : 'View all',
-                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: _kGreen)),
-              const SizedBox(width: 2),
-              const Icon(Icons.arrow_forward_rounded, size: 14, color: _kGreen),
-            ]),
-          ]),
-        ),
-        const Divider(height: 1, color: _kPearl),
-        const _ReleaseRow(isNew: true,  tag: 'Environment', date: '14 May 2026',
-          title: 'Renewable Energy Report — Q1 2026'),
-        const Divider(height: 1, indent: 16, color: _kPearl),
-        const _ReleaseRow(isNew: false, tag: 'Demography',  date: '09 May 2026',
-          title: 'Annual Population Estimates 2024'),
-      ]),
-    );
-  }
-}
-
-class _ReleaseRow extends StatelessWidget {
-  const _ReleaseRow({
-    required this.isNew, required this.tag,
-    required this.date, required this.title,
-  });
-  final bool isNew;
-  final String tag, date, title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Column(children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-            decoration: BoxDecoration(
-              color: isNew ? _kGreen : _kPearl,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Text(isNew ? 'NEW' : '·',
-              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700,
-                color: isNew ? AppColors.white : _kSlate400, letterSpacing: 0.5)),
-          ),
-          const SizedBox(height: 4),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-            decoration: BoxDecoration(
-              color: _kPearl, borderRadius: BorderRadius.circular(4)),
-            child: const Text('PDF',
-              style: TextStyle(fontSize: 9, fontWeight: FontWeight.w600,
-                color: _kSlate600, letterSpacing: 0.3)),
-          ),
-        ]),
-        const SizedBox(width: 12),
-        Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(title,
-            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-              color: _kSlate900, height: 1.3)),
-          const SizedBox(height: 4),
-          Row(children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-              decoration: BoxDecoration(
-                color: _kSage, borderRadius: BorderRadius.circular(999)),
-              child: Text(tag,
-                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
-                  color: _kGreen)),
-            ),
-            const SizedBox(width: 8),
-            Text(date,
-              style: const TextStyle(fontSize: 11, color: _kSlate400)),
-          ]),
-        ])),
-      ]),
-    );
-  }
-}
-
-
 // ── FCSC Footer ───────────────────────────────────────────────────────────────
 class _FcscFooter extends StatelessWidget {
   const _FcscFooter();

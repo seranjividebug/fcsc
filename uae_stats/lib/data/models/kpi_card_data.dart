@@ -31,6 +31,9 @@ enum KpiDisplayUnit {
 
   /// Two decimal places → e.g. 89.85 → "89.85"
   decimal2,
+
+  /// Value is in AED Millions, display as Trillions → 2,028,413 → "2.03T"
+  aedMnToTrillions,
 }
 
 /// Configuration for a single KPI card (static, compile-time definition).
@@ -192,6 +195,11 @@ class KpiCardData {
         return v.toStringAsFixed(1);
       case KpiDisplayUnit.decimal2:
         return v.toStringAsFixed(2);
+      case KpiDisplayUnit.aedMnToTrillions:
+        // Value is in AED Millions — divide by 1,000,000 to get Trillions
+        final t = v / 1e6;
+        if (t >= 1) return '${t.toStringAsFixed(2)}T';
+        return '${(v / 1e3).toStringAsFixed(2)}B';
     }
   }
 }

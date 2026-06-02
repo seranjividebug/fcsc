@@ -1,0 +1,17 @@
+[
+  { "timePeriod": "2015", "value": 5134000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2016", "value": 5289000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2017", "value": 5456000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2018", "value": 5612000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 5801000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 5643000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 5789000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 6021000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 6234000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2015", "value": 3912000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 4418000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 4756000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2015", "value": 1222000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 1383000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 1478000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" }
+]

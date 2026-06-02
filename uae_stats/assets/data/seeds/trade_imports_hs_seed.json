@@ -1,0 +1,10 @@
+[
+  { "timePeriod": "2017", "value": 946470.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2018", "value": 898480.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 914850.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 785110.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 991630.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 1215950.0, "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 1439030.0, "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2024", "value": 1633046.0, "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
+]

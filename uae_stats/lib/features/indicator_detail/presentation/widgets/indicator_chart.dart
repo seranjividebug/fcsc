@@ -71,8 +71,11 @@ class _IndicatorChartState extends State<IndicatorChart> {
     final id = widget.indicatorId;
     final n = widget.allSeries.length;
     if (id == 'health_hospital_beds' || id == 'health_clinics_centers' ||
-        id == 'hospitals') return _ChartRange.y10;
+        id == 'hospitals') { return _ChartRange.y10; }
     if (id == 'health_professionals') return _ChartRange.max;
+    if (id.startsWith('trade_')) return _ChartRange.max;
+    if (id == 'gdp_current' || id == 'gdp_constant') return _ChartRange.max;
+    if (id == 'gdp_quarterly_current' || id == 'gdp_quarterly_constant') return _ChartRange.y5;
     if (n <= 3) return _ChartRange.y3;
     return _ChartRange.y5;
   }
@@ -92,6 +95,22 @@ class _IndicatorChartState extends State<IndicatorChart> {
     if (id == 'health_hospital_beds' || id == 'hospitals') return 'Historical Trend';
     if (id == 'health_clinics_centers') return 'Growth Trend';
     if (id == 'health_professionals') return 'Workforce Trend';
+    if (id == 'aircraft_movement') return 'Annual Aircraft Movements Trend';
+    if (id == 'prices_cpi_annual') return 'Annual CPI Trend (Base 2021=100)';
+    if (id == 'tourism_hotel_arrivals')       return 'Annual Hotel Guest Arrivals';
+    if (id == 'tourism_hotel_establishments') return 'Hotel Establishments Trend';
+    if (id == 'tourism_main_indicators')      return 'Tourism Revenue Trend';
+    if (id.startsWith('tourism_')) return 'Tourism Trend';
+    if (id == 'trade_total')           return 'Annual Trade Trend';
+    if (id == 'trade_imports_hs')      return 'Annual Imports by HS Section';
+    if (id == 'trade_non_oil_exports') return 'Non-Oil Exports Trend';
+    if (id == 'trade_reexports_annual') return 'Annual Re-Exports Trend';
+    if (id == 'trade_reexports_monthly') return 'Monthly Re-Exports';
+    if (id == 'trade_sector_country')  return 'Trade by Sector & Country';
+    if (id == 'gdp_current') return 'Annual GDP Trend (Current Prices)';
+    if (id == 'gdp_constant') return 'Annual GDP Trend (Constant Prices, Base 2010)';
+    if (id == 'gdp_quarterly_constant') return 'Quarterly GDP Trend (Constant Prices)';
+    if (id == 'gdp_quarterly_current')  return 'Quarterly GDP Trend (Current Prices)';
     final n = widget.allSeries.length;
     if (n <= 3) return '3-Year Trend';
     return '5-Year Trend';
@@ -118,8 +137,12 @@ class _IndicatorChartState extends State<IndicatorChart> {
   String get _chartSubLabel {
     final s = _series;
     if (s.isEmpty) return '';
+    final id = widget.indicatorId;
     final genderTag = _hasGender ? ' · By Gender' : '';
-    return '${s.first.timePeriod} — ${s.last.timePeriod} · Source: FCSC$genderTag';
+    final unitTag = (id.startsWith('gdp_') || id.startsWith('trade_'))
+        ? ' · AED Mn'
+        : '';
+    return '${s.first.timePeriod} — ${s.last.timePeriod} · Source: FCSC$unitTag$genderTag';
   }
 
   @override
@@ -230,9 +253,9 @@ class _IndicatorChartState extends State<IndicatorChart> {
                       children: [
                         _LegendDot(color: widget.accentColor, label: 'Total'),
                         const SizedBox(width: 14),
-                        _LegendDot(color: const Color(0xFFC8973A), label: 'Female'),
+                        const _LegendDot(color: Color(0xFFC8973A), label: 'Female'),
                         const SizedBox(width: 14),
-                        _LegendDot(color: const Color(0xFF1A6FA8), label: 'Male'),
+                        const _LegendDot(color: Color(0xFF1A6FA8), label: 'Male'),
                       ],
                     ),
                   ],
@@ -282,7 +305,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
     final maxY = allValues.reduce((a, b) => a > b ? a : b);
     final pad = (maxY - minY) * 0.12;
 
-    LineChartBarData _bar(List<FlSpot> s, Color c, {bool fill = false, bool dashed = false}) =>
+    LineChartBarData bar(List<FlSpot> s, Color c, {bool fill = false, bool dashed = false}) =>
         LineChartBarData(
           spots: s,
           isCurved: true,
@@ -316,9 +339,9 @@ class _IndicatorChartState extends State<IndicatorChart> {
         maxY: maxY + pad,
         clipData: const FlClipData.all(),
         lineBarsData: [
-          _bar(spots, widget.accentColor, fill: true),
-          if (_hasGender) _bar(fSpots, const Color(0xFFC8973A), dashed: true),
-          if (_hasGender) _bar(mSpots, const Color(0xFF1A6FA8), dashed: true),
+          bar(spots, widget.accentColor, fill: true),
+          if (_hasGender) bar(fSpots, const Color(0xFFC8973A), dashed: true),
+          if (_hasGender) bar(mSpots, const Color(0xFF1A6FA8), dashed: true),
         ],
         gridData: FlGridData(
           show: true,

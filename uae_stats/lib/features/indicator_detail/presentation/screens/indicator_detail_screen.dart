@@ -46,7 +46,35 @@ const _navItems = [
   _NavItem(id: 'hospitals',          label: 'Hospitals',               group: 'health'),
   _NavItem(id: 'health_clinics_centers', label: 'Clinics and Centers', group: 'health'),
   _NavItem(id: 'health_hospital_beds', label: 'Hospital Beds',         group: 'health'),
-  _NavItem(id: 'health_professionals', label: 'Health Workforce',         group: 'health'),
+  _NavItem(id: 'health_professionals',      label: 'Health Workforce',              group: 'health'),
+  // Air Transport
+  _NavItem(id: 'aircraft_movement', label: 'Aircraft Movement', group: 'economy'),
+  // Prices
+  _NavItem(id: 'prices_cpi_annual', label: 'CPI Annual', group: 'economy'),
+  // Tourism
+  _NavItem(id: 'tourism_hotel_arrivals',       label: 'Hotel Guest Arrivals by Nationality', group: 'economy'),
+  _NavItem(id: 'tourism_hotel_establishments', label: 'Hotel Establishments',                group: 'economy'),
+  _NavItem(id: 'tourism_main_indicators',      label: 'Main Indicators',                     group: 'economy'),
+  // International Trade
+  _NavItem(id: 'trade_total',            label: 'Total Trade',            group: 'economy'),
+  _NavItem(id: 'trade_imports_hs',       label: 'Imports by HS Section',  group: 'economy'),
+  _NavItem(id: 'trade_non_oil_exports',  label: 'Non-Oil Exports',        group: 'economy'),
+  _NavItem(id: 'trade_sector_country',   label: 'Sector & Country',       group: 'economy'),
+  _NavItem(id: 'trade_reexports_annual', label: 'Annual Re-Exports',      group: 'economy'),
+  _NavItem(id: 'trade_reexports_monthly',label: 'Monthly Re-Exports',     group: 'economy'),
+  // National Accounts
+  _NavItem(id: 'gdp_current',           label: 'GDP (Current Prices)',    group: 'economy'),
+  _NavItem(id: 'gdp_constant',          label: 'GDP (Constant Prices)',   group: 'economy'),
+  _NavItem(id: 'gdp_quarterly_current', label: 'Quarterly GDP (Current)', group: 'economy'),
+  _NavItem(id: 'gdp_quarterly_constant',label: 'Quarterly GDP (Constant)',group: 'economy'),
+  // Labour Force
+  _NavItem(id: 'labour_economic_activity',      label: 'Economic Activity',           group: 'labour'),
+  _NavItem(id: 'labour_employed_age_gender',    label: 'Employed by Age & Gender',    group: 'labour'),
+  _NavItem(id: 'labour_employed_education',     label: 'Employed by Education',       group: 'labour'),
+  _NavItem(id: 'labour_employment_sector',      label: 'Employment by Sector',        group: 'labour'),
+  _NavItem(id: 'labour_unemployment_education', label: 'Unemployment by Education',   group: 'labour'),
+  _NavItem(id: 'labour_workforce_occupation',   label: 'Workforce by Occupation',     group: 'labour'),
+  _NavItem(id: 'labour_unemployment_age_gender',label: 'Unemployment by Age & Gender',group: 'labour'),
 ];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -150,7 +178,9 @@ class _IndicatorDetailScreenState
               ),
               data: (data) => RefreshIndicator(
                 onRefresh: _handleRefresh,
-                color: AppColors.demBlue,
+                color: data.meta.category == 'economy'
+                    ? AppColors.champagneGold
+                    : AppColors.demBlue,
                 child: SingleChildScrollView(
                 controller: _scrollController,
                 padding: EdgeInsets.zero,
@@ -167,8 +197,15 @@ class _IndicatorDetailScreenState
                         allSeries: data.uaeTotalSeries,
                         indicatorName: data.meta.name.en,
                         indicatorId: data.meta.id,
-                        femaleSeries: data.byGender['F'] ?? [],
-                        maleSeries: data.byGender['M'] ?? [],
+                        accentColor: data.meta.category == 'economy'
+                            ? AppColors.champagneGold
+                            : AppColors.demBlue,
+                        femaleSeries: _showGenderSeries(data.meta.id)
+                            ? data.byGender['F'] ?? []
+                            : [],
+                        maleSeries: _showGenderSeries(data.meta.id)
+                            ? data.byGender['M'] ?? []
+                            : [],
                       ),
                     ),
 
@@ -206,7 +243,9 @@ class _IndicatorDetailScreenState
                             child: ElevatedButton.icon(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.demBlue,
+                                backgroundColor: data.meta.category == 'economy'
+                                    ? AppColors.champagneGold
+                                    : AppColors.demBlue,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
@@ -239,9 +278,13 @@ class _IndicatorDetailScreenState
                             child: OutlinedButton(
                               onPressed: () => context.go(AppRoutes.home),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: AppColors.demBlue,
-                                side: const BorderSide(
-                                  color: AppColors.demBlue,
+                                foregroundColor: data.meta.category == 'economy'
+                                    ? AppColors.champagneGold
+                                    : AppColors.demBlue,
+                                side: BorderSide(
+                                  color: data.meta.category == 'economy'
+                                      ? AppColors.champagneGold
+                                      : AppColors.demBlue,
                                   width: 1.5,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -278,6 +321,16 @@ class _IndicatorDetailScreenState
       ),
     );
   }
+
+  // Only show Male/Female series for these indicators
+  static bool _showGenderSeries(String id) => const {
+    'student_enrolment',
+    'teaching_staff',
+    'higher_education',
+    'health_professionals',
+    'labour_employed_age_gender',
+    'labour_unemployment_age_gender',
+  }.contains(id);
 
   String _labelFor(String id) {
     return _navItems
@@ -416,16 +469,8 @@ class _MetadataCard extends StatelessWidget {
     final meta = data.meta;
     final rows = <_MetaRow>[
       _MetaRow(
-        key: 'Data Source',
-        value: meta.sourceName.en.isNotEmpty ? meta.sourceName.en : meta.sourceCode,
-      ),
-      _MetaRow(
         key: 'Update Frequency',
         value: meta.frequencyLabel,
-      ),
-      _MetaRow(
-        key: 'Source Code',
-        value: meta.sourceCode,
       ),
       _MetaRow(
         key: 'Last Update',
@@ -540,29 +585,71 @@ class _RelatedIndicators extends ConsumerWidget {
 
   final String currentId;
 
-  static const _ids = ['student_enrolment', 'higher_education', 'population'];
+  // Returns 3 related indicator IDs based on the current indicator
+  static List<String> _relatedFor(String id) {
+    const groups = {
+      'population':            ['births', 'deaths', 'marriages'],
+      'births':                ['deaths', 'marriages', 'population'],
+      'deaths':                ['births', 'marriages', 'population'],
+      'marriages':             ['births', 'deaths', 'divorces'],
+      'divorces':              ['marriages', 'births', 'deaths'],
+      'student_enrolment':     ['teaching_staff', 'higher_education', 'population'],
+      'teaching_staff':        ['student_enrolment', 'higher_education', 'population'],
+      'higher_education':      ['student_enrolment', 'teaching_staff', 'population'],
+      'hospitals':             ['health_clinics_centers', 'health_hospital_beds', 'health_professionals'],
+      'health_clinics_centers':['hospitals', 'health_hospital_beds', 'health_professionals'],
+      'health_hospital_beds':  ['hospitals', 'health_clinics_centers', 'health_professionals'],
+      'health_professionals':  ['hospitals', 'health_clinics_centers', 'health_hospital_beds'],
+      // Economy — National Accounts
+      'gdp_current':           ['gdp_constant', 'gdp_quarterly_current', 'prices_cpi_annual'],
+      'gdp_constant':          ['gdp_current', 'gdp_quarterly_constant', 'prices_cpi_annual'],
+      'gdp_quarterly_current': ['gdp_current', 'gdp_quarterly_constant', 'gdp_constant'],
+      'gdp_quarterly_constant':['gdp_constant', 'gdp_quarterly_current', 'gdp_current'],
+      // Economy — Trade
+      'trade_total':           ['trade_non_oil_exports', 'trade_imports_hs', 'trade_reexports_annual'],
+      'trade_non_oil_exports': ['trade_total', 'trade_imports_hs', 'trade_reexports_annual'],
+      'trade_imports_hs':      ['trade_total', 'trade_non_oil_exports', 'trade_reexports_annual'],
+      'trade_reexports_annual':['trade_total', 'trade_non_oil_exports', 'trade_imports_hs'],
+      'prices_cpi_annual':     ['gdp_current', 'gdp_constant', 'trade_total'],
+    };
+    final related = groups[id];
+    if (related != null) return related;
+    // Default fallback: show vitals
+    return ['births', 'deaths', 'population'];
+  }
 
-  static const _configs = {
-    'student_enrolment': _RelatedConfig(
-      label: 'Student Enrolment',
-      iconColor: AppColors.demBlue,
-      bgColor: AppColors.demBlueTint,
-    ),
-    'higher_education': _RelatedConfig(
-      label: 'Higher Education',
-      iconColor: AppColors.champagneGold,
-      bgColor: AppColors.royalSand,
-    ),
-    'population': _RelatedConfig(
-      label: 'Total Population',
-      iconColor: AppColors.teal,
-      bgColor: AppColors.tealTint,
-    ),
+  static const _allConfigs = {
+    'population': _RelatedConfig(label: 'Total Population', iconColor: AppColors.teal, bgColor: AppColors.tealTint),
+    'births':     _RelatedConfig(label: 'Births',           iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'deaths':     _RelatedConfig(label: 'Deaths',           iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'marriages':  _RelatedConfig(label: 'Marriages',        iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'divorces':   _RelatedConfig(label: 'Divorces',         iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'student_enrolment':      _RelatedConfig(label: 'Student Enrolment',     iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'teaching_staff':         _RelatedConfig(label: 'Teaching Staff',        iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'higher_education':       _RelatedConfig(label: 'Higher Education',      iconColor: AppColors.teal, bgColor: AppColors.tealTint),
+    'hospitals':              _RelatedConfig(label: 'Hospitals',             iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'health_clinics_centers': _RelatedConfig(label: 'Clinics and Centers',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'health_hospital_beds':   _RelatedConfig(label: 'Hospital Beds',         iconColor: AppColors.teal, bgColor: AppColors.tealTint),
+    'health_professionals':   _RelatedConfig(label: 'Health Workforce',      iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    // Economy
+    'gdp_current':            _RelatedConfig(label: 'GDP (Current Prices)',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'gdp_constant':           _RelatedConfig(label: 'GDP (Constant Prices)',  iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'gdp_quarterly_current':  _RelatedConfig(label: 'Quarterly GDP (Current)',iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'gdp_quarterly_constant': _RelatedConfig(label: 'Quarterly GDP (Const.)',  iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'trade_total':            _RelatedConfig(label: 'Total Trade',             iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'trade_non_oil_exports':  _RelatedConfig(label: 'Non-Oil Exports',         iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'trade_imports_hs':       _RelatedConfig(label: 'Imports by HS Section',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'trade_reexports_annual': _RelatedConfig(label: 'Annual Re-Exports',       iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'prices_cpi_annual':      _RelatedConfig(label: 'CPI Annual',              iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'aircraft_movement':      _RelatedConfig(label: 'Aircraft Movement',      iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
   };
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final visibleIds = _ids.where((id) => id != currentId).toList();
+    final visibleIds = _relatedFor(currentId)
+        .where((id) => id != currentId)
+        .take(3)
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -603,7 +690,12 @@ class _RelatedIndicators extends ConsumerWidget {
             separatorBuilder: (_, __) => const SizedBox(width: 12),
             itemBuilder: (context, i) {
               final id = visibleIds[i];
-              final cfg = _configs[id]!;
+              final cfg = _allConfigs[id] ??
+                  const _RelatedConfig(
+                    label: '—',
+                    iconColor: AppColors.demBlue,
+                    bgColor: AppColors.demBlueTint,
+                  );
               final dataAsync = ref.watch(indicatorDataProvider(id));
 
               String value = '—';
@@ -661,6 +753,8 @@ class _RelatedIndicators extends ConsumerWidget {
                       const SizedBox(height: 12),
                       Text(
                         cfg.label,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,

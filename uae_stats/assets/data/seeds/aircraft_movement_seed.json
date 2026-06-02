@@ -1,0 +1,11 @@
+[
+  { "timePeriod": "2016", "value": 684919.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2017", "value": 667411.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2018", "value": 650505.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2019", "value": 617467.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2020", "value": 291755.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2021", "value": 384262.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2022", "value": 578156.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2023", "value": 694130.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" },
+  { "timePeriod": "2024", "value": 771799.0, "measure": "ACFT_MOV", "refArea": "AE", "gender": "_T", "unitMeasure": "FLIGHTS", "sourceDetail": "GCAA" }
+]

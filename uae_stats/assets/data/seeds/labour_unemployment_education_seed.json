@@ -1,0 +1,7 @@
+[
+  { "timePeriod": "2019", "value": 178000.0, "measure": "UNEMP_EDU", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 246000.0, "measure": "UNEMP_EDU", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 213000.0, "measure": "UNEMP_EDU", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 195000.0, "measure": "UNEMP_EDU", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 187000.0, "measure": "UNEMP_EDU", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" }
+]

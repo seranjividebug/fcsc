@@ -226,8 +226,30 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       'health_services'      => _api.fetchHealthServices(),
       'health_clinics_centers' => _api.fetchHealthClinics(),
       'health_hospital_beds' => _api.fetchHospitalBeds(),
-      'health_professionals' => _api.fetchHealthProfessionals(),
-      _                      => Future.value(const SdmxResult(points: [])),
+      'health_professionals'           => _api.fetchHealthProfessionals(),
+      'prices_cpi_annual'              => _api.fetchCpiAnnual(),
+      'tourism_hotel_arrivals'         => _api.fetchTourismHotelArrivals(),
+      'tourism_hotel_establishments'   => _api.fetchTourismHotelEstablishments(),
+      'tourism_main_indicators'        => _api.fetchTourismMainIndicators(),
+      'aircraft_movement'              => _api.fetchAircraftMovement(),
+      'trade_total'                    => _api.fetchTradeTotal(),
+      'trade_imports_hs'               => _api.fetchTradeImportsHs(),
+      'trade_non_oil_exports'          => _api.fetchTradeNonOilExports(),
+      'trade_sector_country'           => _api.fetchTradeSectorCountry(),
+      'trade_reexports_annual'         => _api.fetchTradeReexportsAnnual(),
+      'trade_reexports_monthly'        => _api.fetchTradeReexportsMonthly(),
+      'gdp_current'                    => _api.fetchGdpCurrent(),
+      'gdp_constant'                   => _api.fetchGdpConstant(),
+      'gdp_quarterly_current'          => _api.fetchGdpQuarterlyCurrent(),
+      'gdp_quarterly_constant'         => _api.fetchGdpQuarterlyConstant(),
+      'labour_economic_activity'       => Future.value(const SdmxResult(points: [])),
+      'labour_employed_age_gender'     => Future.value(const SdmxResult(points: [])),
+      'labour_employed_education'      => Future.value(const SdmxResult(points: [])),
+      'labour_employment_sector'       => Future.value(const SdmxResult(points: [])),
+      'labour_unemployment_education'  => Future.value(const SdmxResult(points: [])),
+      'labour_workforce_occupation'    => Future.value(const SdmxResult(points: [])),
+      'labour_unemployment_age_gender' => Future.value(const SdmxResult(points: [])),
+      _                                => Future.value(const SdmxResult(points: [])),
     };
   }
 
@@ -239,25 +261,42 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     );
   }
 
-  IndicatorMeta _defaultMeta(String id) => IndicatorMeta(
-        id: id,
-        dataflowId: '',
-        dataflowVersion: '1.0.0',
-        agencyId: 'FCSA',
-        name: _nameFor(id),
-        category: 'demography',
-        subCategory: 'vitals',
-        unit: const LocalizedString(en: 'Persons', ar: 'أشخاص'),
-        unitCode: 'PS',
-        frequency: 'A',
-        sourceCode: 'FCSA',
-        sourceName: const LocalizedString(
-          en: 'Federal Competitiveness and Statistics Authority',
-          ar: 'الهيئة الاتحادية للتنافسية والإحصاء',
-        ),
-        coverageStart: '2015',
-        coverageEnd: '2024',
-      );
+  IndicatorMeta _defaultMeta(String id) {
+    final isGdp = id.startsWith('gdp_');
+    final isTrade = id.startsWith('trade_');
+    final isTourism = id.startsWith('tourism_');
+    return IndicatorMeta(
+      id: id,
+      dataflowId: '',
+      dataflowVersion: '1.0.0',
+      agencyId: 'FCSA',
+      name: _nameFor(id),
+      category: (isGdp || isTrade || isTourism || id.startsWith('prices_'))
+          ? 'economy'
+          : id.startsWith('labour_') ? 'demography' : 'demography',
+      subCategory: isGdp ? 'national_accounts'
+          : isTrade ? 'international_trade'
+          : isTourism ? 'tourism'
+          : id.startsWith('prices_') ? 'prices'
+          : 'vitals',
+      unit: isGdp || isTrade
+          ? const LocalizedString(en: 'AED Million', ar: 'مليون درهم')
+          : isTourism
+          ? const LocalizedString(en: 'Persons', ar: 'أشخاص')
+          : id.startsWith('prices_')
+          ? const LocalizedString(en: 'Index', ar: 'مؤشر')
+          : const LocalizedString(en: 'Persons', ar: 'أشخاص'),
+      unitCode: isGdp || isTrade ? 'AED_MN' : 'PS',
+      frequency: 'A',
+      sourceCode: 'FCSA',
+      sourceName: const LocalizedString(
+        en: 'Federal Competitiveness and Statistics Centre',
+        ar: 'مركز الاتحادية للتنافسية والإحصاء',
+      ),
+      coverageStart: '2015',
+      coverageEnd: '2024',
+    );
+  }
 
   LocalizedString _nameFor(String id) => switch (id) {
         'population'        => const LocalizedString(en: 'Population Estimates',      ar: 'تقديرات السكان'),
@@ -272,7 +311,29 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'health_services'   => const LocalizedString(en: 'Health Services',           ar: 'الخدمات الصحية'),
         'health_clinics_centers' => const LocalizedString(en: 'Clinics and Centers',  ar: 'العيادات والمراكز'),
         'health_hospital_beds'   => const LocalizedString(en: 'Hospital Beds',        ar: 'أسرة المستشفيات'),
-        'health_professionals'   => const LocalizedString(en: 'Health Workforce',         ar: 'القوى العاملة الصحية'),
+        'health_professionals'           => const LocalizedString(en: 'Health Workforce',               ar: 'القوى العاملة الصحية'),
+        'prices_cpi_annual'              => const LocalizedString(en: 'CPI Annual',                    ar: 'مؤشر أسعار المستهلك السنوي'),
+        'tourism_hotel_arrivals'         => const LocalizedString(en: 'Hotel Guest Arrivals by Nationality', ar: 'وصول ضيوف الفنادق حسب الجنسية'),
+        'tourism_hotel_establishments'   => const LocalizedString(en: 'Hotel Establishments',           ar: 'المنشآت الفندقية'),
+        'tourism_main_indicators'        => const LocalizedString(en: 'Main Indicators',                ar: 'المؤشرات الرئيسية للسياحة'),
+        'aircraft_movement'              => const LocalizedString(en: 'Aircraft Movement',              ar: 'حركة الطائرات'),
+        'trade_total'                    => const LocalizedString(en: 'Total Trade',                    ar: 'إجمالي التجارة'),
+        'trade_imports_hs'               => const LocalizedString(en: 'Imports by HS Section',          ar: 'الواردات حسب أقسام النظام المنسق'),
+        'trade_non_oil_exports'          => const LocalizedString(en: 'Non-Oil Exports',                ar: 'الصادرات غير النفطية'),
+        'trade_sector_country'           => const LocalizedString(en: 'Sector & Country',               ar: 'القطاع والدولة'),
+        'trade_reexports_annual'         => const LocalizedString(en: 'Annual Re-Exports',              ar: 'إعادة التصدير السنوية'),
+        'trade_reexports_monthly'        => const LocalizedString(en: 'Monthly Re-Exports',             ar: 'إعادة التصدير الشهرية'),
+        'gdp_current'                    => const LocalizedString(en: 'GDP (Current Prices)',           ar: 'الناتج المحلي بالأسعار الجارية'),
+        'gdp_constant'                   => const LocalizedString(en: 'GDP (Constant Prices)',          ar: 'الناتج المحلي بالأسعار الثابتة'),
+        'gdp_quarterly_current'          => const LocalizedString(en: 'Quarterly GDP (Current)',        ar: 'الناتج المحلي الفصلي - جاري'),
+        'gdp_quarterly_constant'         => const LocalizedString(en: 'Quarterly GDP (Constant)',       ar: 'الناتج المحلي الفصلي - ثابت'),
+        'labour_economic_activity'       => const LocalizedString(en: 'Economic Activity',              ar: 'النشاط الاقتصادي'),
+        'labour_employed_age_gender'     => const LocalizedString(en: 'Employed by Age & Gender',       ar: 'العاملون حسب العمر والجنس'),
+        'labour_employed_education'      => const LocalizedString(en: 'Employed by Education Status',   ar: 'العاملون حسب المستوى التعليمي'),
+        'labour_employment_sector'       => const LocalizedString(en: 'Employment by Sector',           ar: 'التوظيف حسب القطاع'),
+        'labour_unemployment_education'  => const LocalizedString(en: 'Unemployment by Education',      ar: 'البطالة حسب التعليم'),
+        'labour_workforce_occupation'    => const LocalizedString(en: 'Workforce by Occupation',        ar: 'القوى العاملة حسب المهنة'),
+        'labour_unemployment_age_gender' => const LocalizedString(en: 'Unemployment by Age & Gender',   ar: 'البطالة حسب العمر والجنس'),
         _ => LocalizedString(en: id, ar: id),
       };
 
@@ -342,7 +403,29 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'health_services'        => 'assets/data/seeds/hospitals_seed.json',
         'health_clinics_centers' => 'assets/data/seeds/health_clinics_centers_seed.json',
         'health_hospital_beds'   => 'assets/data/seeds/health_hospital_beds_seed.json',
-        'health_professionals'   => 'assets/data/seeds/health_professionals_seed.json',
-        _                   => null,
+        'health_professionals'           => 'assets/data/seeds/health_professionals_seed.json',
+        'prices_cpi_annual'              => 'assets/data/seeds/prices_cpi_annual_seed.json',
+        'tourism_hotel_arrivals'         => 'assets/data/seeds/tourism_hotel_arrivals_seed.json',
+        'tourism_hotel_establishments'   => 'assets/data/seeds/tourism_hotel_establishments_seed.json',
+        'tourism_main_indicators'        => 'assets/data/seeds/tourism_main_indicators_seed.json',
+        'aircraft_movement'              => 'assets/data/seeds/aircraft_movement_seed.json',
+        'trade_total'                    => 'assets/data/seeds/trade_total_seed.json',
+        'trade_imports_hs'               => 'assets/data/seeds/trade_imports_hs_seed.json',
+        'trade_non_oil_exports'          => 'assets/data/seeds/trade_non_oil_exports_seed.json',
+        'trade_sector_country'           => 'assets/data/seeds/trade_sector_country_seed.json',
+        'trade_reexports_annual'         => 'assets/data/seeds/trade_reexports_annual_seed.json',
+        'trade_reexports_monthly'        => 'assets/data/seeds/trade_reexports_monthly_seed.json',
+        'gdp_current'                    => 'assets/data/seeds/gdp_current_seed.json',
+        'gdp_constant'                   => 'assets/data/seeds/gdp_constant_seed.json',
+        'gdp_quarterly_current'          => 'assets/data/seeds/gdp_quarterly_current_seed.json',
+        'gdp_quarterly_constant'         => 'assets/data/seeds/gdp_quarterly_constant_seed.json',
+        'labour_economic_activity'       => 'assets/data/seeds/labour_economic_activity_seed.json',
+        'labour_employed_age_gender'     => 'assets/data/seeds/labour_employed_age_gender_seed.json',
+        'labour_employed_education'      => 'assets/data/seeds/labour_employed_education_seed.json',
+        'labour_employment_sector'       => 'assets/data/seeds/labour_employment_sector_seed.json',
+        'labour_unemployment_education'  => 'assets/data/seeds/labour_unemployment_education_seed.json',
+        'labour_workforce_occupation'    => 'assets/data/seeds/labour_workforce_occupation_seed.json',
+        'labour_unemployment_age_gender' => 'assets/data/seeds/labour_unemployment_age_gender_seed.json',
+        _                                => null,
       };
 }

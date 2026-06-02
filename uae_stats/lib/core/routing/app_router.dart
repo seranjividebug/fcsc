@@ -8,6 +8,7 @@ import 'package:uae_stats/features/environment/presentation/screens/environment_
 import 'package:uae_stats/features/home/presentation/screens/home_screen.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/screens/indicator_detail_screen.dart';
 import 'package:uae_stats/features/population_growth/presentation/screens/population_growth_screen.dart';
+import 'package:uae_stats/features/search/presentation/screens/search_screen.dart';
 import 'package:uae_stats/features/splash/presentation/splash_screen.dart';
 
 /// Named route paths — never use raw strings in navigation calls.
@@ -19,6 +20,7 @@ abstract final class AppRoutes {
   static const String environment       = '/environment';
   static const String indicator         = '/indicator/:id';
   static const String populationGrowth  = '/population-growth';
+  static const String search            = '/search';
 
   static String indicatorPath(String id) => '/indicator/$id';
 }
@@ -57,6 +59,10 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.populationGrowth,
       builder: (context, state) => const PopulationGrowthScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.search,
+      builder: (context, state) => const SearchScreen(),
     ),
   ],
 

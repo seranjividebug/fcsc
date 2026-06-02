@@ -40,7 +40,7 @@ class DataTableSection extends StatelessWidget {
                   color: AppColors.slate900,
                 ),
               ),
-              Text(
+              const Text(
                 'Export →',
                 style: TextStyle(
                   fontSize: 13,
@@ -344,23 +344,6 @@ class _FullDataTable extends StatelessWidget {
             );
           }),
 
-          // ── Footer ──────────────────────────────────────────────────────
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.pearlGray)),
-            ),
-            child: const Text(
-              'Data from Federal Competitiveness and Statistics Authority (FCSA). '
-              'Values represent official registered figures for the UAE.',
-              style: TextStyle(
-                fontSize: 12,
-                color: AppColors.slate400,
-                fontStyle: FontStyle.italic,
-                height: 1.5,
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -470,19 +453,6 @@ class _GenderDataTable extends StatelessWidget {
               ),
             );
           }),
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            decoration: const BoxDecoration(
-              border: Border(top: BorderSide(color: AppColors.pearlGray)),
-            ),
-            child: const Text(
-              'Unit: Persons · Source: Federal Competitiveness and Statistics Centre (FCSC)',
-              style: TextStyle(
-                fontSize: 12, color: AppColors.slate400,
-                fontStyle: FontStyle.italic, height: 1.5,
-              ),
-            ),
-          ),
         ],
       ),
     );

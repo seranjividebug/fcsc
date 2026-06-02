@@ -1,0 +1,11 @@
+[
+  { "timePeriod": "2016", "value": 23.3, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2017", "value": 24.8, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2018", "value": 25.5, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 26.0, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 14.7, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 19.0, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 24.5, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 28.1, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2024", "value": 30.8, "measure": "TOUR_MAIN", "refArea": "AE", "gender": "_T", "unitMeasure": "M_GUESTS", "sourceDetail": "FCSA" }
+]

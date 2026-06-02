@@ -1,0 +1,9 @@
+[
+  { "timePeriod": "2016", "value": 1060.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" },
+  { "timePeriod": "2017", "value": 1058.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" },
+  { "timePeriod": "2018", "value": 1106.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 1136.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 1089.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 1144.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 1205.0, "measure": "HTL_EST", "refArea": "AE", "gender": "_T", "unitMeasure": "FAC", "sourceDetail": "FCSA" }
+]

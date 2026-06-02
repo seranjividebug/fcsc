@@ -99,6 +99,81 @@ class SdmxApiClient {
     return _fetch(ApiConstants.healthWorkforceDataUrl);
   }
 
+  /// Fetches Total Trade by HS Section (DF_TRADE_SECT_YR).
+  Future<SdmxResult> fetchTradeTotal() async {
+    return _fetch(ApiConstants.tradeTotalDataUrl);
+  }
+
+  /// Fetches Imports by HS Section (DF_TRADE_IMP_SECT_YR).
+  Future<SdmxResult> fetchTradeImportsHs() async {
+    return _fetch(ApiConstants.tradeImportsHsDataUrl);
+  }
+
+  /// Fetches Non-Oil Exports by HS Section (DF_TRADE_TEXP_SECT_YR).
+  Future<SdmxResult> fetchTradeNonOilExports() async {
+    return _fetch(ApiConstants.tradeNonOilExportsDataUrl);
+  }
+
+  /// Fetches Domestic Non-Oil Exports by HS Section & Country (DF_TRADE_EXP_SECT_YR).
+  Future<SdmxResult> fetchTradeSectorCountry() async {
+    return _fetch(ApiConstants.tradeSectorCountryDataUrl);
+  }
+
+  /// Fetches Annual Re-Exports by HS Section & Country (DF_TRADE_REXP_SECT_YR).
+  Future<SdmxResult> fetchTradeReexportsAnnual() async {
+    return _fetch(ApiConstants.tradeReexportsAnnualDataUrl);
+  }
+
+  /// Fetches Monthly Re-Exports by Destination Country (DF_TRADE_REXP_COUNTRY_MTH).
+  Future<SdmxResult> fetchTradeReexportsMonthly() async {
+    return _fetch(ApiConstants.tradeReexportsMonthlyDataUrl);
+  }
+
+  /// Fetches GDP at Current Prices (DF_NA_ISIC_CUR).
+  Future<SdmxResult> fetchGdpCurrent() async {
+    return _fetch(ApiConstants.gdpCurrentDataUrl);
+  }
+
+  /// Fetches GDP at Constant Prices (DF_NA_ISIC_CON).
+  Future<SdmxResult> fetchGdpConstant() async {
+    return _fetch(ApiConstants.gdpConstantDataUrl);
+  }
+
+  /// Fetches Quarterly GDP at Constant Prices (DF_QGDP_CON).
+  Future<SdmxResult> fetchGdpQuarterlyConstant() async {
+    return _fetch(ApiConstants.gdpQuarterlyConstantDataUrl);
+  }
+
+  /// Fetches Aircraft Movement by Emirate (DF_AIRCRAFT_MOV).
+  Future<SdmxResult> fetchAircraftMovement() async {
+    return _fetch(ApiConstants.aircraftMovementDataUrl);
+  }
+
+  /// Fetches Hotel Main Indicators (DF_HOT_INDICATOR).
+  Future<SdmxResult> fetchTourismMainIndicators() async {
+    return _fetch(ApiConstants.tourismMainIndicatorsDataUrl);
+  }
+
+  /// Fetches Hotel Establishments by Type, Class & Rooms (DF_HOT_TYPE).
+  Future<SdmxResult> fetchTourismHotelEstablishments() async {
+    return _fetch(ApiConstants.tourismHotelEstablishmentsDataUrl);
+  }
+
+  /// Fetches Hotel Guest Arrivals by Nationality (DF_GUEST_REGION).
+  Future<SdmxResult> fetchTourismHotelArrivals() async {
+    return _fetch(ApiConstants.tourismHotelArrivalsDataUrl);
+  }
+
+  /// Fetches CPI Annual (DF_CPI_ANN).
+  Future<SdmxResult> fetchCpiAnnual() async {
+    return _fetch(ApiConstants.cpiAnnualDataUrl);
+  }
+
+  /// Fetches Quarterly GDP at Current Prices (DF_NA_ISIC_CUR quarterly).
+  Future<SdmxResult> fetchGdpQuarterlyCurrent() async {
+    return _fetch(ApiConstants.gdpQuarterlyCurrentDataUrl);
+  }
+
   // ─── Core fetch + parse ───────────────────────────────────────────────────
 
   Future<SdmxResult> _fetch(String url) async {

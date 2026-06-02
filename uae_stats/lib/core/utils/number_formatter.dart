@@ -54,6 +54,19 @@ abstract final class NumberFormatter {
     return '${value.abs().toStringAsFixed(1)}%';
   }
 
+  // ─── AED Millions formatting (GDP / National Accounts) ───────────────────
+
+  /// GDP-style: 2028413 → "2,028,413 Mn AED"  compact → "2.03T AED"
+  static String aedMillionsCompact(double value) {
+    // value is already in AED Millions
+    if (value.abs() >= 1e6) {
+      return '${(value / 1e6).toStringAsFixed(2)}T';
+    } else if (value.abs() >= 1e3) {
+      return '${(value / 1e3).toStringAsFixed(1)}B';
+    }
+    return NumberFormat('#,##0', 'en').format(value.toInt());
+  }
+
   // ─── AED formatting ──────────────────────────────────────────────────────
 
   /// e.g. 1527812637140 → "AED 1.53T"

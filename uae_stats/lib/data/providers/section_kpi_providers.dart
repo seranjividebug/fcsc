@@ -41,13 +41,14 @@ const _gdpYearly = KpiConfig(
   id: 'gdp_yearly',
   nameEn: 'Yearly GDP',
   nameAr: 'الناتج المحلي الإجمالي السنوي',
-  unitEn: 'AED',
-  unitAr: 'درهم',
-  displayUnit: KpiDisplayUnit.aedTrillions,
+  unitEn: 'AED Mn',
+  unitAr: 'مليون درهم',
+  displayUnit: KpiDisplayUnit.aedMnToTrillions,
   icon: Icons.account_balance_outlined,
-  dataflowId: ApiConstants.dfGdpConst,
-  dataflowVersion: ApiConstants.dfGdpConstVersion,
+  dataflowId: ApiConstants.dfGdpCurr,
+  dataflowVersion: ApiConstants.dfGdpCurrVersion,
   filter: '.A.............',
+  measure: 'GDP_CUR',
   startPeriod: '2015',
 );
 
@@ -475,6 +476,12 @@ const _crudeOilProduction = KpiConfig(
 // ─── Provider helpers ─────────────────────────────────────────────────────────
 
 Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
+  // For GDP indicators, go directly to seed (API returns multi-sector rows
+  // that don't filter correctly through the KPI series parser)
+  if (cfg.id == 'gdp_yearly' || cfg.id == 'home_gdp' || cfg.id == 'gdp_quarterly') {
+    final seed = await _resolveSeed(cfg);
+    if (seed != null) return seed;
+  }
   try {
     final result = await svc.fetchKpiSeries(cfg);
     if (result != null) {
@@ -506,8 +513,11 @@ Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
 
 Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
   final seedPath = switch (cfg.id) {
-    'hospitals' => 'assets/data/seeds/hospitals_seed.json',
-    'clinics_centers' => 'assets/data/seeds/health_clinics_centers_seed.json',
+    'hospitals'        => 'assets/data/seeds/hospitals_seed.json',
+    'clinics_centers'  => 'assets/data/seeds/health_clinics_centers_seed.json',
+    'gdp_yearly'       => 'assets/data/seeds/gdp_current_seed.json',
+    'home_gdp'         => 'assets/data/seeds/gdp_current_seed.json',
+    'gdp_quarterly'    => 'assets/data/seeds/gdp_quarterly_current_seed.json',
     _ => null,
   };
   if (seedPath == null) return null;

@@ -96,16 +96,6 @@ class BreadcrumbBar extends StatelessWidget {
             ),
           ),
 
-          const SizedBox(width: 8),
-
-          // Right: data source (always visible)
-          Text(
-            'Source: ${meta.sourceCode}',
-            style: const TextStyle(
-              fontSize: 11,
-              color: AppColors.slate400,
-            ),
-          ),
         ],
       ),
     );

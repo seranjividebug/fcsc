@@ -1,0 +1,7 @@
+[
+  { "timePeriod": "2019", "value": 5623000.0, "measure": "WF_OCC", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 5467000.0, "measure": "WF_OCC", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 5612000.0, "measure": "WF_OCC", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 5843000.0, "measure": "WF_OCC", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 6047000.0, "measure": "WF_OCC", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" }
+]

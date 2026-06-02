@@ -85,14 +85,101 @@ abstract final class ApiConstants {
   static const String dfGdpCurrVersion  = '3.4.0';
   static const String dfGdpQ            = 'DF_QGDP_CON';
   static const String dfGdpQVersion     = '1.8.0';
+  static const String dfGdpQCur         = 'DF_QGDP_CUR';
+  static const String dfGdpQCurVersion  = '1.8.0';
+  /// GDP Current Prices — UAE total (_T sector, annual).
+  /// Filter: .A............. → all dimension slots, frequency=Annual
+  static String get gdpCurrentDataUrl =>
+      '$restBase/data/$_agencyId,$dfGdpCurr,$dfGdpCurrVersion/.A.............?startPeriod=2015&$flatDimension';
+
+  /// GDP Constant Prices — UAE total, annual.
+  static String get gdpConstantDataUrl =>
+      '$restBase/data/$_agencyId,$dfGdpConst,$dfGdpConstVersion/.A.............?startPeriod=2015&$flatDimension';
+
+  /// Quarterly GDP Constant Prices — UAE total.
+  /// Filter: .Q...... → quarterly frequency, all dimensions
+  static String get gdpQuarterlyConstantDataUrl =>
+      '$restBase/data/$_agencyId,$dfGdpQ,$dfGdpQVersion/.Q......?startPeriod=2015-Q1&$flatDimension';
+
+  /// Quarterly GDP Current Prices (DF_QGDP_CUR).
+  static String get gdpQuarterlyCurrentDataUrl =>
+      '$restBase/data/$_agencyId,$dfGdpQCur,$dfGdpQCurVersion/.Q......?startPeriod=2015-Q1&$flatDimension';
+
   static const String dfTradeHs         = 'DF_TRADE_TOT_YR';
   static const String dfTradeHsVersion  = '5.1.0';
+  static const String dfTradeSect       = 'DF_TRADE_SECT_YR';
+  static const String dfTradeSectVersion = '5.1.0';
+
+  static const String dfTradeImpSect        = 'DF_TRADE_IMP_SECT_YR';
+  static const String dfTradeImpSectVersion = '5.1.0';
+
+  /// Total Trade by HS Section — UAE total, annual.
+  static String get tradeTotalDataUrl =>
+      '$restBase/data/$_agencyId,$dfTradeSect,$dfTradeSectVersion/.A.......?startPeriod=2017&$flatDimension';
+
+  /// Imports by HS Section — UAE total, annual.
+  static String get tradeImportsHsDataUrl =>
+      '$restBase/data/$_agencyId,$dfTradeImpSect,$dfTradeImpSectVersion/.A.......?startPeriod=2017&$flatDimension';
+
+  static const String dfTradeNonOil        = 'DF_TRADE_TEXP_SECT_YR';
+  static const String dfTradeNonOilVersion = '5.1.0';
+
+  /// Non-Oil Exports by HS Section — UAE total, annual.
+  static String get tradeNonOilExportsDataUrl =>
+      '$restBase/data/$_agencyId,$dfTradeNonOil,$dfTradeNonOilVersion/.A.......?startPeriod=2017&$flatDimension';
+
+  static const String dfTradeExpSect        = 'DF_TRADE_EXP_SECT_YR';
+  static const String dfTradeExpSectVersion = '5.1.0';
+
+  /// Non-Oil Exports (Domestic) by HS Section & Country — UAE total, annual.
+  static String get tradeSectorCountryDataUrl =>
+      '$restBase/data/$_agencyId,$dfTradeExpSect,$dfTradeExpSectVersion/.A.......?startPeriod=2017&$flatDimension';
+
+  static const String dfTradeReExp        = 'DF_TRADE_REXP_SECT_YR';
+  static const String dfTradeReExpVersion = '5.1.0';
+
+  /// Annual Re-Exports by HS Section & Country — UAE total, annual.
+  static String get tradeReexportsAnnualDataUrl =>
+      '$restBase/data/$_agencyId,$dfTradeReExp,$dfTradeReExpVersion/.A.......?startPeriod=2017&$flatDimension';
+
+  static const String dfTradeReExpMon        = 'DF_TRADE_REXP_COUNTRY_MTH';
+  static const String dfTradeReExpMonVersion = '5.1.0';
+
+  /// Monthly Re-Exports by Destination Country — UAE total.
+  static String get tradeReexportsMonthlyDataUrl =>
+      '$restBase/data/$_agencyId,$dfTradeReExpMon,$dfTradeReExpMonVersion/.M.......?startPeriod=2024-01&$flatDimension';
   static const String dfCpi             = 'DF_CPI_ANN';
   static const String dfCpiVersion      = '3.2.0';
+
+  /// CPI Annual — UAE total, All Items.
+  static String get cpiAnnualDataUrl =>
+      '$restBase/data/$_agencyId,$dfCpi,$dfCpiVersion/...A..?startPeriod=2021&$flatDimension';
   static const String dfHotels          = 'DF_ALL_HOT';
   static const String dfHotelsVersion   = '4.3.0';
+  static const String dfGuestRegion        = 'DF_GUEST_REGION';
+  static const String dfGuestRegionVersion = '4.3.0';
+  static const String dfHotType            = 'DF_HOT_TYPE';
+  static const String dfHotTypeVersion     = '4.3.0';
+  static const String dfHotIndicator       = 'DF_HOT_INDICATOR';
+  static const String dfHotIndicatorVersion = '4.3.0';
+
+  /// Hotel Main Indicators (guests, revenue, occupancy etc) — UAE total, annual.
+  static String get tourismMainIndicatorsDataUrl =>
+      '$restBase/data/$_agencyId,$dfHotIndicator,$dfHotIndicatorVersion/...A....?startPeriod=2016&$flatDimension';
+
+  /// Hotel Guest Arrivals by Nationality Region — UAE total, annual.
+  static String get tourismHotelArrivalsDataUrl =>
+      '$restBase/data/$_agencyId,$dfGuestRegion,$dfGuestRegionVersion/...A....?startPeriod=2016&$flatDimension';
+
+  /// Hotel Establishments by Type, Class & Rooms — UAE total, annual.
+  static String get tourismHotelEstablishmentsDataUrl =>
+      '$restBase/data/$_agencyId,$dfHotType,$dfHotTypeVersion/...A....?startPeriod=2016&$flatDimension';
   static const String dfAir             = 'DF_AIRCRAFT_MOV';
   static const String dfAirVersion      = '1.6.0';
+
+  /// Aircraft Movement by Emirate — UAE total, annual.
+  static String get aircraftMovementDataUrl =>
+      '$restBase/data/$_agencyId,$dfAir,$dfAirVersion/.A....?startPeriod=2016&$flatDimension';
 
   // ─── Social dataflows ────────────────────────────────────────────────────
   // Population reuses DF_POP (already defined above)

@@ -77,11 +77,28 @@ class _DetailHeroCardState extends State<DetailHeroCard>
   }
 
   static String _subtitleFor(String id, String period) => switch (id) {
-        'births' => 'live births registered in $period',
-        'population' => 'estimated residents in UAE',
-        'deaths' => 'deaths registered in $period',
-        'marriages' => 'marriages registered in $period',
-        'divorces' => 'divorces registered in $period',
+        'births'                  => 'live births registered in $period',
+        'population'              => 'estimated residents in UAE',
+        'deaths'                  => 'deaths registered in $period',
+        'marriages'               => 'marriages registered in $period',
+        'divorces'                => 'divorces registered in $period',
+        'gdp_current'             => 'AED million at current prices in $period',
+        'gdp_constant'            => 'AED million at constant prices in $period',
+        'gdp_quarterly_current'   => 'AED million at current prices · $period',
+        'gdp_quarterly_constant'  => 'AED million at constant prices · $period',
+        'trade_total'                    => 'Total merchandise trade (imports + non-oil exports) · $period',
+        'trade_imports_hs'               => 'Total imports by HS section · $period',
+        'trade_non_oil_exports'          => 'Non-oil exports · $period',
+        'trade_reexports_annual'         => 'Annual re-exports · $period',
+        'trade_reexports_monthly'        => 'Monthly re-exports · $period',
+        'trade_sector_country'           => 'Non-oil exports by HS section & country · $period',
+        _ when id.startsWith('trade_')   => 'AED million · $period',
+        'prices_cpi_annual'              => 'All Items CPI Index · Base Year 2021 = 100 · $period',
+        _ when id.startsWith('prices_')  => 'Index value · $period',
+        'tourism_hotel_arrivals'         => 'Total hotel & apartment guest arrivals across 9 nationality regions · $period',
+        'tourism_hotel_establishments'   => 'Total licensed hotel & apartment establishments · $period',
+        'tourism_main_indicators'        => 'Tourism revenue · $period',
+        _ when id.startsWith('tourism_') => 'as of $period',
         _ => 'as of $period',
       };
 
@@ -90,12 +107,14 @@ class _DetailHeroCardState extends State<DetailHeroCard>
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            stops: [0.0, 1.0],
-            colors: [Color(0xFF005A8E), AppColors.demBlue],
+            stops: const [0.0, 1.0],
+            colors: widget.data.meta.category == 'economy'
+                ? const [Color(0xFFC8973A), Color(0xFF92620A)]
+                : const [Color(0xFF005A8E), AppColors.demBlue],
           ),
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),

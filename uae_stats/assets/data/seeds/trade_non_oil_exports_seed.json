@@ -1,0 +1,9 @@
+[
+  { "timePeriod": "2017", "value": 581350.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2018", "value": 637600.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 688650.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 618050.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 794890.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 951140.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 1037060.0, "measure": "NON_OIL_EXP", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
+]
