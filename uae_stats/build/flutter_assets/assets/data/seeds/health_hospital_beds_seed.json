@@ -1,12 +1,16 @@
 [
-  { "timePeriod": "2015", "value": 12640.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2016", "value": 13120.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2017", "value": 13680.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2018", "value": 14240.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2019", "value": 14930.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2020", "value": 15480.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2021", "value": 16020.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2022", "value": 16610.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2023", "value": 17180.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
-  { "timePeriod": "2024", "value": 17750.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" }
+  { "timePeriod": "2010", "value": 8829.0,  "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2011", "value": 9082.0,  "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2012", "value": 9635.0,  "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2013", "value": 9760.0,  "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2014", "value": 10615.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2015", "value": 12434.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2016", "value": 12590.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2017", "value": 13312.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2018", "value": 14936.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2019", "value": 17207.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2020", "value": 18005.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2021", "value": 18363.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2022", "value": 19102.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" },
+  { "timePeriod": "2023", "value": 18497.0, "measure": "BED", "refArea": "AE", "gender": "_T", "unitMeasure": "BED", "sourceDetail": "MOH" }
 ]

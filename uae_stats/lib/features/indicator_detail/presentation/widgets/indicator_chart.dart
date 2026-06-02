@@ -18,15 +18,15 @@ enum _ChartRange { y3, y5, y10, max }
 
 extension _RangeLabel on _ChartRange {
   String get label => switch (this) {
-        _ChartRange.y3 => '3Y',
-        _ChartRange.y5 => '5Y',
+        _ChartRange.y3  => '3Y',
+        _ChartRange.y5  => '5Y',
         _ChartRange.y10 => '10Y',
         _ChartRange.max => 'MAX',
       };
 
   int? get years => switch (this) {
-        _ChartRange.y3 => 3,
-        _ChartRange.y5 => 5,
+        _ChartRange.y3  => 3,
+        _ChartRange.y5  => 5,
         _ChartRange.y10 => 10,
         _ChartRange.max => null,
       };
@@ -37,6 +37,7 @@ class IndicatorChart extends StatefulWidget {
     super.key,
     required this.allSeries,
     required this.indicatorName,
+    this.indicatorId = '',
     this.unitCode = 'PS',
     this.accentColor = AppColors.demBlue,
     this.femaleSeries = const [],
@@ -45,6 +46,7 @@ class IndicatorChart extends StatefulWidget {
 
   final List<DataPoint> allSeries;
   final String indicatorName;
+  final String indicatorId;
   final String unitCode;
   final Color accentColor;
   final List<DataPoint> femaleSeries;
@@ -56,7 +58,44 @@ class IndicatorChart extends StatefulWidget {
 
 class _IndicatorChartState extends State<IndicatorChart> {
   _ChartType _type = _ChartType.line;
-  _ChartRange _range = _ChartRange.y3;
+  late _ChartRange _range;
+
+  @override
+  void initState() {
+    super.initState();
+    _range = _defaultRange;
+  }
+
+  // Indicators with long history use 10Y default; short data uses 3Y; rest 5Y
+  _ChartRange get _defaultRange {
+    final id = widget.indicatorId;
+    final n = widget.allSeries.length;
+    if (id == 'health_hospital_beds' || id == 'health_clinics_centers' ||
+        id == 'hospitals') return _ChartRange.y10;
+    if (id == 'health_professionals') return _ChartRange.max;
+    if (n <= 3) return _ChartRange.y3;
+    return _ChartRange.y5;
+  }
+
+  // Which range chips to show based on data length
+  List<_ChartRange> get _visibleRanges {
+    final n = widget.allSeries.length;
+    if (n <= 3) return [_ChartRange.y3, _ChartRange.max];
+    if (n <= 5) return [_ChartRange.y3, _ChartRange.y5, _ChartRange.max];
+    if (n >= 10) return [_ChartRange.y5, _ChartRange.y10, _ChartRange.max];
+    return [_ChartRange.y3, _ChartRange.y5, _ChartRange.max];
+  }
+
+  // Section title based on indicator type
+  String get _sectionTitle {
+    final id = widget.indicatorId;
+    if (id == 'health_hospital_beds' || id == 'hospitals') return 'Historical Trend';
+    if (id == 'health_clinics_centers') return 'Growth Trend';
+    if (id == 'health_professionals') return 'Workforce Trend';
+    final n = widget.allSeries.length;
+    if (n <= 3) return '3-Year Trend';
+    return '5-Year Trend';
+  }
 
   bool get _hasGender =>
       widget.femaleSeries.isNotEmpty && widget.maleSeries.isNotEmpty;
@@ -94,9 +133,9 @@ class _IndicatorChartState extends State<IndicatorChart> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                '5-Year Trend',
-                style: TextStyle(
+              Text(
+                _sectionTitle,
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
                   color: AppColors.slate900,
@@ -202,6 +241,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
                   const SizedBox(height: 14),
                   _RangeChips(
                     selected: _range,
+                    visible: _visibleRanges,
                     accentColor: widget.accentColor,
                     onChanged: (r) => setState(() => _range = r),
                   ),
@@ -634,18 +674,21 @@ class _RangeChips extends StatelessWidget {
     required this.selected,
     required this.accentColor,
     required this.onChanged,
+    this.visible,
   });
   final _ChartRange selected;
   final Color accentColor;
   final ValueChanged<_ChartRange> onChanged;
+  final List<_ChartRange>? visible;
 
   @override
   Widget build(BuildContext context) {
+    final ranges = visible ?? _ChartRange.values;
     return Wrap(
       alignment: WrapAlignment.center,
       spacing: 8,
       runSpacing: 8,
-      children: _ChartRange.values.map((r) {
+      children: ranges.map((r) {
         final active = r == selected;
         return GestureDetector(
           onTap: () => onChanged(r),

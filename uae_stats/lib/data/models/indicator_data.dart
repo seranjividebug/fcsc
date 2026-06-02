@@ -86,7 +86,7 @@ class IndicatorData {
       'health_services'        => {'HSP'},
       'health_clinics_centers' => {'CAH'},
       'health_hospital_beds'   => {'BED'},
-      'health_professionals'   => {},
+      'health_professionals'   => {'HWF', 'TOTAL'},
       _                   => {},
     };
 

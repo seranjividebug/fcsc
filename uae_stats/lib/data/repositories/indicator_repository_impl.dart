@@ -272,7 +272,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'health_services'   => const LocalizedString(en: 'Health Services',           ar: 'الخدمات الصحية'),
         'health_clinics_centers' => const LocalizedString(en: 'Clinics and Centers',  ar: 'العيادات والمراكز'),
         'health_hospital_beds'   => const LocalizedString(en: 'Hospital Beds',        ar: 'أسرة المستشفيات'),
-        'health_professionals'   => const LocalizedString(en: 'Healthcare Professionals', ar: 'المهنيون الصحيون'),
+        'health_professionals'   => const LocalizedString(en: 'Health Workforce',         ar: 'القوى العاملة الصحية'),
         _ => LocalizedString(en: id, ar: id),
       };
 

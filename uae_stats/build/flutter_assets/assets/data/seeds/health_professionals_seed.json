@@ -1,12 +1,14 @@
 [
-  { "timePeriod": "2015", "value": 84200.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2016", "value": 88750.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2017", "value": 93100.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2018", "value": 97840.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2019", "value": 102900.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2020", "value": 107600.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2021", "value": 112300.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2022", "value": 117100.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2023", "value": 122400.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
-  { "timePeriod": "2024", "value": 127900.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" }
+  { "timePeriod": "2012", "value": 59065.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2013", "value": 68787.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2014", "value": 80242.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2015", "value": 93617.0,  "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2016", "value": 107463.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2017", "value": 112815.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2018", "value": 118200.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2019", "value": 125887.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2020", "value": 131916.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2021", "value": 135929.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2022", "value": 145981.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" },
+  { "timePeriod": "2023", "value": 155618.0, "measure": "HWF", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MOH" }
 ]

@@ -46,7 +46,7 @@ const _navItems = [
   _NavItem(id: 'hospitals',          label: 'Hospitals',               group: 'health'),
   _NavItem(id: 'health_clinics_centers', label: 'Clinics and Centers', group: 'health'),
   _NavItem(id: 'health_hospital_beds', label: 'Hospital Beds',         group: 'health'),
-  _NavItem(id: 'health_professionals', label: 'Healthcare Professionals', group: 'health'),
+  _NavItem(id: 'health_professionals', label: 'Health Workforce',         group: 'health'),
 ];
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -166,6 +166,7 @@ class _IndicatorDetailScreenState
                       child: IndicatorChart(
                         allSeries: data.uaeTotalSeries,
                         indicatorName: data.meta.name.en,
+                        indicatorId: data.meta.id,
                         femaleSeries: data.byGender['F'] ?? [],
                         maleSeries: data.byGender['M'] ?? [],
                       ),
