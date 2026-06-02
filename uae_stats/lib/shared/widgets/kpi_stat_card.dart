@@ -46,7 +46,7 @@ class KpiStatCard extends StatelessWidget {
     final unit = isArabic ? data.unitAr : data.unitEn;
 
     final card = Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
@@ -180,7 +180,7 @@ class KpiStatCardWide extends StatelessWidget {
 
     final card = Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
@@ -270,7 +270,7 @@ class KpiSectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         isArabic ? titleAr : titleEn,
         style: const TextStyle(
@@ -342,7 +342,7 @@ class KpiCardGrid extends StatelessWidget {
                     onTap: _tapFor(context, a.id),
                   ),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 8),
                 Expanded(
                   child: KpiStatCard(
                     data: b,
@@ -358,7 +358,7 @@ class KpiCardGrid extends StatelessWidget {
         );
       }
 
-      if (i + 2 < cards.length) rows.add(const SizedBox(height: 10));
+      if (i + 2 < cards.length) rows.add(const SizedBox(height: 8));
     }
 
     return Column(

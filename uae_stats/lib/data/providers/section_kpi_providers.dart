@@ -556,6 +556,10 @@ Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
   }
 }
 
+/// Public wrapper around [_resolve] for use by other providers (e.g. home carousel).
+Future<KpiCardData> resolveKpi(KpiConfig cfg, KpiSdmxService svc) =>
+    _resolve(cfg, svc);
+
 // ─── Economy provider ─────────────────────────────────────────────────────────
 
 final economyKpisProvider =

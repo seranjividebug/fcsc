@@ -51,11 +51,10 @@ class _DemographyScreenState extends ConsumerState<DemographyScreen> {
               onRefresh: () => ref.refresh(demographyKpisProvider.future),
               child: CustomScrollView(
                 slivers: [
-                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 6)),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.lg),
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
                       child: _SectionHeader(
                         expanded: _expanded,
                         isArabic: isArabic,
@@ -67,8 +66,7 @@ class _DemographyScreenState extends ConsumerState<DemographyScreen> {
                   if (_expanded)
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                            AppSpacing.lg, 8, AppSpacing.lg, 12),
+                        padding: const EdgeInsets.fromLTRB(14, 8, 14, 12),
                         child: kpisAsync.when(
                           loading: () => const _SectionsSkeleton(),
                           error: (_, __) => _ErrorRetry(

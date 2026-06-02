@@ -1,4 +1,15 @@
 // lib/features/search/presentation/screens/search_screen.dart
+//
+// Fully dynamic search screen.
+// - Recent searches: persisted in SharedPreferences, per-item dismissal + clear all
+// - Real-time filtering: debounced 200 ms, searches across all IndicatorMeta from
+//   indicators_index.json (English + Arabic names, category, subCategory)
+// - Trending: derived from per-indicator view counts stored in SharedPreferences;
+//   falls back to a curated default list on first launch
+// - Browse by Category: derived from allMetaProvider — no hardcoded categories
+// - Result navigation records a view count increment for trending
+
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,68 +17,46 @@ import 'package:go_router/go_router.dart';
 import 'package:uae_stats/core/routing/app_router.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
+import 'package:uae_stats/data/models/indicator_meta.dart';
 import 'package:uae_stats/data/providers/indicator_providers.dart';
+import 'package:uae_stats/data/providers/search_providers.dart';
 import 'package:uae_stats/shared/providers/locale_provider.dart';
+import 'package:uae_stats/shared/widgets/shimmer_box.dart';
 
-// ─── All searchable indicators ────────────────────────────────────────────────
+// ─── Design tokens ────────────────────────────────────────────────────────────
 
-class _SearchEntry {
-  const _SearchEntry({
-    required this.id,
-    required this.name,
-    required this.category,
-    required this.subCategory,
-  });
-  final String id;
-  final String name;
-  final String category;
-  final String subCategory;
+const _kBg        = Color(0xFFFAFBFC);
+const _kWhite     = AppColors.white;
+const _kBorder    = Color(0xFFE5E7EB);
+const _kSlate900  = Color(0xFF0F172A);
+const _kSlate600  = Color(0xFF4B5563);
+const _kSlate400  = Color(0xFF9CA3AF);
+const _kGreen     = Color(0xFF00594C);
+const _kGold      = Color(0xFF7A5A1A);
+const _kGoldBg    = Color(0xFFF5E9D3);
+const _kGreenBg   = Color(0xFFE8F1EE);
+const _kEnvBg     = Color(0xFFE0F4F1);
+const _kEnvColor  = Color(0xFF0F6E56);
+
+// Category config
+class _CatConfig {
+  const _CatConfig(this.emoji, this.bg, this.color);
+  final String emoji;
+  final Color bg, color;
 }
 
-const _allEntries = [
-  // Demography
-  _SearchEntry(id: 'population',           name: 'Population Estimates',         category: 'Demography', subCategory: 'Population'),
-  _SearchEntry(id: 'births',               name: 'Births',                        category: 'Demography', subCategory: 'Vitals'),
-  _SearchEntry(id: 'deaths',               name: 'Deaths',                        category: 'Demography', subCategory: 'Vitals'),
-  _SearchEntry(id: 'marriages',            name: 'Marriages',                     category: 'Demography', subCategory: 'Vitals'),
-  _SearchEntry(id: 'divorces',             name: 'Divorces',                      category: 'Demography', subCategory: 'Vitals'),
-  _SearchEntry(id: 'student_enrolment',    name: 'Student Enrolment',             category: 'Demography', subCategory: 'Education'),
-  _SearchEntry(id: 'teaching_staff',       name: 'Teaching Staff',                category: 'Demography', subCategory: 'Education'),
-  _SearchEntry(id: 'higher_education',     name: 'Higher Education Students',     category: 'Demography', subCategory: 'Education'),
-  _SearchEntry(id: 'hospitals',            name: 'Hospitals',                     category: 'Demography', subCategory: 'Health'),
-  _SearchEntry(id: 'health_clinics_centers', name: 'Clinics and Centers',         category: 'Demography', subCategory: 'Health'),
-  _SearchEntry(id: 'health_hospital_beds', name: 'Hospital Beds',                 category: 'Demography', subCategory: 'Health'),
-  _SearchEntry(id: 'health_professionals', name: 'Health Workforce',              category: 'Demography', subCategory: 'Health'),
-  _SearchEntry(id: 'labour_economic_activity',       name: 'Economic Activity',           category: 'Demography', subCategory: 'Labour'),
-  _SearchEntry(id: 'labour_employed_age_gender',     name: 'Employed by Age & Gender',    category: 'Demography', subCategory: 'Labour'),
-  _SearchEntry(id: 'labour_employed_education',      name: 'Employed by Education Status',category: 'Demography', subCategory: 'Labour'),
-  _SearchEntry(id: 'labour_employment_sector',       name: 'Employment by Sector',        category: 'Demography', subCategory: 'Labour'),
-  _SearchEntry(id: 'labour_unemployment_education',  name: 'Unemployment by Education',   category: 'Demography', subCategory: 'Labour'),
-  _SearchEntry(id: 'labour_workforce_occupation',    name: 'Workforce by Occupation',     category: 'Demography', subCategory: 'Labour'),
-  _SearchEntry(id: 'labour_unemployment_age_gender', name: 'Unemployment by Age & Gender',category: 'Demography', subCategory: 'Labour'),
-  // Economy
-  _SearchEntry(id: 'gdp_current',            name: 'GDP (Current Prices)',        category: 'Economy', subCategory: 'National Accounts'),
-  _SearchEntry(id: 'gdp_constant',           name: 'GDP (Constant Prices)',       category: 'Economy', subCategory: 'National Accounts'),
-  _SearchEntry(id: 'gdp_quarterly_current',  name: 'Quarterly GDP (Current)',     category: 'Economy', subCategory: 'National Accounts'),
-  _SearchEntry(id: 'gdp_quarterly_constant', name: 'Quarterly GDP (Constant)',    category: 'Economy', subCategory: 'National Accounts'),
-  _SearchEntry(id: 'trade_total',            name: 'Total Trade',                 category: 'Economy', subCategory: 'International Trade'),
-  _SearchEntry(id: 'trade_imports_hs',       name: 'Imports by HS Section',       category: 'Economy', subCategory: 'International Trade'),
-  _SearchEntry(id: 'trade_non_oil_exports',  name: 'Non-Oil Exports',             category: 'Economy', subCategory: 'International Trade'),
-  _SearchEntry(id: 'trade_sector_country',   name: 'Sector & Country',            category: 'Economy', subCategory: 'International Trade'),
-  _SearchEntry(id: 'trade_reexports_annual', name: 'Annual Re-Exports',           category: 'Economy', subCategory: 'International Trade'),
-  _SearchEntry(id: 'trade_reexports_monthly',name: 'Monthly Re-Exports',          category: 'Economy', subCategory: 'International Trade'),
-  _SearchEntry(id: 'prices_cpi_annual',      name: 'CPI Annual',                  category: 'Economy', subCategory: 'Prices'),
-  _SearchEntry(id: 'tourism_hotel_arrivals',       name: 'Hotel Guest Arrivals by Nationality', category: 'Economy', subCategory: 'Tourism'),
-  _SearchEntry(id: 'tourism_hotel_establishments', name: 'Hotel Establishments',  category: 'Economy', subCategory: 'Tourism'),
-  _SearchEntry(id: 'tourism_main_indicators',      name: 'Main Indicators',       category: 'Economy', subCategory: 'Tourism'),
-];
+const _catConfigs = <String, _CatConfig>{
+  'demography':   _CatConfig('👥', _kGreenBg, _kGreen),
+  'economy':      _CatConfig('📈', _kGoldBg,  _kGold),
+  'environment':  _CatConfig('🌿', _kEnvBg,   _kEnvColor),
+};
 
-const _trendingIds = ['population', 'gdp_current', 'prices_cpi_annual', 'births'];
+_CatConfig _catConfig(String cat) =>
+    _catConfigs[cat.toLowerCase()] ??
+    const _CatConfig('📊', Color(0xFFF3F5F7), _kSlate600);
 
-const _suggestions = [
-  'Population Estimates', 'GDP', 'Inflation', 'Energy', 'Education',
-  'Births', 'Deaths', 'Hospitals', 'Tourism', 'Trade',
-];
+String _capitalize(String s) =>
+    s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
@@ -80,70 +69,111 @@ class SearchScreen extends ConsumerStatefulWidget {
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _controller = TextEditingController();
-  final _focusNode = FocusNode();
-  String _query = '';
-  String _filterCategory = 'All';
+  final _focusNode  = FocusNode();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _focusNode.requestFocus());
-    _controller.addListener(() => setState(() => _query = _controller.text));
+    _controller.addListener(_onTextChanged);
+  }
+
+  void _onTextChanged() {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 200), () {
+      if (!mounted) return;
+      ref.read(searchQueryProvider.notifier).state = _controller.text;
+    });
   }
 
   @override
   void dispose() {
+    _debounce?.cancel();
+    _controller.removeListener(_onTextChanged);
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
-  List<_SearchEntry> get _results {
-    if (_query.isEmpty) return [];
-    final q = _query.toLowerCase();
-    return _allEntries.where((e) {
-      final matchesQuery = e.name.toLowerCase().contains(q) ||
-          e.category.toLowerCase().contains(q) ||
-          e.subCategory.toLowerCase().contains(q);
-      final matchesFilter = _filterCategory == 'All' ||
-          e.category == _filterCategory;
-      return matchesQuery && matchesFilter;
-    }).toList();
+  void _navigateTo(IndicatorMeta meta) {
+    // Record view for trending
+    ref.read(searchHistoryServiceProvider).incrementView(meta.id);
+    // Persist search term
+    final q = _controller.text.trim();
+    if (q.isNotEmpty) {
+      ref.read(searchHistoryProvider.notifier).add(q);
+    }
+    context.push(AppRoutes.indicatorPath(meta.id));
+  }
+
+  void _applyRecent(String term) {
+    _controller.text = term;
+    _controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: term.length));
+    ref.read(searchQueryProvider.notifier).state = term;
   }
 
   @override
   Widget build(BuildContext context) {
     final isArabic = ref.watch(localeProvider).languageCode == 'ar';
+    final query    = ref.watch(searchQueryProvider);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFBFC),
+      backgroundColor: _kBg,
       body: SafeArea(
         child: Column(
           children: [
-            _buildAppBar(isArabic),
+            _AppBar(
+              controller: _controller,
+              focusNode:  _focusNode,
+              isArabic:   isArabic,
+              onClear:    () {
+                _controller.clear();
+                ref.read(searchQueryProvider.notifier).state = '';
+                ref.read(searchCategoryProvider.notifier).state = 'All';
+              },
+              onCancel:   () => context.go(AppRoutes.home),
+            ),
             Expanded(
-              child: _query.isEmpty
-                  ? _buildInitialState(isArabic)
-                  : _buildResultsState(isArabic),
+              child: query.isEmpty
+                  ? _InitialState(onRecentTap: _applyRecent)
+                  : _ResultsState(onTap: _navigateTo),
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  // ─── App bar with search field ───────────────────────────────────────────
+// ─── App bar ──────────────────────────────────────────────────────────────────
 
-  Widget _buildAppBar(bool isArabic) {
+class _AppBar extends StatelessWidget {
+  const _AppBar({
+    required this.controller,
+    required this.focusNode,
+    required this.isArabic,
+    required this.onClear,
+    required this.onCancel,
+  });
+
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final bool isArabic;
+  final VoidCallback onClear, onCancel;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
-      color: AppColors.white,
+      color: _kWhite,
       padding: const EdgeInsets.fromLTRB(8, 8, 14, 10),
       child: Row(
         children: [
           IconButton(
-            onPressed: () => context.go(AppRoutes.home),
+            onPressed: onCancel,
             icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 20),
-            color: const Color(0xFF0F172A),
+            color: _kSlate900,
           ),
           Expanded(
             child: Container(
@@ -155,77 +185,94 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               child: Row(
                 children: [
                   const SizedBox(width: 11),
-                  const Icon(Icons.search_rounded, size: 18,
-                      color: Color(0xFF9CA3AF)),
+                  const Icon(Icons.search_rounded, size: 18, color: _kSlate400),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-                      style: const TextStyle(
-                          fontSize: 14, color: Color(0xFF0F172A)),
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        hintText: isArabic
-                            ? 'ابحث عن المؤشرات والموضوعات…'
-                            : 'Search any indicator or topic…',
-                        hintStyle: const TextStyle(
-                            fontSize: 14, color: Color(0xFF9CA3AF)),
+                    child: ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: controller,
+                      builder: (_, v, __) => TextField(
+                        controller: controller,
+                        focusNode: focusNode,
+                        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
+                        style: const TextStyle(fontSize: 14, color: _kSlate900),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          hintText: isArabic
+                              ? 'ابحث عن المؤشرات والموضوعات…'
+                              : 'Search any indicator or topic…',
+                          hintStyle: const TextStyle(
+                              fontSize: 14, color: _kSlate400),
+                        ),
                       ),
                     ),
                   ),
-                  if (_query.isNotEmpty)
-                    GestureDetector(
-                      onTap: () => _controller.clear(),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8),
-                        child: Icon(Icons.close_rounded, size: 18,
-                            color: Color(0xFF9CA3AF)),
-                      ),
-                    )
-                  else
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Icon(Icons.mic_none_rounded, size: 18,
-                          color: Color(0xFF00594C)),
-                    ),
+                  ValueListenableBuilder<TextEditingValue>(
+                    valueListenable: controller,
+                    builder: (_, v, __) => v.text.isNotEmpty
+                        ? GestureDetector(
+                            onTap: onClear,
+                            child: const Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8),
+                              child: Icon(Icons.close_rounded,
+                                  size: 18, color: _kSlate400),
+                            ),
+                          )
+                        : const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Icon(Icons.mic_none_rounded,
+                                size: 18, color: _kGreen),
+                          ),
+                  ),
                 ],
               ),
             ),
           ),
           const SizedBox(width: 10),
           GestureDetector(
-            onTap: () => context.go(AppRoutes.home),
+            onTap: onCancel,
             child: const Text('Cancel',
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF00594C))),
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,
+                    color: _kGreen)),
           ),
         ],
       ),
     );
   }
+}
 
-  // ─── Initial state ───────────────────────────────────────────────────────
+// ─── Initial state (no query) ─────────────────────────────────────────────────
 
-  Widget _buildInitialState(bool isArabic) {
+class _InitialState extends ConsumerWidget {
+  const _InitialState({required this.onRecentTap});
+  final ValueChanged<String> onRecentTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final history   = ref.watch(searchHistoryProvider);
+    final trending  = ref.watch(trendingIdsProvider);
+    final categories = ref.watch(categoriesProvider);
+
     return ListView(
       padding: EdgeInsets.zero,
       children: [
-        // Recent searches
-        _sectionHeader('Recent', 'Clear all'),
-        ...[
-          'GDP Current Prices',
-          'Population Estimates 2024',
-          'Renewable Energy',
-          'CPI Inflation 2024',
-        ].map((item) => _recentRow(item)),
+        // ── Recent searches ──────────────────────────────────────────────
+        if (history.isNotEmpty) ...[
+          _SectionHeader(
+            title: 'Recent',
+            action: 'Clear all',
+            onAction: () => ref.read(searchHistoryProvider.notifier).clearAll(),
+          ),
+          ...history.map((term) => _RecentRow(
+                term: term,
+                onTap: () => onRecentTap(term),
+                onRemove: () =>
+                    ref.read(searchHistoryProvider.notifier).remove(term),
+              )),
+        ],
 
-        // Trending
+        // ── Trending This Week ───────────────────────────────────────────
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
@@ -234,283 +281,112 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             children: [
               const Text('🔥 Trending This Week',
                   style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-                      color: Color(0xFF0F172A))),
+                      color: _kSlate900)),
               const SizedBox(height: 2),
-              const Text('Most searched indicators',
+              const Text('Most viewed indicators',
                   style: TextStyle(fontSize: 11, color: Color(0xFF6B7280))),
               const SizedBox(height: 10),
               SizedBox(
                 height: 90,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _trendingIds.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 9),
-                  itemBuilder: (_, i) {
-                    final entry = _allEntries.firstWhere(
-                        (e) => e.id == _trendingIds[i],
-                        orElse: () => _allEntries.first);
-                    return _trendingCard(entry, i + 1);
-                  },
+                child: trending.when(
+                  loading: () => _TrendingSkeletonRow(),
+                  error: (_, __) => const SizedBox.shrink(),
+                  data: (ids) => _TrendingRow(ids: ids),
                 ),
               ),
             ],
           ),
         ),
 
-        // Browse by category
+        // ── Browse by Category ───────────────────────────────────────────
         const SizedBox(height: 20),
-        _sectionHeader('Browse by Category', null),
-        _categoryRow('Demography', '🧑‍🤝‍🧑', const Color(0xFFE8F1EE),
-            const Color(0xFF00594C)),
-        _categoryRow('Economy', '📈', const Color(0xFFF5E9D3),
-            const Color(0xFF7A5A1A)),
-        _categoryRow('Environment', '🌿', const Color(0xFFE0F4F1),
-            const Color(0xFF0F6E56)),
-
-        // Quick facts
-        const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(18, 0, 18, 20),
-          child: Container(
-            padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(
-              color: const Color(0xFF00594C),
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('QUICK FACT',
-                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
-                        letterSpacing: 0.8, color: Color(0xAAFFFFFF))),
-                const SizedBox(height: 7),
-                const Text(
-                    "The UAE's GDP grew 3.4% in 2024 — outpacing the GCC average for the fifth consecutive year.",
-                    style: TextStyle(fontSize: 13, color: Colors.white,
-                        fontWeight: FontWeight.w500, height: 1.55)),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (i) => Container(
-                    width: i == 0 ? 12 : 4, height: 4,
-                    margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(
-                      color: i == 0
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.35),
-                      borderRadius: BorderRadius.circular(99),
-                    ),
-                  )),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  // ─── Results state ───────────────────────────────────────────────────────
-
-  Widget _buildResultsState(bool isArabic) {
-    final results = _results;
-
-    if (results.isEmpty) return _buildNoResults();
-
-    return Column(
-      children: [
-        // Header + filter chips
-        Padding(
-          padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
-          child: Row(
-            children: [
-              Text('${results.length} results for \'$_query\'',
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-                      color: Color(0xFF0F172A))),
-              const Spacer(),
-              const Icon(Icons.tune_rounded, size: 16, color: Color(0xFF4B5563)),
-              const SizedBox(width: 4),
-              const Text('Filters',
-                  style: TextStyle(fontSize: 13, color: Color(0xFF4B5563))),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 36,
-          child: ListView(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            children: ['All', 'Demography', 'Economy', 'Environment'].map((f) {
-              final active = _filterCategory == f;
-              return GestureDetector(
-                onTap: () => setState(() => _filterCategory = f),
-                child: Container(
-                  margin: const EdgeInsets.only(right: 7),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: active
-                        ? const Color(0xFF00594C)
-                        : AppColors.white,
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(
-                      color: active
-                          ? const Color(0xFF00594C)
-                          : const Color(0xFFE5E7EB),
-                    ),
-                  ),
-                  child: Text(
-                    f + (f == 'All' ? ' ▾' : ''),
-                    style: TextStyle(
-                      fontSize: 12, fontWeight: FontWeight.w600,
-                      color: active ? Colors.white : const Color(0xFF4B5563),
-                    ),
-                  ),
-                ),
+        const _SectionHeader(title: 'Browse by Category'),
+        categories.when(
+          loading: () => const _CategorySkeleton(),
+          error: (_, __) => const SizedBox.shrink(),
+          data: (cats) => Column(
+            children: cats.map((cat) {
+              final cfg = _catConfig(cat);
+              return _CategoryRow(
+                name:  cat,
+                emoji: cfg.emoji,
+                bg:    cfg.bg,
+                color: cfg.color,
+                onTap: () {
+                  ref.read(searchCategoryProvider.notifier).state = cat;
+                  // Bring up results for the category by simulating a category browse
+                },
               );
             }).toList(),
           ),
         ),
-        const SizedBox(height: 8),
-        // Results
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.fromLTRB(14, 0, 14, 20),
-            itemCount: results.length,
-            itemBuilder: (_, i) => _resultCard(results[i]),
-          ),
-        ),
+
+        const SizedBox(height: 24),
       ],
     );
   }
+}
 
-  // ─── No results ──────────────────────────────────────────────────────────
+// ─── Trending row ─────────────────────────────────────────────────────────────
 
-  Widget _buildNoResults() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(36),
-        child: Column(
-          children: [
-            const SizedBox(height: 30),
-            Container(
-              width: 80, height: 80,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE8F1EE),
-                borderRadius: BorderRadius.circular(40),
-              ),
-              child: const Icon(Icons.search_off_rounded, size: 40,
-                  color: Color(0xFF00594C)),
-            ),
-            const SizedBox(height: 20),
-            Text("No results for '$_query'",
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600,
-                    color: Color(0xFF0F172A))),
-            const SizedBox(height: 8),
-            const Text(
-                "We couldn't find any indicators matching your search. Check your spelling or try a related term.",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 13, color: Color(0xFF6B7280),
-                    height: 1.55)),
-            const SizedBox(height: 22),
-            const Text('Try one of these:',
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600,
-                    color: Color(0xFF374151))),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 7, runSpacing: 7,
-              alignment: WrapAlignment.center,
-              children: _suggestions.take(6).map((s) => GestureDetector(
-                onTap: () => _controller.text = s,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 12, vertical: 7),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE8F1EE),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(s,
-                      style: const TextStyle(fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF003D33))),
-                ),
-              )).toList(),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: OutlinedButton(
-                onPressed: () => context.go(AppRoutes.home),
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: Color(0xFF00594C)),
-                  foregroundColor: const Color(0xFF00594C),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                child: const Text('Browse by Category',
-                    style: TextStyle(fontSize: 13,
-                        fontWeight: FontWeight.w600)),
-              ),
-            ),
-          ],
-        ),
-      ),
+class _TrendingRow extends ConsumerWidget {
+  const _TrendingRow({required this.ids});
+  final List<String> ids;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allMeta = ref.watch(allMetaProvider);
+
+    return allMeta.when(
+      loading: () => _TrendingSkeletonRow(),
+      error: (_, __) => const SizedBox.shrink(),
+      data: (all) {
+        final metaMap = {for (final m in all) m.id: m};
+        final cards = ids
+            .where((id) => metaMap.containsKey(id))
+            .take(6)
+            .toList();
+
+        return ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemCount: cards.length,
+          separatorBuilder: (_, __) => const SizedBox(width: 9),
+          itemBuilder: (ctx, i) {
+            final meta = metaMap[cards[i]]!;
+            final cfg  = _catConfig(meta.category);
+            return GestureDetector(
+              onTap: () {
+                ref.read(searchHistoryServiceProvider).incrementView(meta.id);
+                ctx.push(AppRoutes.indicatorPath(meta.id));
+              },
+              child: _TrendingCard(meta: meta, rank: i + 1, cfg: cfg),
+            );
+          },
+        );
+      },
     );
   }
+}
 
-  // ─── Helper widgets ──────────────────────────────────────────────────────
+class _TrendingCard extends StatelessWidget {
+  const _TrendingCard({
+    required this.meta,
+    required this.rank,
+    required this.cfg,
+  });
+  final IndicatorMeta meta;
+  final int rank;
+  final _CatConfig cfg;
 
-  Widget _sectionHeader(String title, String? action) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(18, 20, 18, 10),
-      child: Row(
-        children: [
-          Text(title,
-              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-                  color: Color(0xFF0F172A))),
-          const Spacer(),
-          if (action != null)
-            Text(action,
-                style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500,
-                    color: Color(0xFF00594C))),
-        ],
-      ),
-    );
-  }
-
-  Widget _recentRow(String text) {
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.symmetric(horizontal: 18),
-      decoration: const BoxDecoration(
-        border: Border(bottom: BorderSide(color: Color(0xFFE5E7EB), width: 0.5)),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.access_time_rounded, size: 17,
-              color: Color(0xFF9CA3AF)),
-          const SizedBox(width: 11),
-          Expanded(
-            child: Text(text,
-                style: const TextStyle(fontSize: 14,
-                    color: Color(0xFF0F172A))),
-          ),
-          const Icon(Icons.close_rounded, size: 15,
-              color: Color(0xFF9CA3AF)),
-        ],
-      ),
-    );
-  }
-
-  Widget _trendingCard(_SearchEntry entry, int rank) {
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: 148,
       padding: const EdgeInsets.all(11),
       decoration: BoxDecoration(
-        color: AppColors.white,
+        color: _kWhite,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 0.5),
+        border: Border.all(color: _kBorder, width: 0.5),
       ),
       child: Stack(
         children: [
@@ -518,14 +394,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 4),
-              Text(entry.name,
-                  maxLines: 2, overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12,
-                      fontWeight: FontWeight.w600, color: Color(0xFF0F172A))),
+              Text(
+                meta.name.en,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12,
+                    fontWeight: FontWeight.w600, color: _kSlate900),
+              ),
               const SizedBox(height: 2),
-              Text(entry.category,
-                  style: const TextStyle(fontSize: 10,
-                      color: Color(0xFF6B7280))),
+              Text(
+                _capitalize(meta.category),
+                style: const TextStyle(fontSize: 10, color: Color(0xFF6B7280)),
+              ),
             ],
           ),
           Positioned(
@@ -533,58 +413,175 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: const Color(0xFFF5E9D3),
+                color: cfg.bg,
                 borderRadius: BorderRadius.circular(99),
               ),
               child: Text('#$rank',
-                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.w700,
-                      color: Color(0xFF7A5A1A))),
+                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.w700,
+                      color: cfg.color)),
             ),
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _categoryRow(String name, String emoji, Color bg, Color color) {
-    return Container(
-      height: 60, margin: const EdgeInsets.fromLTRB(18, 0, 18, 7),
-      padding: const EdgeInsets.symmetric(horizontal: 14),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFE5E7EB), width: 0.5),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 38, height: 38,
-            decoration: BoxDecoration(color: bg,
-                borderRadius: BorderRadius.circular(11)),
-            child: Center(child: Text(emoji, style: const TextStyle(fontSize: 18))),
-          ),
-          const SizedBox(width: 11),
-          Expanded(
-            child: Text(name,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600,
-                    color: Color(0xFF0F172A))),
-          ),
-          const Icon(Icons.chevron_right_rounded, size: 17,
-              color: Color(0xFF9CA3AF)),
-        ],
+class _TrendingSkeletonRow extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      scrollDirection: Axis.horizontal,
+      itemCount: 4,
+      separatorBuilder: (_, __) => const SizedBox(width: 9),
+      itemBuilder: (_, __) => Container(
+        width: 148,
+        decoration: BoxDecoration(
+          color: _kWhite,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: _kBorder, width: 0.5),
+        ),
+        padding: const EdgeInsets.all(11),
+        child: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 4),
+            ShimmerBox(width: 110, height: 12),
+            SizedBox(height: 6),
+            ShimmerBox(width: 70, height: 10),
+          ],
+        ),
       ),
     );
   }
+}
 
-  Widget _resultCard(_SearchEntry entry) {
-    final dataAsync = ref.watch(indicatorSummaryProvider(entry.id));
+// ─── Results state ────────────────────────────────────────────────────────────
+
+class _ResultsState extends ConsumerWidget {
+  const _ResultsState({required this.onTap});
+  final ValueChanged<IndicatorMeta> onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final resultsAsync = ref.watch(searchResultsProvider);
+    final query        = ref.watch(searchQueryProvider);
+    final category     = ref.watch(searchCategoryProvider);
+    final categories   = ref.watch(categoriesProvider);
+
+    return resultsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(
+        child: Text('Error: $e',
+            style: const TextStyle(color: _kSlate400)),
+      ),
+      data: (results) {
+        if (results.isEmpty) return _NoResults(query: query);
+
+        final cats = categories.valueOrNull ?? [];
+        final allFilters = ['All', ...cats];
+
+        return Column(
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 14, 18, 8),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      "${results.length} result${results.length == 1 ? '' : 's'} for '$query'",
+                      style: const TextStyle(fontSize: 13,
+                          fontWeight: FontWeight.w600, color: _kSlate900),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.tune_rounded, size: 16, color: _kSlate600),
+                  const SizedBox(width: 4),
+                  const Text('Filter',
+                      style: TextStyle(fontSize: 13, color: _kSlate600)),
+                ],
+              ),
+            ),
+            // Category filter chips
+            SizedBox(
+              height: 36,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 18),
+                itemCount: allFilters.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 7),
+                itemBuilder: (_, i) {
+                  final f      = allFilters[i];
+                  final active = category == f;
+                  return GestureDetector(
+                    onTap: () => ref
+                        .read(searchCategoryProvider.notifier)
+                        .state = f,
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 160),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 14, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: active ? _kGreen : _kWhite,
+                        borderRadius: BorderRadius.circular(999),
+                        border: Border.all(
+                            color: active ? _kGreen : _kBorder),
+                      ),
+                      child: Text(
+                        f == 'All' ? 'All ▾' : _capitalize(f),
+                        style: TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.w600,
+                          color: active ? Colors.white : _kSlate600,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Result list
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.fromLTRB(14, 0, 14, 20),
+                itemCount: results.length,
+                itemBuilder: (_, i) => _ResultCard(
+                  meta: results[i],
+                  onTap: () => onTap(results[i]),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+// ─── Result card ──────────────────────────────────────────────────────────────
+
+class _ResultCard extends ConsumerWidget {
+  const _ResultCard({required this.meta, required this.onTap});
+  final IndicatorMeta meta;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isArabic   = ref.watch(localeProvider).languageCode == 'ar';
+    final dataAsync  = ref.watch(indicatorSummaryProvider(meta.id));
+    final cfg        = _catConfig(meta.category);
+
     String value = '—';
-    String trend = '';
-    bool trendUp = true;
+    String trend  = '';
+    bool   trendUp = true;
+    String year   = meta.coverageEnd;
 
     dataAsync.whenData((summary) {
       if (summary.latestValue != 0) {
-        value = NumberFormatter.compact(summary.latestValue);
+        value  = NumberFormatter.compact(summary.latestValue);
+        year   = summary.latestPeriod;
         trendUp = summary.yoyChange >= 0;
         if (summary.yoyChange.abs() > 0.05) {
           trend = '${trendUp ? '↑' : '↓'} ${summary.yoyChange.abs().toStringAsFixed(1)}%';
@@ -592,71 +589,63 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       }
     });
 
-    final isEconomy = entry.category == 'Economy';
-    final iconBg = isEconomy
-        ? const Color(0xFFF5E9D3)
-        : entry.category == 'Environment'
-            ? const Color(0xFFE0F4F1)
-            : const Color(0xFFE8F1EE);
-    final iconColor = isEconomy
-        ? const Color(0xFF7A5A1A)
-        : entry.category == 'Environment'
-            ? const Color(0xFF0F6E56)
-            : const Color(0xFF00594C);
-
     return GestureDetector(
-      onTap: () => context.push(AppRoutes.indicatorPath(entry.id)),
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 7),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: _kWhite,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: const Color(0xFFE5E7EB), width: 0.5),
+          border: Border.all(color: _kBorder, width: 0.5),
         ),
         child: Column(
           children: [
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Icon
                 Container(
                   width: 34, height: 34,
                   decoration: BoxDecoration(
-                      color: iconBg,
+                      color: cfg.bg,
                       borderRadius: BorderRadius.circular(9)),
-                  child: Icon(Icons.bar_chart_rounded, size: 17,
-                      color: iconColor),
+                  child: Center(
+                    child: Text(cfg.emoji,
+                        style: const TextStyle(fontSize: 16)),
+                  ),
                 ),
                 const SizedBox(width: 10),
+                // Name + breadcrumb
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${entry.category} · ${entry.subCategory}',
+                        '${_capitalize(meta.category)} · ${_capitalize(meta.subCategory)}',
                         style: const TextStyle(fontSize: 9,
                             fontWeight: FontWeight.w600,
-                            letterSpacing: 0.6,
-                            color: Color(0xFF9CA3AF)),
+                            letterSpacing: 0.6, color: _kSlate400),
                       ),
                       const SizedBox(height: 2),
-                      Text(entry.name,
-                          style: const TextStyle(fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF0F172A))),
+                      Text(
+                        isArabic ? meta.name.ar : meta.name.en,
+                        style: const TextStyle(fontSize: 14,
+                            fontWeight: FontWeight.w600, color: _kSlate900),
+                      ),
                     ],
                   ),
                 ),
+                // Value + trend
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(value,
                         style: const TextStyle(fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF0F172A))),
-                    if (trend.isNotEmpty)
+                            fontWeight: FontWeight.w700, color: _kSlate900)),
+                    if (trend.isNotEmpty) ...[
+                      const SizedBox(height: 2),
                       Container(
-                        margin: const EdgeInsets.only(top: 2),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 6, vertical: 2),
                         decoration: BoxDecoration(
@@ -673,24 +662,281 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                   : const Color(0xFFDC2626),
                             )),
                       ),
+                    ],
                   ],
                 ),
               ],
             ),
             const SizedBox(height: 9),
-            const Divider(height: 1, color: Color(0xFFE5E7EB)),
+            const Divider(height: 1, color: _kBorder),
             const SizedBox(height: 7),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Row(
               children: [
-                Text('Source: FCSA',
-                    style: TextStyle(fontSize: 10,
-                        color: Color(0xFF9CA3AF))),
-                Icon(Icons.chevron_right_rounded, size: 14,
-                    color: Color(0xFF9CA3AF)),
+                Expanded(
+                  child: Text(
+                    '${meta.frequencyLabel} · ${meta.sourceCode} · $year',
+                    style: const TextStyle(fontSize: 10, color: _kSlate400),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                const Icon(Icons.chevron_right_rounded,
+                    size: 14, color: _kSlate400),
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── No results ───────────────────────────────────────────────────────────────
+
+class _NoResults extends ConsumerWidget {
+  const _NoResults({required this.query});
+  final String query;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final allMeta = ref.watch(allMetaProvider);
+    // Pick 6 random suggestions from available indicators
+    final suggestions = allMeta.valueOrNull
+            ?.take(6)
+            .map((m) => m.name.en)
+            .toList() ??
+        ['Population', 'GDP', 'Inflation', 'Energy', 'Education', 'Births'];
+
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(36),
+        child: Column(
+          children: [
+            const SizedBox(height: 30),
+            Container(
+              width: 80, height: 80,
+              decoration: BoxDecoration(
+                  color: _kGreenBg,
+                  borderRadius: BorderRadius.circular(40)),
+              child: const Icon(Icons.search_off_rounded,
+                  size: 40, color: _kGreen),
+            ),
+            const SizedBox(height: 20),
+            Text("No results for '$query'",
+                style: const TextStyle(fontSize: 16,
+                    fontWeight: FontWeight.w600, color: _kSlate900)),
+            const SizedBox(height: 8),
+            const Text(
+                "We couldn't find any indicators matching your search. "
+                "Check your spelling or try a related term.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 13, color: Color(0xFF6B7280),
+                    height: 1.55)),
+            const SizedBox(height: 22),
+            const Text('Try one of these:',
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600,
+                    color: Color(0xFF374151))),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 7, runSpacing: 7,
+              alignment: WrapAlignment.center,
+              children: suggestions.map((s) => GestureDetector(
+                onTap: () =>
+                    ref.read(searchQueryProvider.notifier).state = s,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 7),
+                  decoration: BoxDecoration(
+                    color: _kGreenBg,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(s,
+                      style: const TextStyle(fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF003D33))),
+                ),
+              )).toList(),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity, height: 48,
+              child: OutlinedButton(
+                onPressed: () => context.go(AppRoutes.home),
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(color: _kGreen),
+                  foregroundColor: _kGreen,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                ),
+                child: const Text('Browse by Category',
+                    style: TextStyle(fontSize: 13,
+                        fontWeight: FontWeight.w600)),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Shared small widgets ─────────────────────────────────────────────────────
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
+    required this.title,
+    this.action,
+    this.onAction,
+  });
+  final String title;
+  final String? action;
+  final VoidCallback? onAction;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18, 20, 18, 10),
+      child: Row(
+        children: [
+          Text(title,
+              style: const TextStyle(fontSize: 13,
+                  fontWeight: FontWeight.w600, color: _kSlate900)),
+          const Spacer(),
+          if (action != null)
+            GestureDetector(
+              onTap: onAction,
+              child: Text(action!,
+                  style: const TextStyle(fontSize: 11,
+                      fontWeight: FontWeight.w500, color: _kGreen)),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RecentRow extends StatelessWidget {
+  const _RecentRow({
+    required this.term,
+    required this.onTap,
+    required this.onRemove,
+  });
+  final String term;
+  final VoidCallback onTap, onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(horizontal: 18),
+        decoration: const BoxDecoration(
+          border: Border(
+              bottom: BorderSide(color: Color(0xFFE5E7EB), width: 0.5)),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.access_time_rounded,
+                size: 17, color: _kSlate400),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Text(term,
+                  style: const TextStyle(
+                      fontSize: 14, color: _kSlate900),
+                  overflow: TextOverflow.ellipsis),
+            ),
+            GestureDetector(
+              onTap: onRemove,
+              behavior: HitTestBehavior.opaque,
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                child: Icon(Icons.close_rounded,
+                    size: 15, color: _kSlate400),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryRow extends StatelessWidget {
+  const _CategoryRow({
+    required this.name,
+    required this.emoji,
+    required this.bg,
+    required this.color,
+    required this.onTap,
+  });
+  final String name, emoji;
+  final Color bg, color;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 60,
+        margin: const EdgeInsets.fromLTRB(18, 0, 18, 7),
+        padding: const EdgeInsets.symmetric(horizontal: 14),
+        decoration: BoxDecoration(
+          color: _kWhite,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: _kBorder, width: 0.5),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 38, height: 38,
+              decoration: BoxDecoration(
+                  color: bg, borderRadius: BorderRadius.circular(11)),
+              child: Center(
+                child: Text(emoji,
+                    style: const TextStyle(fontSize: 18)),
+              ),
+            ),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Text(_capitalize(name),
+                  style: const TextStyle(fontSize: 14,
+                      fontWeight: FontWeight.w600, color: _kSlate900)),
+            ),
+            const Icon(Icons.chevron_right_rounded,
+                size: 17, color: _kSlate400),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategorySkeleton extends StatelessWidget {
+  const _CategorySkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        3,
+        (_) => Container(
+          height: 60,
+          margin: const EdgeInsets.fromLTRB(18, 0, 18, 7),
+          decoration: BoxDecoration(
+            color: _kWhite,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: _kBorder, width: 0.5),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
+          child: const Row(
+            children: [
+              ShimmerBox(width: 38, height: 38, borderRadius: 11),
+              SizedBox(width: 11),
+              ShimmerBox(width: 120, height: 14),
+            ],
+          ),
         ),
       ),
     );

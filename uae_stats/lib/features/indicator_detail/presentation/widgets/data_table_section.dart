@@ -27,12 +27,12 @@ class DataTableSection extends StatelessWidget {
 
         // ── Data table section ─────────────────────────────────────────
         const SizedBox(height: 20),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Detailed Data',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
@@ -40,7 +40,7 @@ class DataTableSection extends StatelessWidget {
                   color: AppColors.slate900,
                 ),
               ),
-              const Text(
+              Text(
                 'Export →',
                 style: TextStyle(
                   fontSize: 13,

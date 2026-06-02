@@ -116,7 +116,7 @@ class _DetailHeroCardState extends State<DetailHeroCard>
                 ? const [Color(0xFFC8973A), Color(0xFF92620A)]
                 : const [Color(0xFF005A8E), AppColors.demBlue],
           ),
-          borderRadius: BorderRadius.all(Radius.circular(24)),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
         ),
         constraints: const BoxConstraints(minHeight: 200),
         clipBehavior: Clip.hardEdge,

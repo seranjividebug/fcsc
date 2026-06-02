@@ -133,41 +133,25 @@ const _carouselConfigs = <_CarouselEntry>[
 final homeCarouselProvider = FutureProvider<List<HomeKpiItem>>((ref) async {
   final svc = ref.read(kpiSdmxServiceProvider);
 
-  final results = await Future.wait(
-    _carouselConfigs.map((c) => svc.fetchKpiSeries(c.cfg)),
+  final cards = await Future.wait(
+    _carouselConfigs.map((c) => resolveKpi(c.cfg, svc)),
   );
 
   return List.generate(_carouselConfigs.length, (i) {
     final c = _carouselConfigs[i];
-    final result = results[i];
-
-    if (result == null) {
-      return HomeKpiItem(
-        category: c.category,
-        label: c.cfg.nameEn,
-        displayValue: '—',
-        year: '—',
-        icon: c.cfg.icon,
-        iconColor: c.iconColor,
-        iconBg: c.iconBg,
-        categoryColor: c.categoryColor,
-      );
-    }
-
-    final raw = result.historicalValues;
-    final last8 = raw.length > 8 ? raw.sublist(raw.length - 8) : raw;
+    final card = cards[i];
 
     return HomeKpiItem(
       category: c.category,
       label: c.cfg.nameEn,
-      displayValue: KpiCardData.format(result.value, c.cfg.displayUnit),
-      year: result.year,
+      displayValue: card.displayValue,
+      year: card.year,
       icon: c.cfg.icon,
       iconColor: c.iconColor,
       iconBg: c.iconBg,
       categoryColor: c.categoryColor,
-      trendPercent: result.trendPercent,
-      sparklinePoints: normalizePoints(last8),
+      trendPercent: card.trendPercent,
+      sparklinePoints: card.sparklinePoints,
     );
   });
 });

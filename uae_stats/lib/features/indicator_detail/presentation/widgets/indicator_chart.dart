@@ -134,16 +134,6 @@ class _IndicatorChartState extends State<IndicatorChart> {
     return src.sublist(src.length - n);
   }
 
-  String get _chartSubLabel {
-    final s = _series;
-    if (s.isEmpty) return '';
-    final id = widget.indicatorId;
-    final genderTag = _hasGender ? ' · By Gender' : '';
-    final unitTag = (id.startsWith('gdp_') || id.startsWith('trade_'))
-        ? ' · AED Mn'
-        : '';
-    return '${s.first.timePeriod} — ${s.last.timePeriod} · Source: FCSC$unitTag$genderTag';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -229,12 +219,6 @@ class _IndicatorChartState extends State<IndicatorChart> {
                       color: AppColors.slate600,
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    _chartSubLabel,
-                    style: const TextStyle(
-                        fontSize: 11, color: AppColors.slate400),
-                  ),
                   const SizedBox(height: 14),
 
                   // Chart
@@ -277,6 +261,26 @@ class _IndicatorChartState extends State<IndicatorChart> {
     );
   }
 
+  // ─── Y-axis interval helper ───────────────────────────────────────────────
+
+  /// Computes a clean interval that yields ~4 labels for the given y-range.
+  double _yInterval(double minY, double maxY) {
+    final range = maxY - minY;
+    if (range <= 0) return 1;
+    final rawStep = range / 4;
+    const steps = <double>[
+      1, 2, 5, 10, 20, 25, 50, 100, 200, 250, 500,
+      1000, 2000, 2500, 5000, 10000, 20000, 25000, 50000,
+      100000, 200000, 250000, 500000,
+      1e6, 2e6, 2.5e6, 5e6, 1e7, 2e7, 2.5e7, 5e7, 1e8,
+    ];
+    double best = steps.last;
+    for (final s in steps) {
+      if (s >= rawStep) { best = s; break; }
+    }
+    return best;
+  }
+
   // ─── Line Chart ────────────────────────────────────────────────────────────
 
   Widget _buildLineChart() {
@@ -301,9 +305,12 @@ class _IndicatorChartState extends State<IndicatorChart> {
       if (_hasGender) ...fSeries.map((p) => p.value),
       if (_hasGender) ...mSeries.map((p) => p.value),
     ];
-    final minY = allValues.reduce((a, b) => a < b ? a : b);
-    final maxY = allValues.reduce((a, b) => a > b ? a : b);
-    final pad = (maxY - minY) * 0.12;
+    final minVal = allValues.reduce((a, b) => a < b ? a : b);
+    final maxVal = allValues.reduce((a, b) => a > b ? a : b);
+    final pad = (maxVal - minVal) * 0.15;
+    final chartMinY = (minVal - pad).clamp(0.0, double.infinity);
+    final chartMaxY = maxVal + pad;
+    final yInterval = _yInterval(chartMinY.toDouble(), chartMaxY);
 
     LineChartBarData bar(List<FlSpot> s, Color c, {bool fill = false, bool dashed = false}) =>
         LineChartBarData(
@@ -335,8 +342,8 @@ class _IndicatorChartState extends State<IndicatorChart> {
 
     return LineChart(
       LineChartData(
-        minY: (minY - pad).clamp(0, double.infinity),
-        maxY: maxY + pad,
+        minY: chartMinY.toDouble(),
+        maxY: chartMaxY,
         clipData: const FlClipData.all(),
         lineBarsData: [
           bar(spots, widget.accentColor, fill: true),
@@ -346,6 +353,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
+          horizontalInterval: yInterval,
           getDrawingHorizontalLine: (_) => const FlLine(
             color: AppColors.pearlGray,
             strokeWidth: 1,
@@ -360,29 +368,39 @@ class _IndicatorChartState extends State<IndicatorChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 56,
-              getTitlesWidget: (val, meta) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Text(
-                  NumberFormatter.compact(val),
-                  style: const TextStyle(
-                      fontSize: 10, color: AppColors.slate400),
-                  textAlign: TextAlign.right,
-                ),
-              ),
+              reservedSize: 62,
+              interval: yInterval,
+              getTitlesWidget: (val, meta) {
+                // Skip labels that coincide with axis min/max to avoid clipping
+                if (val == meta.min || val == meta.max) {
+                  return const SizedBox.shrink();
+                }
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 6,
+                  child: Text(
+                    NumberFormatter.compact(val),
+                    style: const TextStyle(
+                        fontSize: 10, color: AppColors.slate400),
+                    textAlign: TextAlign.right,
+                  ),
+                );
+              },
             ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              reservedSize: 28,
               interval: 1,
               getTitlesWidget: (val, meta) {
                 final idx = val.round();
                 if (idx < 0 || idx >= series.length) {
                   return const SizedBox.shrink();
                 }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 6,
                   child: Text(
                     series[idx].timePeriod,
                     style: const TextStyle(
@@ -461,6 +479,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
 
     final maxY = series.map((p) => p.value).reduce((a, b) => a > b ? a : b);
     final barW = _barWidth(series.length);
+    final yInterval = _yInterval(0, maxY * 1.12);
 
     return BarChart(
       BarChartData(
@@ -484,6 +503,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
         gridData: FlGridData(
           show: true,
           drawVerticalLine: false,
+          horizontalInterval: yInterval,
           getDrawingHorizontalLine: (_) => const FlLine(
             color: AppColors.pearlGray,
             strokeWidth: 1,
@@ -498,29 +518,38 @@ class _IndicatorChartState extends State<IndicatorChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 56,
-              getTitlesWidget: (val, meta) => Padding(
-                padding: const EdgeInsets.only(right: 8),
-                child: Text(
-                  NumberFormatter.compact(val),
-                  style: const TextStyle(
-                      fontSize: 10, color: AppColors.slate400),
-                  textAlign: TextAlign.right,
-                ),
-              ),
+              reservedSize: 62,
+              interval: yInterval,
+              getTitlesWidget: (val, meta) {
+                if (val == meta.min || val == meta.max) {
+                  return const SizedBox.shrink();
+                }
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 6,
+                  child: Text(
+                    NumberFormatter.compact(val),
+                    style: const TextStyle(
+                        fontSize: 10, color: AppColors.slate400),
+                    textAlign: TextAlign.right,
+                  ),
+                );
+              },
             ),
           ),
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
+              reservedSize: 28,
               interval: 1,
               getTitlesWidget: (val, meta) {
                 final idx = val.round();
                 if (idx < 0 || idx >= series.length) {
                   return const SizedBox.shrink();
                 }
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  space: 6,
                   child: Text(
                     series[idx].timePeriod,
                     style: const TextStyle(

@@ -51,11 +51,10 @@ class _EnvironmentScreenState extends ConsumerState<EnvironmentScreen> {
               onRefresh: () => ref.refresh(environmentKpisProvider.future),
               child: CustomScrollView(
                 slivers: [
-                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 6)),
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.lg),
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
                       child: _SectionHeader(
                         expanded: _expanded,
                         isArabic: isArabic,
@@ -67,8 +66,7 @@ class _EnvironmentScreenState extends ConsumerState<EnvironmentScreen> {
                   if (_expanded)
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                            AppSpacing.lg, 12, AppSpacing.lg, AppSpacing.xl),
+                        padding: const EdgeInsets.fromLTRB(14, 10, 14, 16),
                         child: kpisAsync.when(
                           loading: () => const _SectionsSkeleton(),
                           error: (_, __) => _ErrorRetry(

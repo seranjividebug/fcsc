@@ -125,17 +125,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               // Gap to account for the overlap
-              const SliverToBoxAdapter(child: SizedBox(height: 96)),
+              const SliverToBoxAdapter(child: SizedBox(height: 92)),
               // Search bar
-              const SliverToBoxAdapter(child: SizedBox(height: 8)),
+              const SliverToBoxAdapter(child: SizedBox(height: 6)),
               const SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: EdgeInsets.symmetric(horizontal: 14),
                   child: _SearchBar(),
                 ),
               ),
               // Filter chips
-              const SliverToBoxAdapter(child: SizedBox(height: 12)),
+              const SliverToBoxAdapter(child: SizedBox(height: 10)),
               SliverToBoxAdapter(
                 child: _FilterChips(
                   selected: _activeFilter,
@@ -148,10 +148,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               // Demography section
-              const SliverToBoxAdapter(child: SizedBox(height: 20)),
+              const SliverToBoxAdapter(child: SizedBox(height: 10)),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                   child: _CategorySection(
                     sectionKey: _demographyKey,
                     icon: Icons.people_rounded,
@@ -170,10 +170,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               // Economy section
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              const SliverToBoxAdapter(child: SizedBox(height: 10)),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                   child: _CategorySection(
                     sectionKey: _economyKey,
                     icon: Icons.business_rounded,
@@ -191,10 +191,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               // Environment section
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              const SliverToBoxAdapter(child: SizedBox(height: 10)),
               SliverToBoxAdapter(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 14),
                   child: _CategorySection(
                     sectionKey: _environmentKey,
                     icon: Icons.eco_rounded,
@@ -211,9 +211,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               // FCSC Footer
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
+              const SliverToBoxAdapter(child: SizedBox(height: 12)),
               const SliverToBoxAdapter(child: _FcscFooter()),
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+              const SliverToBoxAdapter(child: SizedBox(height: 16)),
             ],
           ),
         ),
@@ -621,15 +621,15 @@ class _CategorySectionState extends ConsumerState<_CategorySection> {
           onTap: () => setState(() => _expanded = !_expanded),
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(children: [
               Container(
-                width: 40, height: 40,
+                width: 38, height: 38,
                 decoration: BoxDecoration(
                   color: widget.iconBg,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(widget.icon, size: 20, color: widget.iconColor),
+                child: Icon(widget.icon, size: 19, color: widget.iconColor),
               ),
               const SizedBox(width: 12),
               Expanded(child: Column(
@@ -677,19 +677,23 @@ class _TileGrid extends StatelessWidget {
     final gridTiles = tiles.where((t) => !t.isFullWidth).toList();
     final fullTiles  = tiles.where((t) => t.isFullWidth).toList();
 
+    // Tile height adapts to screen width: narrower screens get shorter tiles
+    final screenW = MediaQuery.sizeOf(context).width;
+    final tileH = screenW < 380 ? 104.0 : 112.0;
+
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       child: Column(children: [
         // 2-column grid
         if (gridTiles.isNotEmpty)
           GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 118,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              mainAxisExtent: tileH,
             ),
             itemCount: gridTiles.length,
             itemBuilder: (_, i) => _Tile(
@@ -700,7 +704,7 @@ class _TileGrid extends StatelessWidget {
           ),
         // Full-width tiles
         for (final t in fullTiles) ...[
-          if (gridTiles.isNotEmpty) const SizedBox(height: 10),
+          if (gridTiles.isNotEmpty) const SizedBox(height: 8),
           _FullWidthTile(data: t, accentColor: accentColor, accentBg: accentBg),
         ],
       ]),
@@ -755,7 +759,7 @@ class _TileState extends State<_Tile> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         transform: Matrix4.identity()..scaleByDouble(_pressed ? 0.98 : 1.0, _pressed ? 0.98 : 1.0, 1.0, 1.0),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
@@ -767,7 +771,7 @@ class _TileState extends State<_Tile> {
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisSize: MainAxisSize.min, children: [
           Row(children: [
             Container(
-              width: 32, height: 32,
+              width: 30, height: 30,
               decoration: BoxDecoration(
                 color: widget.accentBg,
                 borderRadius: BorderRadius.circular(8),
@@ -830,14 +834,10 @@ class _TileState extends State<_Tile> {
                         Icon(d.change >= 0 ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
                           size: 10, color: d.change >= 0 ? AppColors.success : AppColors.error),
                         const SizedBox(width: 2),
-                        Flexible(
-                          child: Text('${d.change.toStringAsFixed(1)}%',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
-                              color: d.change >= 0 ? AppColors.success : AppColors.error)),
-                        ),
-                        const Spacer(),
+                        Text('${d.change.toStringAsFixed(1)}%',
+                          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600,
+                            color: d.change >= 0 ? AppColors.success : AppColors.error)),
+                        const SizedBox(width: 6),
                         Text(d.year,
                           style: const TextStyle(fontSize: 9, color: _kSlate400)),
                       ]),
@@ -853,6 +853,7 @@ class _TileState extends State<_Tile> {
                       painter: _SparklinePainter(
                         points: d.sparklinePoints,
                         isUp: d.change >= 0,
+                        color: widget.accentColor,
                       ),
                     ),
                   ),
@@ -901,7 +902,7 @@ class _FullWidthTileState extends State<_FullWidthTile> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 120),
         transform: Matrix4.identity()..scaleByDouble(_pressed ? 0.98 : 1.0, _pressed ? 0.98 : 1.0, 1.0, 1.0),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
@@ -909,12 +910,12 @@ class _FullWidthTileState extends State<_FullWidthTile> {
         ),
         child: Row(children: [
           Container(
-            width: 40, height: 40,
+            width: 38, height: 38,
             decoration: BoxDecoration(
               color: widget.accentBg,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(d.icon, size: 20, color: widget.accentColor),
+            child: Icon(d.icon, size: 19, color: widget.accentColor),
           ),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1281,9 +1282,9 @@ class _EducationSheet extends ConsumerWidget {
     'higher_education':  Icons.account_balance_outlined,
   };
   static const _labels = {
-    'student_enrolment': 'General Education – Students',
-    'teaching_staff':    'General Education – Teachers',
-    'higher_education':  'Higher Education – Students',
+    'student_enrolment': 'Students',
+    'teaching_staff':    'Teachers',
+    'higher_education':  'Higher Education',
   };
 
   @override
@@ -2428,9 +2429,10 @@ class _LaborSheet extends ConsumerWidget {
 }
 
 class _SparklinePainter extends CustomPainter {
-  const _SparklinePainter({required this.points, required this.isUp});
+  const _SparklinePainter({required this.points, required this.isUp, this.color});
   final List<double> points;
   final bool isUp;
+  final Color? color;
 
   static const _fallbackUp   = [0.60, 0.65, 0.72, 0.80, 0.88, 0.95, 1.0];
   static const _fallbackDown = [1.00, 0.92, 0.85, 0.78, 0.72, 0.68, 0.62];
@@ -2438,7 +2440,7 @@ class _SparklinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final pts = points.isNotEmpty ? points : (isUp ? _fallbackUp : _fallbackDown);
-    final drawColor = isUp ? const Color(0xFF00594C) : AppColors.error;
+    final drawColor = color ?? (isUp ? const Color(0xFF00594C) : AppColors.error);
 
     final paint = Paint()
       ..color = drawColor

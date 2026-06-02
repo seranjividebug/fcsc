@@ -283,34 +283,36 @@ class _BarList extends StatelessWidget {
               Expanded(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(999),
-                  child: Container(
+                  child: SizedBox(
                     height: 10,
-                    color: AppColors.pearlGray,
-                    child: FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
-                      widthFactor:
-                          (item.percentage / 100).clamp(0.0, 1.0),
-                      child: TweenAnimationBuilder<double>(
-                        tween: Tween(
+                    child: Stack(
+                      children: [
+                        // Track
+                        Container(color: AppColors.pearlGray),
+                        // Animated fill — single FractionallySizedBox, left-aligned
+                        TweenAnimationBuilder<double>(
+                          tween: Tween(
                             begin: 0,
-                            end: (item.percentage / 100).clamp(0.0, 1.0)),
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeOut,
-                        builder: (_, val, child) => FractionallySizedBox(
-                          widthFactor: val,
-                          child: child,
-                        ),
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.aeGold,
-                                Color(0xFF1A8C78),
-                              ],
+                            end: (item.percentage / 100).clamp(0.0, 1.0),
+                          ),
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeOut,
+                          builder: (_, val, __) => FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: val,
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    AppColors.aeGold,
+                                    Color(0xFF1A8C78),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
                   ),
                 ),

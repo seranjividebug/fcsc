@@ -265,28 +265,33 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     final isGdp = id.startsWith('gdp_');
     final isTrade = id.startsWith('trade_');
     final isTourism = id.startsWith('tourism_');
+    final isAir = id == 'aircraft_movement';
+    final isPrices = id.startsWith('prices_');
     return IndicatorMeta(
       id: id,
       dataflowId: '',
       dataflowVersion: '1.0.0',
       agencyId: 'FCSA',
       name: _nameFor(id),
-      category: (isGdp || isTrade || isTourism || id.startsWith('prices_'))
+      category: (isGdp || isTrade || isTourism || isPrices || isAir)
           ? 'economy'
           : id.startsWith('labour_') ? 'demography' : 'demography',
       subCategory: isGdp ? 'national_accounts'
           : isTrade ? 'international_trade'
           : isTourism ? 'tourism'
-          : id.startsWith('prices_') ? 'prices'
+          : isPrices ? 'prices'
+          : isAir ? 'air_transport'
           : 'vitals',
       unit: isGdp || isTrade
           ? const LocalizedString(en: 'AED Million', ar: 'مليون درهم')
           : isTourism
           ? const LocalizedString(en: 'Persons', ar: 'أشخاص')
-          : id.startsWith('prices_')
+          : isPrices
           ? const LocalizedString(en: 'Index', ar: 'مؤشر')
+          : isAir
+          ? const LocalizedString(en: 'Movements', ar: 'حركة')
           : const LocalizedString(en: 'Persons', ar: 'أشخاص'),
-      unitCode: isGdp || isTrade ? 'AED_MN' : 'PS',
+      unitCode: isGdp || isTrade ? 'AED_MN' : isAir ? 'MOV' : 'PS',
       frequency: 'A',
       sourceCode: 'FCSA',
       sourceName: const LocalizedString(
