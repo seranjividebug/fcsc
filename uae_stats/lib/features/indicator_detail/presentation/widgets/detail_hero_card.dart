@@ -8,19 +8,21 @@
 
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/models/indicator_data.dart';
+import 'package:uae_stats/shared/providers/locale_provider.dart';
 
-class DetailHeroCard extends StatefulWidget {
+class DetailHeroCard extends ConsumerStatefulWidget {
   const DetailHeroCard({super.key, required this.data});
   final IndicatorData data;
 
   @override
-  State<DetailHeroCard> createState() => _DetailHeroCardState();
+  ConsumerState<DetailHeroCard> createState() => _DetailHeroCardState();
 }
 
-class _DetailHeroCardState extends State<DetailHeroCard>
+class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulseCtrl;
   late final Animation<double> _pulse;
@@ -44,12 +46,40 @@ class _DetailHeroCardState extends State<DetailHeroCard>
 
   // ─── Derived display strings ─────────────────────────────────────────────
 
-  String get _categoryTag =>
-      '${_cap(widget.data.meta.category)} · ${_cap(widget.data.meta.subCategory)}'.toUpperCase();
+  bool get _isArabic => ref.watch(localeProvider).languageCode == 'ar';
+
+  String get _categoryTag {
+    final cat = _isArabic ? _catAr(widget.data.meta.category) : _cap(widget.data.meta.category);
+    final sub = _isArabic ? _subAr(widget.data.meta.subCategory) : _cap(widget.data.meta.subCategory);
+    return '$cat · $sub'.toUpperCase();
+  }
+
+  String _catAr(String c) => switch (c) {
+    'demography'  => 'الديموغرافيا',
+    'economy'     => 'الاقتصاد',
+    'environment' => 'البيئة',
+    _             => _cap(c),
+  };
+
+  String _subAr(String s) => switch (s) {
+    'population'        => 'السكان',
+    'vitals'            => 'الأحوال الحيوية',
+    'education'         => 'التعليم',
+    'health'            => 'الصحة',
+    'labour'            => 'العمل',
+    'national_accounts' => 'الحسابات القومية',
+    'international_trade' => 'التجارة الدولية',
+    'tourism'           => 'السياحة',
+    'prices'            => 'الأسعار',
+    'air_transport'     => 'النقل الجوي',
+    'ecology'           => 'البيئة الطبيعية',
+    'agriculture'       => 'الزراعة',
+    _                   => _cap(s),
+  };
 
   String get _period => widget.data.latestPeriod;
 
-  String get _subtitle => _subtitleFor(widget.data.meta.id, _period);
+  String get _subtitle => _subtitleFor(widget.data.meta.id, _period, _isArabic);
 
   double get _value => widget.data.latestValue;
 
@@ -64,8 +94,12 @@ class _DetailHeroCardState extends State<DetailHeroCard>
   String get _vsLabel {
     final series = widget.data.uaeTotalSeries;
     if (series.length < 2) return '';
-    return 'vs ${series[series.length - 2].timePeriod}';
+    final prev = series[series.length - 2].timePeriod;
+    return _isArabic ? 'مقارنة بـ $prev' : 'vs $prev';
   }
+
+  String get _liveLabel =>
+      _isArabic ? 'مباشر · ${_fmtDateAr(widget.data.fetchedAt)}' : 'Live · ${_fmtDate(widget.data.fetchedAt)}';
 
   String _cap(String s) =>
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
@@ -76,30 +110,37 @@ class _DetailHeroCardState extends State<DetailHeroCard>
     return '${dt.day} ${m[dt.month - 1]} ${dt.year}';
   }
 
-  static String _subtitleFor(String id, String period) => switch (id) {
-        'births'                  => 'live births registered in $period',
-        'population'              => 'estimated residents in UAE',
-        'deaths'                  => 'deaths registered in $period',
-        'marriages'               => 'marriages registered in $period',
-        'divorces'                => 'divorces registered in $period',
-        'gdp_current'             => 'AED million at current prices in $period',
-        'gdp_constant'            => 'AED million at constant prices in $period',
-        'gdp_quarterly_current'   => 'AED million at current prices · $period',
-        'gdp_quarterly_constant'  => 'AED million at constant prices · $period',
-        'trade_total'                    => 'Total merchandise trade (imports + non-oil exports) · $period',
-        'trade_imports_hs'               => 'Total imports by HS section · $period',
-        'trade_non_oil_exports'          => 'Non-oil exports · $period',
-        'trade_reexports_annual'         => 'Annual re-exports · $period',
-        'trade_reexports_monthly'        => 'Monthly re-exports · $period',
-        'trade_sector_country'           => 'Non-oil exports by HS section & country · $period',
-        _ when id.startsWith('trade_')   => 'AED million · $period',
-        'prices_cpi_annual'              => 'All Items CPI Index · Base Year 2021 = 100 · $period',
-        _ when id.startsWith('prices_')  => 'Index value · $period',
-        'tourism_hotel_arrivals'         => 'Total hotel & apartment guest arrivals across 9 nationality regions · $period',
-        'tourism_hotel_establishments'   => 'Total licensed hotel & apartment establishments · $period',
-        'tourism_main_indicators'        => 'Tourism revenue · $period',
-        _ when id.startsWith('tourism_') => 'as of $period',
-        _ => 'as of $period',
+  static String _fmtDateAr(DateTime dt) {
+    const m = ['يناير','فبراير','مارس','أبريل','مايو','يونيو',
+                'يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+    return '${dt.day} ${m[dt.month - 1]} ${dt.year}';
+  }
+
+  static String _subtitleFor(String id, String period, bool ar) => switch (id) {
+        'births'  => ar ? 'مولود حي مسجل في $period' : 'live births registered in $period',
+        'population' => ar ? 'مقيم في دولة الإمارات' : 'estimated residents in UAE',
+        'deaths'  => ar ? 'وفاة مسجلة في $period' : 'deaths registered in $period',
+        'marriages' => ar ? 'زواج مسجل في $period' : 'marriages registered in $period',
+        'divorces' => ar ? 'طلاق مسجل في $period' : 'divorces registered in $period',
+        'gdp_current' => ar ? 'مليون درهم بالأسعار الجارية في $period' : 'AED million at current prices in $period',
+        'gdp_constant' => ar ? 'مليون درهم بالأسعار الثابتة في $period' : 'AED million at constant prices in $period',
+        'gdp_quarterly_current' => ar ? 'مليون درهم بالأسعار الجارية · $period' : 'AED million at current prices · $period',
+        'gdp_quarterly_constant' => ar ? 'مليون درهم بالأسعار الثابتة · $period' : 'AED million at constant prices · $period',
+        'trade_total' => ar ? 'إجمالي التجارة · $period' : 'Total merchandise trade · $period',
+        'trade_imports_hs' => ar ? 'الواردات حسب أقسام النظام المنسق · $period' : 'Total imports by HS section · $period',
+        'trade_non_oil_exports' => ar ? 'الصادرات غير النفطية · $period' : 'Non-oil exports · $period',
+        'trade_reexports_annual' => ar ? 'إعادة التصدير السنوية · $period' : 'Annual re-exports · $period',
+        'trade_reexports_monthly' => ar ? 'إعادة التصدير الشهرية · $period' : 'Monthly re-exports · $period',
+        'prices_cpi_annual' => ar ? 'مؤشر أسعار المستهلك · السنة الأساسية 2021=100 · $period' : 'All Items CPI Index · Base Year 2021=100 · $period',
+        'tourism_hotel_arrivals' => ar ? 'إجمالي وصول ضيوف الفنادق · $period' : 'Total hotel guest arrivals · $period',
+        'tourism_hotel_establishments' => ar ? 'إجمالي المنشآت الفندقية المرخصة · $period' : 'Total licensed hotel establishments · $period',
+        'tourism_main_indicators' => ar ? 'إيرادات السياحة · $period' : 'Tourism revenue · $period',
+        'aircraft_movement' => ar ? 'حركة الطائرات · $period' : 'Aircraft movements · $period',
+        'ecology_mean_temp' => ar ? 'متوسط درجة الحرارة السنوية · $period' : 'Annual mean temperature · $period',
+        'crop_production' => ar ? 'إنتاج المحاصيل الزراعية · $period' : 'Agricultural crop production · $period',
+        'crop_area' => ar ? 'المساحة الزراعية المزروعة · $period' : 'Agricultural cultivated area · $period',
+        'crop_land_total' => ar ? 'إجمالي مساحة الأراضي الزراعية · $period' : 'Total agricultural land area · $period',
+        _ => ar ? 'كما في $period' : 'as of $period',
       };
 
   @override
@@ -114,7 +155,9 @@ class _DetailHeroCardState extends State<DetailHeroCard>
             stops: const [0.0, 1.0],
             colors: widget.data.meta.category == 'economy'
                 ? const [Color(0xFFC8973A), Color(0xFF92620A)]
-                : const [Color(0xFF005A8E), AppColors.demBlue],
+                : widget.data.meta.category == 'environment'
+                    ? const [Color(0xFF24432B), Color(0xFF3F8E50)]
+                    : const [Color(0xFF005A8E), AppColors.demBlue],
           ),
           borderRadius: const BorderRadius.all(Radius.circular(24)),
         ),
@@ -179,7 +222,7 @@ class _DetailHeroCardState extends State<DetailHeroCard>
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            'Live · ${_fmtDate(widget.data.fetchedAt)}',
+                            _liveLabel,
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.white.withValues(alpha: 0.7),
@@ -194,7 +237,7 @@ class _DetailHeroCardState extends State<DetailHeroCard>
 
                   // Indicator name
                   Text(
-                    widget.data.meta.name.en,
+                    _isArabic ? widget.data.meta.name.ar : widget.data.meta.name.en,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 22,

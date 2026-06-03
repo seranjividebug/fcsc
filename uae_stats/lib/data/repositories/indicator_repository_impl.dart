@@ -242,6 +242,10 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       'gdp_constant'                   => _api.fetchGdpConstant(),
       'gdp_quarterly_current'          => _api.fetchGdpQuarterlyCurrent(),
       'gdp_quarterly_constant'         => _api.fetchGdpQuarterlyConstant(),
+      'ecology_mean_temp'              => _api.fetchClimateTemp(),
+      'crop_production'                => _api.fetchCropStatistics(),
+      'crop_area'                      => _api.fetchCropStatistics(),
+      'crop_land_total'                => _api.fetchCropLand(),
       'labour_economic_activity'       => Future.value(const SdmxResult(points: [])),
       'labour_employed_age_gender'     => Future.value(const SdmxResult(points: [])),
       'labour_employed_education'      => Future.value(const SdmxResult(points: [])),
@@ -267,6 +271,8 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     final isTourism = id.startsWith('tourism_');
     final isAir = id == 'aircraft_movement';
     final isPrices = id.startsWith('prices_');
+    final isEcology = id.startsWith('ecology_');
+    final isCrop    = id.startsWith('crop_');
     return IndicatorMeta(
       id: id,
       dataflowId: '',
@@ -275,12 +281,15 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       name: _nameFor(id),
       category: (isGdp || isTrade || isTourism || isPrices || isAir)
           ? 'economy'
+          : (isEcology || isCrop) ? 'environment'
           : id.startsWith('labour_') ? 'demography' : 'demography',
       subCategory: isGdp ? 'national_accounts'
           : isTrade ? 'international_trade'
           : isTourism ? 'tourism'
           : isPrices ? 'prices'
           : isAir ? 'air_transport'
+          : isEcology ? 'ecology'
+          : isCrop ? 'agriculture'
           : 'vitals',
       unit: isGdp || isTrade
           ? const LocalizedString(en: 'AED Million', ar: 'مليون درهم')
@@ -290,8 +299,14 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           ? const LocalizedString(en: 'Index', ar: 'مؤشر')
           : isAir
           ? const LocalizedString(en: 'Movements', ar: 'حركة')
+          : isEcology
+          ? const LocalizedString(en: '°C', ar: '°م')
+          : isCrop && id == 'crop_land_total'
+          ? const LocalizedString(en: 'K Donum', ar: 'ألف دونم')
+          : isCrop
+          ? const LocalizedString(en: 'Metric Tonnes', ar: 'طن متري')
           : const LocalizedString(en: 'Persons', ar: 'أشخاص'),
-      unitCode: isGdp || isTrade ? 'AED_MN' : isAir ? 'MOV' : 'PS',
+      unitCode: isGdp || isTrade ? 'AED_MN' : isAir ? 'MOV' : isEcology ? 'CEL' : 'PS',
       frequency: 'A',
       sourceCode: 'FCSA',
       sourceName: const LocalizedString(
@@ -322,6 +337,10 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'tourism_hotel_establishments'   => const LocalizedString(en: 'Hotel Establishments',           ar: 'المنشآت الفندقية'),
         'tourism_main_indicators'        => const LocalizedString(en: 'Main Indicators',                ar: 'المؤشرات الرئيسية للسياحة'),
         'aircraft_movement'              => const LocalizedString(en: 'Aircraft Movement',              ar: 'حركة الطائرات'),
+        'ecology_mean_temp'              => const LocalizedString(en: 'Mean Temperature',                ar: 'متوسط درجة الحرارة'),
+        'crop_production'                => const LocalizedString(en: 'Crop Statistics by Emirate',      ar: 'إحصاءات المحاصيل حسب الإمارة'),
+        'crop_area'                      => const LocalizedString(en: 'Agricultural Cultivated Area',    ar: 'المساحة الزراعية المزروعة'),
+        'crop_land_total'                => const LocalizedString(en: 'Total Agricultural Land Use',     ar: 'إجمالي استخدام الأراضي الزراعية'),
         'trade_total'                    => const LocalizedString(en: 'Total Trade',                    ar: 'إجمالي التجارة'),
         'trade_imports_hs'               => const LocalizedString(en: 'Imports by HS Section',          ar: 'الواردات حسب أقسام النظام المنسق'),
         'trade_non_oil_exports'          => const LocalizedString(en: 'Non-Oil Exports',                ar: 'الصادرات غير النفطية'),
@@ -414,6 +433,10 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'tourism_hotel_establishments'   => 'assets/data/seeds/tourism_hotel_establishments_seed.json',
         'tourism_main_indicators'        => 'assets/data/seeds/tourism_main_indicators_seed.json',
         'aircraft_movement'              => 'assets/data/seeds/aircraft_movement_seed.json',
+        'ecology_mean_temp'              => 'assets/data/seeds/climate_temp_seed.json',
+        'crop_production'                => 'assets/data/seeds/crop_production_seed.json',
+        'crop_area'                      => 'assets/data/seeds/crop_area_seed.json',
+        'crop_land_total'                => 'assets/data/seeds/crop_land_total_seed.json',
         'trade_total'                    => 'assets/data/seeds/trade_total_seed.json',
         'trade_imports_hs'               => 'assets/data/seeds/trade_imports_hs_seed.json',
         'trade_non_oil_exports'          => 'assets/data/seeds/trade_non_oil_exports_seed.json',

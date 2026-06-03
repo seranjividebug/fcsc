@@ -174,6 +174,21 @@ class SdmxApiClient {
     return _fetch(ApiConstants.gdpQuarterlyCurrentDataUrl);
   }
 
+  /// Fetches Climate Mean Temperature — monthly (DF_CLIMATE_TEMP).
+  Future<SdmxResult> fetchClimateTemp() async {
+    return _fetch(ApiConstants.climateTempDataUrl);
+  }
+
+  /// Fetches Crop Statistics by Emirate (DF_CROP_EM).
+  Future<SdmxResult> fetchCropStatistics() async {
+    return _fetch(ApiConstants.cropEmDataUrl);
+  }
+
+  /// Fetches Agricultural Land Use by Emirate (DF_CROP_LAND).
+  Future<SdmxResult> fetchCropLand() async {
+    return _fetch(ApiConstants.cropLandDataUrl);
+  }
+
   // ─── Core fetch + parse ───────────────────────────────────────────────────
 
   Future<SdmxResult> _fetch(String url) async {

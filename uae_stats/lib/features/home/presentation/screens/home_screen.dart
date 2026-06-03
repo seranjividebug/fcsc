@@ -203,7 +203,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     title: isArabic ? 'البيئة' : 'Environment',
                     subtitle: isArabic ? 'الزراعة · الطاقة · المناخ · الموارد' : 'Agriculture · Energy · Climate · Resources',
                     tiles: const [
-                      _TileData.group(icon: Icons.grass_outlined, label: 'Agriculture', subtitle: 'Crops, Livestock, Fisheries…', count: 4),
+                      _TileData.group(icon: Icons.grass_outlined, label: 'Agriculture', subtitle: 'Crop Statistics, Total Area, Total Production', count: 3),
                       _TileData.group(icon: Icons.bolt_outlined, label: 'Energy', subtitle: 'Electricity, Oil & Gas, Renewable', count: 3),
                       _TileData.fullWidth(icon: Icons.park_outlined, label: 'Environment', subtitle: 'Air Quality, Reserves, Climate, Waste…', value: '', change: 0, year: '', count: 7),
                     ],
@@ -673,41 +673,43 @@ class _TileGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Separate full-width tiles from grid tiles
     final gridTiles = tiles.where((t) => !t.isFullWidth).toList();
-    final fullTiles  = tiles.where((t) => t.isFullWidth).toList();
+    final fullTiles = tiles.where((t) => t.isFullWidth).toList();
 
-    // Tile height adapts to screen width: narrower screens get shorter tiles
-    final screenW = MediaQuery.sizeOf(context).width;
-    final tileH = screenW < 380 ? 104.0 : 112.0;
+    // Build rows of 2 manually to avoid GridView shrinkWrap height bugs
+    final rows = <Widget>[];
+    for (int i = 0; i < gridTiles.length; i += 2) {
+      if (i > 0) rows.add(const SizedBox(height: 8));
+      final a = gridTiles[i];
+      final b = i + 1 < gridTiles.length ? gridTiles[i + 1] : null;
+      rows.add(
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(child: _Tile(data: a, accentColor: accentColor, accentBg: accentBg)),
+              if (b != null) ...[
+                const SizedBox(width: 8),
+                Expanded(child: _Tile(data: b, accentColor: accentColor, accentBg: accentBg)),
+              ] else
+                const Expanded(child: SizedBox.shrink()),
+            ],
+          ),
+        ),
+      );
+    }
+
+    for (final t in fullTiles) {
+      if (rows.isNotEmpty) rows.add(const SizedBox(height: 8));
+      rows.add(_FullWidthTile(data: t, accentColor: accentColor, accentBg: accentBg));
+    }
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-      child: Column(children: [
-        // 2-column grid
-        if (gridTiles.isNotEmpty)
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
-              mainAxisExtent: tileH,
-            ),
-            itemCount: gridTiles.length,
-            itemBuilder: (_, i) => _Tile(
-              data: gridTiles[i],
-              accentColor: accentColor,
-              accentBg: accentBg,
-            ),
-          ),
-        // Full-width tiles
-        for (final t in fullTiles) ...[
-          if (gridTiles.isNotEmpty) const SizedBox(height: 8),
-          _FullWidthTile(data: t, accentColor: accentColor, accentBg: accentBg),
-        ],
-      ]),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: rows,
+      ),
     );
   }
 }
@@ -736,7 +738,9 @@ class _TileState extends State<_Tile> {
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
       onTap: () {
-        if (d.label == 'Vitals') {
+        if (d.label == 'Agriculture') {
+          _showAgricultureSheet(context);
+        } else if (d.label == 'Vitals') {
           _showVitalsSheet(context);
         } else if (d.label == 'Education') {
           _showEducationSheet(context);
@@ -974,6 +978,140 @@ class _FullWidthTileState extends State<_FullWidthTile> {
 }
 
 
+// ── Agriculture bottom sheet ──────────────────────────────────────────────────
+void _showAgricultureSheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _AgricultureSheet(),
+  );
+}
+
+class _AgricultureSheet extends ConsumerWidget {
+  const _AgricultureSheet();
+
+  static const _ids    = ['crop_production', 'crop_area', 'crop_land_total'];
+  static const _icons  = {
+    'crop_production': Icons.grass_outlined,
+    'crop_area':       Icons.crop_square_rounded,
+    'crop_land_total': Icons.terrain_outlined,
+  };
+  static const _labels = {
+    'crop_production': 'Crop Statistics by Emirate',
+    'crop_area':       'Agricultural Cultivated Area',
+    'crop_land_total': 'Total Agricultural Land Use',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+    return DraggableScrollableSheet(
+      initialChildSize: 0.55,
+      minChildSize: 0.40,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW, height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(color: _kSilver, borderRadius: BorderRadius.circular(999)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: AppColors.envGreenTint, borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.grass_outlined, size: 20, color: AppColors.envGreen),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Agriculture', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
+                  Text('Environment · 3 Indicators', style: TextStyle(fontSize: 12, color: _kSlate600)),
+                ],
+              )),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: const BoxDecoration(color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!, label: _labels[id]!,
+                    iconColor: AppColors.envGreen, iconBg: AppColors.envGreenTint,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!, label: _labels[id]!,
+                    summary: summary,
+                    iconColor: AppColors.envGreen, iconBg: AppColors.envGreenTint,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            decoration: const BoxDecoration(border: Border(top: BorderSide(color: _kPearl))),
+            child: SizedBox(
+              width: double.infinity, height: 48,
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  context.push(AppRoutes.indicatorPath('crop_production'));
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.envGreen,
+                  foregroundColor: AppColors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),
+                  elevation: 0,
+                ),
+                child: const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Text('View All Agriculture Data', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+                  SizedBox(width: 6),
+                  Icon(Icons.arrow_forward_rounded, size: 16),
+                ]),
+              ),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
 // ── Vitals bottom sheet ───────────────────────────────────────────────────────
 void _showVitalsSheet(BuildContext context) {
   showModalBottomSheet(
@@ -1075,11 +1213,15 @@ class _VitalsSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -1100,7 +1242,10 @@ class _VitalsSheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath('births'));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kDemBlue,
                     foregroundColor: AppColors.white,
@@ -1116,9 +1261,6 @@ class _VitalsSheet extends ConsumerWidget {
                   ]),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text('Data source: FCSA · Updated annually',
-                style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
         ]),
@@ -1133,11 +1275,15 @@ class _VitalRow extends StatelessWidget {
     required this.label,
     required this.summary,
     this.onTap,
+    this.iconColor = _kDemBlue,
+    this.iconBg = _kDemBlueBg,
   });
   final IconData icon;
   final String label;
   final IndicatorSummary summary;
   final VoidCallback? onTap;
+  final Color iconColor;
+  final Color iconBg;
 
   @override
   Widget build(BuildContext context) {
@@ -1152,8 +1298,8 @@ class _VitalRow extends StatelessWidget {
         child: Row(children: [
           Container(
             width: 36, height: 36,
-            decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(8)),
-            child: Icon(icon, size: 18, color: _kDemBlue),
+            decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(8)),
+            child: Icon(icon, size: 18, color: iconColor),
           ),
           const SizedBox(width: 12),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -1234,9 +1380,16 @@ class _VitalRowShimmer extends StatelessWidget {
 }
 
 class _VitalRowEmpty extends StatelessWidget {
-  const _VitalRowEmpty({required this.icon, required this.label});
+  const _VitalRowEmpty({
+    required this.icon,
+    required this.label,
+    this.iconColor = _kDemBlue,
+    this.iconBg = _kDemBlueBg,
+  });
   final IconData icon;
   final String label;
+  final Color iconColor;
+  final Color iconBg;
 
   @override
   Widget build(BuildContext context) {
@@ -1245,8 +1398,8 @@ class _VitalRowEmpty extends StatelessWidget {
       child: Row(children: [
         Container(
           width: 36, height: 36,
-          decoration: BoxDecoration(color: _kDemBlueBg, borderRadius: BorderRadius.circular(8)),
-          child: Icon(icon, size: 18, color: _kDemBlue),
+          decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(8)),
+          child: Icon(icon, size: 18, color: iconColor),
         ),
         const SizedBox(width: 12),
         Expanded(child: Text(label,
@@ -1357,11 +1510,15 @@ class _EducationSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -1382,7 +1539,10 @@ class _EducationSheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath('student_enrolment'));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kDemBlue,
                     foregroundColor: AppColors.white,
@@ -1398,9 +1558,6 @@ class _EducationSheet extends ConsumerWidget {
                   ]),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text('Data source: FCSA · Updated annually',
-                style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
         ]),
@@ -1538,11 +1695,15 @@ class _HealthSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -1562,7 +1723,10 @@ class _HealthSheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath('hospitals'));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kDemBlue,
                     foregroundColor: AppColors.white,
@@ -1586,11 +1750,6 @@ class _HealthSheet extends ConsumerWidget {
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Data source: FCSA · Updated annually',
-                style: TextStyle(fontSize: 11, color: _kSlate400),
               ),
             ]),
           ),
@@ -1631,8 +1790,11 @@ class _AirTransportSheet extends ConsumerWidget {
       labels: _labels,
       summaries: summaries,
       buttonLabel: 'View All Air Transport Data',
+      firstIndicatorId: 'aircraft_movement',
       accentColor: _kGold,
       accentBg: _kSage,
+      rowIconColor: _kGold,
+      rowIconBg: _kSage,
     );
   }
 }
@@ -1683,8 +1845,11 @@ class _PricesSheet extends ConsumerWidget {
       labels: _labels,
       summaries: summaries,
       buttonLabel: 'View All Prices & Tourism Data',
+      firstIndicatorId: 'prices_cpi_annual',
       accentColor: _kGold,
       accentBg: _kSage,
+      rowIconColor: _kGold,
+      rowIconBg: _kSage,
     );
   }
 }
@@ -1732,8 +1897,11 @@ class _TourismSheet extends ConsumerWidget {
       labels: _labels,
       summaries: summaries,
       buttonLabel: 'View All Tourism Data',
+      firstIndicatorId: 'tourism_hotel_arrivals',
       accentColor: _kGold,
       accentBg: _kSage,
+      rowIconColor: _kGold,
+      rowIconBg: _kSage,
     );
   }
 }
@@ -1750,16 +1918,21 @@ class _EconomySheet extends ConsumerWidget {
     required this.labels,
     required this.summaries,
     required this.buttonLabel,
+    required this.firstIndicatorId,
     this.accentColor = _kDemBlue,
     this.accentBg = _kDemBlueBg,
+    this.rowIconColor = _kDemBlue,
+    this.rowIconBg = _kDemBlueBg,
   });
 
-  final String title, subtitle, buttonLabel;
+  final String title, subtitle, buttonLabel, firstIndicatorId;
   final IconData icon;
   final List<String> ids;
   final Map<String, IconData> icons;
   final Map<String, String> labels;
   final List<AsyncValue<IndicatorSummary>> summaries;
+  final Color rowIconColor;
+  final Color rowIconBg;
   final Color accentColor;
   final Color accentBg;
 
@@ -1836,11 +2009,14 @@ class _EconomySheet extends ConsumerWidget {
                 return async.when(
                   loading: () => const _VitalRowShimmer(),
                   error: (_, __) => _VitalRowEmpty(
-                      icon: icons[id]!, label: labels[id]!),
+                      icon: icons[id]!, label: labels[id]!,
+                      iconColor: rowIconColor, iconBg: rowIconBg),
                   data: (summary) => _VitalRow(
                     icon: icons[id]!,
                     label: labels[id]!,
                     summary: summary,
+                    iconColor: rowIconColor,
+                    iconBg: rowIconBg,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -1860,7 +2036,10 @@ class _EconomySheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath(firstIndicatorId));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: accentColor,
                     foregroundColor: AppColors.white,
@@ -1880,9 +2059,6 @@ class _EconomySheet extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text('Data source: FCSA · Updated annually',
-                  style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
         ]),
@@ -2015,11 +2191,15 @@ class _InternationalTradeSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -2039,7 +2219,10 @@ class _InternationalTradeSheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath('trade_total'));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kGold,
                     foregroundColor: AppColors.white,
@@ -2060,9 +2243,6 @@ class _InternationalTradeSheet extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text('Data source: FCSA · Updated annually',
-                  style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
         ]),
@@ -2191,11 +2371,15 @@ class _NationalAccountsSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -2215,7 +2399,10 @@ class _NationalAccountsSheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath('gdp_current'));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kGold,
                     foregroundColor: AppColors.white,
@@ -2236,9 +2423,6 @@ class _NationalAccountsSheet extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text('Data source: FCSA · Updated annually',
-                  style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
         ]),
@@ -2373,11 +2557,15 @@ class _LaborSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
+                    iconColor: _kGold,
+                    iconBg: _kSage,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -2397,7 +2585,10 @@ class _LaborSheet extends ConsumerWidget {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    context.push(AppRoutes.indicatorPath('labour_economic_activity'));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: _kDemBlue,
                     foregroundColor: AppColors.white,
@@ -2417,9 +2608,6 @@ class _LaborSheet extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 8),
-              const Text('Data source: FCSA · Updated annually',
-                  style: TextStyle(fontSize: 11, color: _kSlate400)),
             ]),
           ),
         ]),

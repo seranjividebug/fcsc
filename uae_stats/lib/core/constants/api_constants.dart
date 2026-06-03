@@ -241,6 +241,20 @@ abstract final class ApiConstants {
   // ─── Environment dataflows ───────────────────────────────────────────────
   static const String dfCrops           = 'DF_CROP_ALL';
   static const String dfCropsVersion    = '3.0.0';
+  static const String dfCropEm          = 'DF_CROP_EM';
+  static const String dfCropEmVersion   = '3.0.0';
+  static const String dfCropLand        = 'DF_CROP_LAND';
+  static const String dfCropLandVersion = '3.0.0';
+
+  /// Crop Statistics by Emirate — annual, all dimensions.
+  static String get cropEmDataUrl =>
+      '$restBase/data/$_agencyId,$dfCropEm,$dfCropEmVersion/.A......'
+      '?startPeriod=2015&$flatDimension';
+
+  /// Agricultural Land Use by Emirate — annual, all dimensions.
+  static String get cropLandDataUrl =>
+      '$restBase/data/$_agencyId,$dfCropLand,$dfCropLandVersion/.A......'
+      '?startPeriod=2016&$flatDimension';
   static const String dfLivestock       = 'DF_LSALL';
   static const String dfLivestockVersion= '1.2.0';
   static const String dfClimateTemp     = 'DF_CLIMATE_TEMP';
@@ -257,6 +271,11 @@ abstract final class ApiConstants {
   static const String dfRenewableVersion= '1.9.0';
   static const String dfOilGas          = 'DF_CO';
   static const String dfOilGasVersion   = '4.1.0';
+
+  /// Climate Mean Temperature — monthly, all stations, from 2016.
+  static String get climateTempDataUrl =>
+      '$restBase/data/$_agencyId,$dfClimateTemp,$dfClimateTempVersion/...M...'
+      '?startPeriod=2016-01&$flatDimension';
 
   // ─── Generic SDMX data URL builder ───────────────────────────────────────
   static String dataUrl({

@@ -250,9 +250,8 @@ class _InitialState extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final history   = ref.watch(searchHistoryProvider);
-    final trending  = ref.watch(trendingIdsProvider);
-    final categories = ref.watch(categoriesProvider);
+    final history  = ref.watch(searchHistoryProvider);
+    final trending = ref.watch(trendingIdsProvider);
 
     return ListView(
       padding: EdgeInsets.zero,
@@ -301,25 +300,8 @@ class _InitialState extends ConsumerWidget {
         // ── Browse by Category ───────────────────────────────────────────
         const SizedBox(height: 20),
         const _SectionHeader(title: 'Browse by Category'),
-        categories.when(
-          loading: () => const _CategorySkeleton(),
-          error: (_, __) => const SizedBox.shrink(),
-          data: (cats) => Column(
-            children: cats.map((cat) {
-              final cfg = _catConfig(cat);
-              return _CategoryRow(
-                name:  cat,
-                emoji: cfg.emoji,
-                bg:    cfg.bg,
-                color: cfg.color,
-                onTap: () {
-                  ref.read(searchCategoryProvider.notifier).state = cat;
-                  // Bring up results for the category by simulating a category browse
-                },
-              );
-            }).toList(),
-          ),
-        ),
+        const SizedBox(height: 4),
+        _BrowseCategoryGrid(),
 
         const SizedBox(height: 24),
       ],
@@ -862,81 +844,164 @@ class _RecentRow extends StatelessWidget {
   }
 }
 
-class _CategoryRow extends StatelessWidget {
-  const _CategoryRow({
-    required this.name,
-    required this.emoji,
-    required this.bg,
-    required this.color,
-    required this.onTap,
-  });
-  final String name, emoji;
-  final Color bg, color;
-  final VoidCallback onTap;
+// ─── Browse by category — always shows all 3 sections ────────────────────────
+
+class _BrowseCategoryGrid extends StatelessWidget {
+  static const _items = [
+    _CatItem(
+      label: 'Demography',
+      labelAr: 'الديموغرافيا',
+      subtitle: 'Population · Vitals · Education · Health · Labour',
+      subtitleAr: 'السكان · الأحوال الحيوية · التعليم · الصحة · العمل',
+      icon: Icons.people_rounded,
+      bg: _kGreenBg,
+      color: _kGreen,
+      route: AppRoutes.demography,
+    ),
+    _CatItem(
+      label: 'Economy',
+      labelAr: 'الاقتصاد',
+      subtitle: 'GDP · Trade · Prices · Tourism · Transport',
+      subtitleAr: 'الناتج المحلي · التجارة · الأسعار · السياحة',
+      icon: Icons.trending_up_rounded,
+      bg: _kGoldBg,
+      color: _kGold,
+      route: AppRoutes.economy,
+    ),
+    _CatItem(
+      label: 'Environment',
+      labelAr: 'البيئة',
+      subtitle: 'Agriculture · Energy · Climate · Resources',
+      subtitleAr: 'الزراعة · الطاقة · المناخ · الموارد',
+      icon: Icons.eco_rounded,
+      bg: _kEnvBg,
+      color: _kEnvColor,
+      route: AppRoutes.environment,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        height: 60,
-        margin: const EdgeInsets.fromLTRB(18, 0, 18, 7),
-        padding: const EdgeInsets.symmetric(horizontal: 14),
-        decoration: BoxDecoration(
-          color: _kWhite,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: _kBorder, width: 0.5),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 38, height: 38,
-              decoration: BoxDecoration(
-                  color: bg, borderRadius: BorderRadius.circular(11)),
-              child: Center(
-                child: Text(emoji,
-                    style: const TextStyle(fontSize: 18)),
-              ),
-            ),
-            const SizedBox(width: 11),
-            Expanded(
-              child: Text(_capitalize(name),
-                  style: const TextStyle(fontSize: 14,
-                      fontWeight: FontWeight.w600, color: _kSlate900)),
-            ),
-            const Icon(Icons.chevron_right_rounded,
-                size: 17, color: _kSlate400),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: _items.map((item) => _CatCard(item: item)).toList(),
       ),
     );
   }
 }
 
-class _CategorySkeleton extends StatelessWidget {
-  const _CategorySkeleton();
+class _CatItem {
+  const _CatItem({
+    required this.label,
+    required this.labelAr,
+    required this.subtitle,
+    required this.subtitleAr,
+    required this.icon,
+    required this.bg,
+    required this.color,
+    required this.route,
+  });
+  final String label, labelAr, subtitle, subtitleAr, route;
+  final IconData icon;
+  final Color bg, color;
+}
+
+class _CatCard extends ConsumerStatefulWidget {
+  const _CatCard({required this.item});
+  final _CatItem item;
+
+  @override
+  ConsumerState<_CatCard> createState() => _CatCardState();
+}
+
+class _CatCardState extends ConsumerState<_CatCard> {
+  bool _pressed = false;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(
-        3,
-        (_) => Container(
-          height: 60,
-          margin: const EdgeInsets.fromLTRB(18, 0, 18, 7),
-          decoration: BoxDecoration(
-            color: _kWhite,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: _kBorder, width: 0.5),
+    final isArabic = ref.watch(localeProvider).languageCode == 'ar';
+    final item = widget.item;
+
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: () => context.push(item.route),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 140),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: _pressed ? item.bg : _kWhite,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: _pressed ? item.color.withValues(alpha: 0.4) : _kBorder,
+            width: _pressed ? 1.5 : 0.8,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 14),
-          child: const Row(
-            children: [
-              ShimmerBox(width: 38, height: 38, borderRadius: 11),
-              SizedBox(width: 11),
-              ShimmerBox(width: 120, height: 14),
-            ],
-          ),
+          boxShadow: _pressed
+              ? []
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+        ),
+        child: Row(
+          children: [
+            // Icon badge
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: item.bg,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(item.icon, size: 24, color: item.color),
+            ),
+            const SizedBox(width: 14),
+            // Text
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isArabic ? item.labelAr : item.label,
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: _kSlate900,
+                      letterSpacing: -0.2,
+                    ),
+                  ),
+                  const SizedBox(height: 3),
+                  Text(
+                    isArabic ? item.subtitleAr : item.subtitle,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: _kSlate400,
+                      height: 1.3,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            // Arrow
+            Container(
+              width: 30,
+              height: 30,
+              decoration: BoxDecoration(
+                color: item.bg,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(Icons.arrow_forward_rounded,
+                  size: 16, color: item.color),
+            ),
+          ],
         ),
       ),
     );

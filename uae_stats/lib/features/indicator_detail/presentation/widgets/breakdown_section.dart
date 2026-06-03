@@ -5,9 +5,11 @@
 // Tabs are only shown if the underlying data is available.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/models/indicator_data.dart';
+import 'package:uae_stats/shared/providers/locale_provider.dart';
 
 // ─── Breakdown item model ─────────────────────────────────────────────────────
 
@@ -42,15 +44,15 @@ const _citizenshipNames = {
 
 // ─── Main widget ──────────────────────────────────────────────────────────────
 
-class BreakdownSection extends StatefulWidget {
+class BreakdownSection extends ConsumerStatefulWidget {
   const BreakdownSection({super.key, required this.data});
   final IndicatorData data;
 
   @override
-  State<BreakdownSection> createState() => _BreakdownSectionState();
+  ConsumerState<BreakdownSection> createState() => _BreakdownSectionState();
 }
 
-class _BreakdownSectionState extends State<BreakdownSection> {
+class _BreakdownSectionState extends ConsumerState<BreakdownSection> {
   int _activeTab = 0;
 
   // ─── Compute breakdowns from IndicatorData ────────────────────────────────
@@ -130,25 +132,26 @@ class _BreakdownSectionState extends State<BreakdownSection> {
 
   // ─── Tab configuration ────────────────────────────────────────────────────
 
-  List<_TabDef> get _tabs {
+  List<_TabDef> _buildTabs(bool isAr) {
     final tabs = <_TabDef>[];
     final hasCitizenship = widget.data.byCitizenship.isNotEmpty;
-    tabs.add(_TabDef('Overall', _overallBreakdown));
+    tabs.add(_TabDef(isAr ? 'الإجمالي' : 'Overall', _overallBreakdown));
     if (widget.data.byEmirate.isNotEmpty) {
-      tabs.add(_TabDef('By Emirate', _emirateBreakdown));
+      tabs.add(_TabDef(isAr ? 'حسب الإمارة' : 'By Emirate', _emirateBreakdown));
     }
     if (widget.data.byGender.isNotEmpty) {
-      tabs.add(_TabDef('By Gender', _genderBreakdown));
+      tabs.add(_TabDef(isAr ? 'حسب الجنس' : 'By Gender', _genderBreakdown));
     }
     if (hasCitizenship) {
-      tabs.add(_TabDef('By Nationality', _citizenshipBreakdown));
+      tabs.add(_TabDef(isAr ? 'حسب الجنسية' : 'By Nationality', _citizenshipBreakdown));
     }
     return tabs;
   }
 
   @override
   Widget build(BuildContext context) {
-    final tabs = _tabs;
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
+    final tabs = _buildTabs(isAr);
     if (tabs.isEmpty) return const SizedBox.shrink();
 
     // Clamp active tab
@@ -159,11 +162,11 @@ class _BreakdownSectionState extends State<BreakdownSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // Section header
-        const Padding(
-          padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
           child: Text(
-            'Breakdown',
-            style: TextStyle(
+            isAr ? 'التصنيف' : 'Breakdown',
+            style: const TextStyle(
               fontWeight: FontWeight.w700,
               fontSize: 18,
               color: AppColors.slate900,
@@ -223,11 +226,11 @@ class _BreakdownSectionState extends State<BreakdownSection> {
 
         // Bar list
         if (items.isEmpty)
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'Breakdown data not available',
-              style: TextStyle(
+              isAr ? 'بيانات التصنيف غير متاحة' : 'Breakdown data not available',
+              style: const TextStyle(
                   fontSize: 13, color: AppColors.slate400),
             ),
           )

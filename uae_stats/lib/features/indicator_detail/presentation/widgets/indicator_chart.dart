@@ -7,10 +7,12 @@
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/theme/app_spacing.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/models/data_point.dart';
+import 'package:uae_stats/shared/providers/locale_provider.dart';
 
 enum _ChartType { line, bar, table }
 
@@ -32,7 +34,7 @@ extension _RangeLabel on _ChartRange {
       };
 }
 
-class IndicatorChart extends StatefulWidget {
+class IndicatorChart extends ConsumerStatefulWidget {
   const IndicatorChart({
     super.key,
     required this.allSeries,
@@ -53,10 +55,10 @@ class IndicatorChart extends StatefulWidget {
   final List<DataPoint> maleSeries;
 
   @override
-  State<IndicatorChart> createState() => _IndicatorChartState();
+  ConsumerState<IndicatorChart> createState() => _IndicatorChartState();
 }
 
-class _IndicatorChartState extends State<IndicatorChart> {
+class _IndicatorChartState extends ConsumerState<IndicatorChart> {
   _ChartType _type = _ChartType.line;
   late _ChartRange _range;
 
@@ -137,6 +139,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
 
   @override
   Widget build(BuildContext context) {
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -156,14 +159,14 @@ class _IndicatorChartState extends State<IndicatorChart> {
               ),
               GestureDetector(
                 onTap: () {},
-                child: const Row(
+                child: Row(
                   children: [
-                    Icon(Icons.open_in_full_rounded,
+                    const Icon(Icons.open_in_full_rounded,
                         size: 17, color: AppColors.slate600),
-                    SizedBox(width: 4),
+                    const SizedBox(width: 4),
                     Text(
-                      'Expand',
-                      style: TextStyle(
+                      isAr ? 'توسيع' : 'Expand',
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.slate600,
                       ),
@@ -183,6 +186,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
           child: _ChartTypeToggle(
             selected: _type,
             accentColor: widget.accentColor,
+            isAr: isAr,
             onChanged: (t) => setState(() => _type = t),
           ),
         ),
@@ -212,7 +216,9 @@ class _IndicatorChartState extends State<IndicatorChart> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Annual ${widget.indicatorName} in the UAE',
+                    isAr
+                        ? '${widget.indicatorName} السنوي في الإمارات'
+                        : 'Annual ${widget.indicatorName} in the UAE',
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
@@ -235,11 +241,11 @@ class _IndicatorChartState extends State<IndicatorChart> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        _LegendDot(color: widget.accentColor, label: 'Total'),
+                        _LegendDot(color: widget.accentColor, label: isAr ? 'الإجمالي' : 'Total'),
                         const SizedBox(width: 14),
-                        const _LegendDot(color: Color(0xFFC8973A), label: 'Female'),
+                        _LegendDot(color: const Color(0xFFC8973A), label: isAr ? 'إناث' : 'Female'),
                         const SizedBox(width: 14),
-                        const _LegendDot(color: Color(0xFF1A6FA8), label: 'Male'),
+                        _LegendDot(color: const Color(0xFF1A6FA8), label: isAr ? 'ذكور' : 'Male'),
                       ],
                     ),
                   ],
@@ -250,6 +256,7 @@ class _IndicatorChartState extends State<IndicatorChart> {
                     selected: _range,
                     visible: _visibleRanges,
                     accentColor: widget.accentColor,
+                    isAr: isAr,
                     onChanged: (r) => setState(() => _range = r),
                   ),
                 ],
@@ -613,10 +620,12 @@ class _ChartTypeToggle extends StatelessWidget {
     required this.selected,
     required this.accentColor,
     required this.onChanged,
+    this.isAr = false,
   });
   final _ChartType selected;
   final Color accentColor;
   final ValueChanged<_ChartType> onChanged;
+  final bool isAr;
 
   @override
   Widget build(BuildContext context) {
@@ -631,7 +640,7 @@ class _ChartTypeToggle extends StatelessWidget {
         children: [
           _Tab(
             icon: Icons.show_chart_rounded,
-            label: 'Line',
+            label: isAr ? 'خطي' : 'Line',
             active: selected == _ChartType.line,
             accentColor: accentColor,
             onTap: () => onChanged(_ChartType.line),
@@ -639,7 +648,7 @@ class _ChartTypeToggle extends StatelessWidget {
           const SizedBox(width: 3),
           _Tab(
             icon: Icons.bar_chart_rounded,
-            label: 'Bar',
+            label: isAr ? 'أعمدة' : 'Bar',
             active: selected == _ChartType.bar,
             accentColor: accentColor,
             onTap: () => onChanged(_ChartType.bar),
@@ -647,7 +656,7 @@ class _ChartTypeToggle extends StatelessWidget {
           const SizedBox(width: 3),
           _Tab(
             icon: Icons.table_rows_outlined,
-            label: 'Table',
+            label: isAr ? 'جدول' : 'Table',
             active: selected == _ChartType.table,
             accentColor: accentColor,
             onTap: () => onChanged(_ChartType.table),
@@ -727,11 +736,22 @@ class _RangeChips extends StatelessWidget {
     required this.accentColor,
     required this.onChanged,
     this.visible,
+    this.isAr = false,
   });
   final _ChartRange selected;
   final Color accentColor;
   final ValueChanged<_ChartRange> onChanged;
   final List<_ChartRange>? visible;
+  final bool isAr;
+
+  String _label(_ChartRange r) => isAr
+      ? switch (r) {
+          _ChartRange.y3  => '٣ س',
+          _ChartRange.y5  => '٥ س',
+          _ChartRange.y10 => '١٠ س',
+          _ChartRange.max => 'الكل',
+        }
+      : r.label;
 
   @override
   Widget build(BuildContext context) {
@@ -754,7 +774,7 @@ class _RangeChips extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: Text(
-              r.label,
+              _label(r),
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
@@ -770,12 +790,13 @@ class _RangeChips extends StatelessWidget {
 
 // ─── Inline data table (shown when Table tab is active) ───────────────────────
 
-class _DataTableCard extends StatelessWidget {
+class _DataTableCard extends ConsumerWidget {
   const _DataTableCard({required this.series});
   final List<DataPoint> series;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
     // Show newest first
     final rows = series.reversed.toList();
 
@@ -793,21 +814,21 @@ class _DataTableCard extends StatelessWidget {
             color: AppColors.pearlGray,
             height: 44,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: const Row(
+            child: Row(
               children: [
                 SizedBox(
                   width: 48,
-                  child: Text('YEAR',
-                      style: TextStyle(
+                  child: Text(isAr ? 'السنة' : 'YEAR',
+                      style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.44,
                           color: AppColors.slate600)),
                 ),
                 Expanded(
-                  child: Text('VALUE',
+                  child: Text(isAr ? 'القيمة' : 'VALUE',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.44,
@@ -815,9 +836,9 @@ class _DataTableCard extends StatelessWidget {
                 ),
                 SizedBox(
                   width: 60,
-                  child: Text('YOY',
+                  child: Text(isAr ? 'س/س' : 'YOY',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.44,

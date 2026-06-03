@@ -14,6 +14,7 @@ import 'package:uae_stats/features/indicator_detail/presentation/widgets/breakdo
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/data_table_section.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/detail_hero_card.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/indicator_chart.dart';
+import 'package:uae_stats/shared/providers/locale_provider.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
 import 'package:uae_stats/shared/widgets/language_toggle_button.dart';
@@ -32,50 +33,73 @@ class _NavItem {
 }
 
 const _navItems = [
-  // Vitals
-  _NavItem(id: 'population',         label: 'Population Estimates',    group: 'vitals'),
-  _NavItem(id: 'births',             label: 'Births',                  group: 'vitals'),
-  _NavItem(id: 'deaths',             label: 'Deaths',                  group: 'vitals'),
-  _NavItem(id: 'marriages',          label: 'Marriages',               group: 'vitals'),
-  _NavItem(id: 'divorces',           label: 'Divorces',                group: 'vitals'),
+  // ── Demography ──────────────────────────────────────────────────────────────
+  // Population & Vitals
+  _NavItem(id: 'population',         label: 'Population Estimates',    group: 'demography'),
+  _NavItem(id: 'births',             label: 'Births',                  group: 'demography'),
+  _NavItem(id: 'deaths',             label: 'Deaths',                  group: 'demography'),
+  _NavItem(id: 'marriages',          label: 'Marriages',               group: 'demography'),
+  _NavItem(id: 'divorces',           label: 'Divorces',                group: 'demography'),
   // Education
-  _NavItem(id: 'student_enrolment',  label: 'Student Enrolment',       group: 'education'),
-  _NavItem(id: 'teaching_staff',     label: 'Teaching Staff',          group: 'education'),
-  _NavItem(id: 'higher_education',   label: 'Higher Education Students', group: 'education'),
+  _NavItem(id: 'student_enrolment',  label: 'Student Enrolment',       group: 'demography'),
+  _NavItem(id: 'teaching_staff',     label: 'Teaching Staff',          group: 'demography'),
+  _NavItem(id: 'higher_education',   label: 'Higher Education',        group: 'demography'),
   // Health
-  _NavItem(id: 'hospitals',          label: 'Hospitals',               group: 'health'),
-  _NavItem(id: 'health_clinics_centers', label: 'Clinics and Centers', group: 'health'),
-  _NavItem(id: 'health_hospital_beds', label: 'Hospital Beds',         group: 'health'),
-  _NavItem(id: 'health_professionals',      label: 'Health Workforce',              group: 'health'),
+  _NavItem(id: 'hospitals',              label: 'Hospitals',           group: 'demography'),
+  _NavItem(id: 'health_clinics_centers', label: 'Clinics & Centers',   group: 'demography'),
+  _NavItem(id: 'health_hospital_beds',   label: 'Hospital Beds',       group: 'demography'),
+  _NavItem(id: 'health_professionals',   label: 'Health Workforce',    group: 'demography'),
+  // Labour
+  _NavItem(id: 'labour_economic_activity',      label: 'Economic Activity',        group: 'demography'),
+  _NavItem(id: 'labour_employed_age_gender',    label: 'Employed: Age & Gender',   group: 'demography'),
+  _NavItem(id: 'labour_employed_education',     label: 'Employed: Education',      group: 'demography'),
+  _NavItem(id: 'labour_employment_sector',      label: 'Employment by Sector',     group: 'demography'),
+  _NavItem(id: 'labour_unemployment_education', label: 'Unemployment: Education',  group: 'demography'),
+  _NavItem(id: 'labour_workforce_occupation',   label: 'Workforce: Occupation',    group: 'demography'),
+  _NavItem(id: 'labour_unemployment_age_gender',label: 'Unemployment: Age/Gender', group: 'demography'),
+
+  // ── Environment / Ecology ────────────────────────────────────────────────────
+  _NavItem(id: 'ecology_mean_temp', label: 'Mean Temperature',           group: 'environment'),
+  // Agriculture
+  _NavItem(id: 'crop_production',   label: 'Crop Statistics by Emirate', group: 'environment'),
+  _NavItem(id: 'crop_area',         label: 'Cultivated Area',            group: 'environment'),
+  _NavItem(id: 'crop_land_total',   label: 'Total Agricultural Area',    group: 'environment'),
+
+  // ── Economy ─────────────────────────────────────────────────────────────────
+  // National Accounts
+  _NavItem(id: 'gdp_current',            label: 'GDP (Current Prices)',    group: 'economy'),
+  _NavItem(id: 'gdp_constant',           label: 'GDP (Constant Prices)',   group: 'economy'),
+  _NavItem(id: 'gdp_quarterly_current',  label: 'Quarterly GDP (Current)', group: 'economy'),
+  _NavItem(id: 'gdp_quarterly_constant', label: 'Quarterly GDP (Constant)',group: 'economy'),
+  // International Trade
+  _NavItem(id: 'trade_total',            label: 'Total Trade',             group: 'economy'),
+  _NavItem(id: 'trade_imports_hs',       label: 'Imports by HS Section',   group: 'economy'),
+  _NavItem(id: 'trade_non_oil_exports',  label: 'Non-Oil Exports',         group: 'economy'),
+  _NavItem(id: 'trade_sector_country',   label: 'Sector & Country',        group: 'economy'),
+  _NavItem(id: 'trade_reexports_annual', label: 'Annual Re-Exports',       group: 'economy'),
+  _NavItem(id: 'trade_reexports_monthly',label: 'Monthly Re-Exports',      group: 'economy'),
+  // Prices
+  _NavItem(id: 'prices_cpi_annual',      label: 'CPI Annual',              group: 'economy'),
+  // Tourism
+  _NavItem(id: 'tourism_hotel_arrivals',       label: 'Hotel Guest Arrivals', group: 'economy'),
+  _NavItem(id: 'tourism_hotel_establishments', label: 'Hotel Establishments', group: 'economy'),
+  _NavItem(id: 'tourism_main_indicators',      label: 'Tourism Indicators',   group: 'economy'),
   // Air Transport
   _NavItem(id: 'aircraft_movement', label: 'Aircraft Movement', group: 'economy'),
-  // Prices
-  _NavItem(id: 'prices_cpi_annual', label: 'CPI Annual', group: 'economy'),
-  // Tourism
-  _NavItem(id: 'tourism_hotel_arrivals',       label: 'Hotel Guest Arrivals by Nationality', group: 'economy'),
-  _NavItem(id: 'tourism_hotel_establishments', label: 'Hotel Establishments',                group: 'economy'),
-  _NavItem(id: 'tourism_main_indicators',      label: 'Main Indicators',                     group: 'economy'),
-  // International Trade
-  _NavItem(id: 'trade_total',            label: 'Total Trade',            group: 'economy'),
-  _NavItem(id: 'trade_imports_hs',       label: 'Imports by HS Section',  group: 'economy'),
-  _NavItem(id: 'trade_non_oil_exports',  label: 'Non-Oil Exports',        group: 'economy'),
-  _NavItem(id: 'trade_sector_country',   label: 'Sector & Country',       group: 'economy'),
-  _NavItem(id: 'trade_reexports_annual', label: 'Annual Re-Exports',      group: 'economy'),
-  _NavItem(id: 'trade_reexports_monthly',label: 'Monthly Re-Exports',     group: 'economy'),
-  // National Accounts
-  _NavItem(id: 'gdp_current',           label: 'GDP (Current Prices)',    group: 'economy'),
-  _NavItem(id: 'gdp_constant',          label: 'GDP (Constant Prices)',   group: 'economy'),
-  _NavItem(id: 'gdp_quarterly_current', label: 'Quarterly GDP (Current)', group: 'economy'),
-  _NavItem(id: 'gdp_quarterly_constant',label: 'Quarterly GDP (Constant)',group: 'economy'),
-  // Labour Force
-  _NavItem(id: 'labour_economic_activity',      label: 'Economic Activity',           group: 'labour'),
-  _NavItem(id: 'labour_employed_age_gender',    label: 'Employed by Age & Gender',    group: 'labour'),
-  _NavItem(id: 'labour_employed_education',     label: 'Employed by Education',       group: 'labour'),
-  _NavItem(id: 'labour_employment_sector',      label: 'Employment by Sector',        group: 'labour'),
-  _NavItem(id: 'labour_unemployment_education', label: 'Unemployment by Education',   group: 'labour'),
-  _NavItem(id: 'labour_workforce_occupation',   label: 'Workforce by Occupation',     group: 'labour'),
-  _NavItem(id: 'labour_unemployment_age_gender',label: 'Unemployment by Age & Gender',group: 'labour'),
 ];
+
+/// Returns the nav-strip group ('demography' | 'economy') for a given indicator id.
+String _groupFor(String id) {
+  for (final item in _navItems) {
+    if (item.id == id) return item.group;
+  }
+  // Fallback: infer from id prefix
+  if (id.startsWith('gdp_') || id.startsWith('trade_') ||
+      id.startsWith('tourism_') || id.startsWith('prices_') ||
+      id == 'aircraft_movement') { return 'economy'; }
+  if (id.startsWith('ecology_') || id.startsWith('crop_')) { return 'environment'; }
+  return 'demography';
+}
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 class IndicatorDetailScreen extends ConsumerStatefulWidget {
@@ -93,6 +117,23 @@ class _IndicatorDetailScreenState
   late String _activeId;
   final ScrollController _scrollController = ScrollController();
 
+  static String _capitalise(String s) =>
+      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+
+  static String _catAr(String c) => switch (c) {
+    'demography'  => 'الديموغرافيا',
+    'economy'     => 'الاقتصاد',
+    'environment' => 'البيئة',
+    _             => c,
+  };
+
+  /// Returns the correct accent color for a given category string.
+  static Color _accentFor(String category) => switch (category) {
+        'economy'     => AppColors.champagneGold,
+        'environment' => AppColors.envGreen,
+        _             => AppColors.demBlue,
+      };
+
   @override
   void initState() {
     super.initState();
@@ -108,6 +149,7 @@ class _IndicatorDetailScreenState
   @override
   Widget build(BuildContext context) {
     final dataAsync = ref.watch(indicatorDataProvider(_activeId));
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
 
     return Scaffold(
       backgroundColor: AppColors.offWhite,
@@ -133,7 +175,7 @@ class _IndicatorDetailScreenState
                   Expanded(
                     child: Text(
                       dataAsync.maybeWhen(
-                        data: (d) => d.meta.name.en,
+                        data: (d) => isAr ? d.meta.name.ar : d.meta.name.en,
                         orElse: () => _labelFor(_activeId),
                       ),
                       style: const TextStyle(
@@ -162,6 +204,7 @@ class _IndicatorDetailScreenState
           // ─── Indicator nav strip ──────────────────────────────────────────
           _IndicatorNavStrip(
             activeId: _activeId,
+            group: _groupFor(_activeId),
             onSelect: (id) {
               _scrollToTop();
               setState(() => _activeId = id);
@@ -178,9 +221,7 @@ class _IndicatorDetailScreenState
               ),
               data: (data) => RefreshIndicator(
                 onRefresh: _handleRefresh,
-                color: data.meta.category == 'economy'
-                    ? AppColors.champagneGold
-                    : AppColors.demBlue,
+                color: _accentFor(data.meta.category),
                 child: SingleChildScrollView(
                 controller: _scrollController,
                 padding: EdgeInsets.zero,
@@ -195,11 +236,9 @@ class _IndicatorDetailScreenState
                           const EdgeInsets.symmetric(horizontal: 20),
                       child: IndicatorChart(
                         allSeries: data.uaeTotalSeries,
-                        indicatorName: data.meta.name.en,
+                        indicatorName: isAr ? data.meta.name.ar : data.meta.name.en,
                         indicatorId: data.meta.id,
-                        accentColor: data.meta.category == 'economy'
-                            ? AppColors.champagneGold
-                            : AppColors.demBlue,
+                        accentColor: _accentFor(data.meta.category),
                         femaleSeries: _showGenderSeries(data.meta.id)
                             ? data.byGender['F'] ?? []
                             : [],
@@ -243,9 +282,7 @@ class _IndicatorDetailScreenState
                             child: ElevatedButton.icon(
                               onPressed: () {},
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: data.meta.category == 'economy'
-                                    ? AppColors.champagneGold
-                                    : AppColors.demBlue,
+                                backgroundColor: _accentFor(data.meta.category),
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
@@ -253,19 +290,19 @@ class _IndicatorDetailScreenState
                                 elevation: 0,
                               ),
                               icon: const SizedBox.shrink(),
-                              label: const Row(
+                              label: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    'Compare with Another Indicator',
-                                    style: TextStyle(
+                                    isAr ? 'مقارنة مع مؤشر آخر' : 'Compare with Another Indicator',
+                                    style: const TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(width: 8),
-                                  Icon(Icons.arrow_forward_rounded,
+                                  const SizedBox(width: 8),
+                                  const Icon(Icons.arrow_forward_rounded,
                                       size: 16),
                                 ],
                               ),
@@ -278,22 +315,20 @@ class _IndicatorDetailScreenState
                             child: OutlinedButton(
                               onPressed: () => context.go(AppRoutes.home),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: data.meta.category == 'economy'
-                                    ? AppColors.champagneGold
-                                    : AppColors.demBlue,
+                                foregroundColor: _accentFor(data.meta.category),
                                 side: BorderSide(
-                                  color: data.meta.category == 'economy'
-                                      ? AppColors.champagneGold
-                                      : AppColors.demBlue,
+                                  color: _accentFor(data.meta.category),
                                   width: 1.5,
                                 ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(14),
                                 ),
                               ),
-                              child: const Text(
-                                'View All Demography Indicators',
-                                style: TextStyle(
+                              child: Text(
+                                isAr
+                                    ? 'عرض جميع مؤشرات ${_catAr(data.meta.category)}'
+                                    : 'View All ${_capitalise(data.meta.category)} Indicators',
+                                style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -357,17 +392,68 @@ class _IndicatorDetailScreenState
 }
 
 // ─── Indicator nav strip ──────────────────────────────────────────────────────
-class _IndicatorNavStrip extends StatelessWidget {
+class _IndicatorNavStrip extends StatefulWidget {
   const _IndicatorNavStrip({
     required this.activeId,
+    required this.group,
     required this.onSelect,
   });
 
   final String activeId;
+  final String group;
   final ValueChanged<String> onSelect;
 
   @override
+  State<_IndicatorNavStrip> createState() => _IndicatorNavStripState();
+}
+
+class _IndicatorNavStripState extends State<_IndicatorNavStrip> {
+  final _scrollController = ScrollController();
+  final _itemKeys = <String, GlobalKey>{};
+
+  @override
+  void initState() {
+    super.initState();
+    for (final item in _navItems) {
+      _itemKeys[item.id] = GlobalKey();
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToActive());
+  }
+
+  @override
+  void didUpdateWidget(_IndicatorNavStrip old) {
+    super.didUpdateWidget(old);
+    if (old.activeId != widget.activeId) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToActive());
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollToActive() {
+    final key = _itemKeys[widget.activeId];
+    if (key == null) return;
+    final ctx = key.currentContext;
+    if (ctx == null) return;
+    Scrollable.ensureVisible(ctx,
+        alignment: 0.3,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final accentColor = switch (widget.group) {
+      'economy'     => AppColors.champagneGold,
+      'environment' => AppColors.envGreen,
+      _             => AppColors.demBlue,
+    };
+    final items = _navItems.where((i) => i.group == widget.group).toList();
+
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.white,
@@ -376,28 +462,26 @@ class _IndicatorNavStrip extends StatelessWidget {
         ),
       ),
       child: SingleChildScrollView(
+        controller: _scrollController,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Row(
-          children: _navItems.map((item) {
-            final active = item.id == activeId;
+          children: items.map((item) {
+            final active = item.id == widget.activeId;
             return Padding(
               padding: const EdgeInsets.only(right: 6),
               child: GestureDetector(
-                onTap: () => onSelect(item.id),
+                key: _itemKeys[item.id],
+                onTap: () => widget.onSelect(item.id),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   height: 32,
                   padding: const EdgeInsets.symmetric(horizontal: 14),
                   decoration: BoxDecoration(
-                    color: active
-                        ? AppColors.demBlue
-                        : Colors.transparent,
+                    color: active ? accentColor : Colors.transparent,
                     borderRadius: BorderRadius.circular(999),
                     border: Border.all(
-                      color: active
-                          ? AppColors.demBlue
-                          : AppColors.silver,
+                      color: active ? accentColor : AppColors.silver,
                       width: 1.5,
                     ),
                   ),
@@ -422,9 +506,7 @@ class _IndicatorNavStrip extends StatelessWidget {
                           fontWeight: active
                               ? FontWeight.w600
                               : FontWeight.w500,
-                          color: active
-                              ? Colors.white
-                              : AppColors.slate600,
+                          color: active ? Colors.white : AppColors.slate600,
                         ),
                       ),
                     ],
@@ -459,30 +541,31 @@ class _BreadcrumbShimmer extends StatelessWidget {
 }
 
 // ─── Metadata card ────────────────────────────────────────────────────────────
-class _MetadataCard extends StatelessWidget {
+class _MetadataCard extends ConsumerWidget {
   const _MetadataCard({required this.data});
 
   final dynamic data;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
     final meta = data.meta;
     final rows = <_MetaRow>[
       _MetaRow(
-        key: 'Update Frequency',
-        value: meta.frequencyLabel,
+        key: isAr ? 'تكرار التحديث' : 'Update Frequency',
+        value: isAr ? _freqAr(meta.frequency) : meta.frequencyLabel,
       ),
       _MetaRow(
-        key: 'Last Update',
+        key: isAr ? 'آخر تحديث' : 'Last Update',
         value: data.preparedAtForDisplay ?? data.latestPeriod,
       ),
       _MetaRow(
-        key: 'Data Coverage',
+        key: isAr ? 'نطاق البيانات' : 'Data Coverage',
         value: data.dataRange,
       ),
       _MetaRow(
-        key: 'Unit',
-        value: meta.unit.en,
+        key: isAr ? 'الوحدة' : 'Unit',
+        value: isAr ? meta.unit.ar : meta.unit.en,
       ),
     ];
 
@@ -495,9 +578,9 @@ class _MetadataCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'About This Indicator',
-            style: TextStyle(
+          Text(
+            isAr ? 'حول هذا المؤشر' : 'About This Indicator',
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
               color: AppColors.slate900,
@@ -509,6 +592,13 @@ class _MetadataCard extends StatelessWidget {
       ),
     );
   }
+
+  static String _freqAr(String f) => switch (f) {
+    'A' => 'سنوي',
+    'M' => 'شهري',
+    'Q' => 'ربع سنوي',
+    _   => f,
+  };
 }
 
 class _MetaRow {

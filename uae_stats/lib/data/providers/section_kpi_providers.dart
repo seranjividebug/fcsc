@@ -164,15 +164,16 @@ const _hotelGuestArrivals = KpiConfig(
 
 const _passengerTraffic = KpiConfig(
   id: 'passenger_traffic_v2',
-  nameEn: 'Passenger Traffic',
-  nameAr: 'حركة الركاب',
-  unitEn: 'Persons',
-  unitAr: 'أشخاص',
-  displayUnit: KpiDisplayUnit.millions,
+  nameEn: 'Aircraft Movements',
+  nameAr: 'حركة الطائرات',
+  unitEn: 'Flights',
+  unitAr: 'رحلة',
+  displayUnit: KpiDisplayUnit.thousands,
   icon: Icons.flight_outlined,
   dataflowId: ApiConstants.dfAir,
   dataflowVersion: ApiConstants.dfAirVersion,
   filter: '.A....',
+  measure: 'ACFT_MOV',
   startPeriod: '2016',
 );
 
@@ -380,8 +381,8 @@ const _livestock = KpiConfig(
 );
 
 const _climateMeanTemp = KpiConfig(
-  id: 'climate_mean_temp',
-  nameEn: 'Climate Mean Temp',
+  id: 'ecology_mean_temp',
+  nameEn: 'Mean Temperature',
   nameAr: 'متوسط درجة الحرارة',
   unitEn: '°C',
   unitAr: '°م',
@@ -389,7 +390,9 @@ const _climateMeanTemp = KpiConfig(
   icon: Icons.device_thermostat,
   dataflowId: ApiConstants.dfClimateTemp,
   dataflowVersion: ApiConstants.dfClimateTempVersion,
-  filter: '..M',
+  filter: '...M...',
+  measure: 'MEAN_TEMP',
+  startPeriod: '2016',
 );
 
 const _rainfall = KpiConfig(
@@ -475,6 +478,9 @@ const _crudeOilProduction = KpiConfig(
 
 // ─── Provider helpers ─────────────────────────────────────────────────────────
 
+/// IDs whose raw API value is a CPI index — display value must be YoY % change.
+const _cpiIds = {'home_inflation', 'inflation_rate'};
+
 Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
   // For GDP indicators, go directly to seed (API returns multi-sector rows
   // that don't filter correctly through the KPI series parser)
@@ -487,6 +493,12 @@ Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
     if (result != null) {
       final raw = result.historicalValues;
       final last8 = raw.length > 8 ? raw.sublist(raw.length - 8) : raw;
+
+      // CPI dataflow returns index values — convert to YoY inflation rate.
+      if (_cpiIds.contains(cfg.id)) {
+        return _cpiCardFromSeries(cfg, raw, year: result.year);
+      }
+
       return KpiCardData.fromLive(
         cfg: cfg,
         value: result.value,
@@ -497,6 +509,13 @@ Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
       );
     }
   } catch (_) {}
+
+  // CPI seed fallback — compute YoY from index values.
+  if (_cpiIds.contains(cfg.id)) {
+    final seed = await _resolveCpiSeed(cfg);
+    if (seed != null) return seed;
+  }
+
   final seed = await _resolveSeed(cfg);
   if (seed != null) return seed;
   return KpiCardData(
@@ -518,6 +537,7 @@ Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
     'gdp_yearly'       => 'assets/data/seeds/gdp_current_seed.json',
     'home_gdp'         => 'assets/data/seeds/gdp_current_seed.json',
     'gdp_quarterly'    => 'assets/data/seeds/gdp_quarterly_current_seed.json',
+    'ecology_mean_temp' => 'assets/data/seeds/climate_temp_seed.json',
     _ => null,
   };
   if (seedPath == null) return null;
@@ -549,6 +569,94 @@ Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
       year: latest['timePeriod'] as String,
       trendPercent: trend,
       fromCache: true,
+      sparklinePoints: normalizePoints(last8),
+    );
+  } catch (_) {
+    return null;
+  }
+}
+
+// ─── CPI helpers ──────────────────────────────────────────────────────────────
+
+/// Builds a CPI card from a live historical series of index values.
+/// Displays the YoY inflation rate (%), not the raw index.
+KpiCardData _cpiCardFromSeries(
+  KpiConfig cfg,
+  List<double> indexValues, {
+  String year = '—',
+}) {
+  if (indexValues.length < 2) {
+    return KpiCardData(
+      id: cfg.id, nameEn: cfg.nameEn, nameAr: cfg.nameAr,
+      displayValue: '—', unitEn: cfg.unitEn, unitAr: cfg.unitAr,
+      year: year, icon: cfg.icon,
+    );
+  }
+  final prev    = indexValues[indexValues.length - 2];
+  final current = indexValues.last;
+  final yoy     = prev != 0 ? ((current - prev) / prev) * 100 : 0.0;
+
+  // Build sparkline from YoY rates across the whole series
+  final rates = <double>[];
+  for (int i = 1; i < indexValues.length; i++) {
+    final p = indexValues[i - 1];
+    if (p != 0) rates.add(((indexValues[i] - p) / p) * 100);
+  }
+  final last8 = rates.length > 8 ? rates.sublist(rates.length - 8) : rates;
+
+  return KpiCardData(
+    id: cfg.id,
+    nameEn: cfg.nameEn,
+    nameAr: cfg.nameAr,
+    displayValue: '${yoy.toStringAsFixed(2)}%',
+    unitEn: cfg.unitEn,
+    unitAr: cfg.unitAr,
+    year: year,
+    trendPercent: yoy,
+    icon: cfg.icon,
+    sparklinePoints: normalizePoints(last8),
+  );
+}
+
+/// Reads the CPI seed JSON (index values) and returns a card showing YoY %.
+Future<KpiCardData?> _resolveCpiSeed(KpiConfig cfg) async {
+  const seedPath = 'assets/data/seeds/prices_cpi_annual_seed.json';
+  try {
+    final raw  = await rootBundle.loadString(seedPath);
+    final rows = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
+    final totals = rows
+        .where((r) =>
+            (r['refArea'] as String?) == 'AE' &&
+            (r['gender'] as String?) == '_T')
+        .toList()
+      ..sort((a, b) =>
+          (a['timePeriod'] as String).compareTo(b['timePeriod'] as String));
+    if (totals.length < 2) return null;
+
+    final values = totals.map((r) => (r['value'] as num).toDouble()).toList();
+    final latestYear = totals.last['timePeriod'] as String;
+    final prev    = values[values.length - 2];
+    final current = values.last;
+    final yoy     = prev != 0 ? ((current - prev) / prev) * 100 : 0.0;
+
+    // Sparkline from YoY rates
+    final rates = <double>[];
+    for (int i = 1; i < values.length; i++) {
+      final p = values[i - 1];
+      if (p != 0) rates.add(((values[i] - p) / p) * 100);
+    }
+    final last8 = rates.length > 8 ? rates.sublist(rates.length - 8) : rates;
+
+    return KpiCardData(
+      id: cfg.id,
+      nameEn: cfg.nameEn,
+      nameAr: cfg.nameAr,
+      displayValue: '${yoy.toStringAsFixed(2)}%',
+      unitEn: cfg.unitEn,
+      unitAr: cfg.unitAr,
+      year: latestYear,
+      trendPercent: yoy,
+      icon: cfg.icon,
       sparklinePoints: normalizePoints(last8),
     );
   } catch (_) {
@@ -683,8 +791,8 @@ final environmentKpisProvider =
       cards: [results[0], results[1]],
     ),
     KpiSectionGroup(
-      titleEn: 'Environment',
-      titleAr: 'البيئة',
+      titleEn: 'Ecology',
+      titleAr: 'البيئة الطبيعية',
       cards: [results[2], results[3], results[4], results[5]],
     ),
     KpiSectionGroup(

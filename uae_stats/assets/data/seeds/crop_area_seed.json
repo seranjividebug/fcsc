@@ -1,0 +1,12 @@
+[
+  { "timePeriod": "2015", "value": 245867.0,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2016", "value": 502009.0,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2017", "value": 560664.0,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2018", "value": 524734.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2019", "value": 580060.5,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2020", "value": 579308.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2021", "value": 611596.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 577753.8,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 565449.1,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
+  { "timePeriod": "2024", "value": 562274.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" }
+]

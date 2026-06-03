@@ -4,13 +4,15 @@
 // Section: padding 20px sides, gap between chips 10px.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/theme/app_spacing.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/models/data_point.dart';
 import 'package:uae_stats/data/models/indicator_data.dart';
+import 'package:uae_stats/shared/providers/locale_provider.dart';
 
-class DataTableSection extends StatelessWidget {
+class DataTableSection extends ConsumerWidget {
   const DataTableSection({super.key, required this.data});
   final IndicatorData data;
 
@@ -18,31 +20,32 @@ class DataTableSection extends StatelessWidget {
       data.byGender.containsKey('M') && data.byGender.containsKey('F');
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // ── Stats chips ────────────────────────────────────────────────
-        _StatsChipsRow(data: data),
+        _StatsChipsRow(data: data, isAr: isAr),
 
         // ── Data table section ─────────────────────────────────────────
         const SizedBox(height: 20),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Detailed Data',
-                style: TextStyle(
+                isAr ? 'البيانات التفصيلية' : 'Detailed Data',
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
                   color: AppColors.slate900,
                 ),
               ),
               Text(
-                'Export →',
-                style: TextStyle(
+                isAr ? 'تصدير ←' : 'Export →',
+                style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   color: AppColors.demBlue,
@@ -61,8 +64,9 @@ class DataTableSection extends StatelessWidget {
                   total: data.uaeTotalSeries,
                   male: data.byGender['M']!,
                   female: data.byGender['F']!,
+                  isAr: isAr,
                 )
-              : _FullDataTable(series: data.uaeTotalSeries),
+              : _FullDataTable(series: data.uaeTotalSeries, isAr: isAr),
         ),
       ],
     );
@@ -72,8 +76,9 @@ class DataTableSection extends StatelessWidget {
 // ─── Stats chips row ──────────────────────────────────────────────────────────
 
 class _StatsChipsRow extends StatelessWidget {
-  const _StatsChipsRow({required this.data});
+  const _StatsChipsRow({required this.data, required this.isAr});
   final IndicatorData data;
+  final bool isAr;
 
   // Use 3Y slice when ≤3 data points available, else 5Y
   static int _sliceN(List<DataPoint> series) =>
@@ -111,24 +116,24 @@ class _StatsChipsRow extends StatelessWidget {
         itemBuilder: (context, index) {
           return switch (index) {
             0 => _StatChip(
-                overline: '$label MIN',
+                overline: isAr ? 'أدنى $label' : '$label MIN',
                 value: NumberFormatter.compact(min),
                 caption: minYear,
               ),
             1 => _StatChip(
-                overline: '$label MAX',
+                overline: isAr ? 'أعلى $label' : '$label MAX',
                 value: NumberFormatter.compact(max),
                 caption: maxYear,
               ),
             2 => _StatChip(
-                overline: '$label AVG',
+                overline: isAr ? 'متوسط $label' : '$label AVG',
                 value: NumberFormatter.compact(avg),
-                caption: 'annual',
+                caption: isAr ? 'سنوي' : 'annual',
               ),
             _ => _StatChip(
-                overline: '$label GROWTH',
+                overline: isAr ? 'نمو $label' : '$label GROWTH',
                 value: NumberFormatter.percent(growth),
-                caption: 'total',
+                caption: isAr ? 'إجمالي' : 'total',
                 valueColor: AppColors.success,
               ),
           };
@@ -201,8 +206,9 @@ class _StatChip extends StatelessWidget {
 // ─── Full data table (all available data) ─────────────────────────────────────
 
 class _FullDataTable extends StatelessWidget {
-  const _FullDataTable({required this.series});
+  const _FullDataTable({required this.series, required this.isAr});
   final List<DataPoint> series;
+  final bool isAr;
 
   @override
   Widget build(BuildContext context) {
@@ -225,21 +231,21 @@ class _FullDataTable extends StatelessWidget {
           Container(
             color: AppColors.pearlGray,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: const Row(
+            child: Row(
               children: [
                 SizedBox(
                   width: 48,
-                  child: Text('YEAR',
-                      style: TextStyle(
+                  child: Text(isAr ? 'السنة' : 'YEAR',
+                      style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
                           color: AppColors.slate600)),
                 ),
                 Expanded(
-                  child: Text('VALUE',
+                  child: Text(isAr ? 'القيمة' : 'VALUE',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
@@ -247,9 +253,9 @@ class _FullDataTable extends StatelessWidget {
                 ),
                 SizedBox(
                   width: 60,
-                  child: Text('YoY',
+                  child: Text(isAr ? 'س/س' : 'YoY',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                           letterSpacing: 0.4,
@@ -357,11 +363,13 @@ class _GenderDataTable extends StatelessWidget {
     required this.total,
     required this.male,
     required this.female,
+    required this.isAr,
   });
 
   final List<DataPoint> total;
   final List<DataPoint> male;
   final List<DataPoint> female;
+  final bool isAr;
 
   @override
   Widget build(BuildContext context) {
@@ -388,12 +396,12 @@ class _GenderDataTable extends StatelessWidget {
           Container(
             color: AppColors.pearlGray,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: const Row(
+            child: Row(
               children: [
-                SizedBox(width: 44, child: Text('YEAR', style: headerStyle)),
-                Expanded(child: Text('MALE', textAlign: TextAlign.right, style: headerStyle)),
-                Expanded(child: Text('FEMALE', textAlign: TextAlign.right, style: headerStyle)),
-                Expanded(child: Text('TOTAL', textAlign: TextAlign.right, style: headerStyle)),
+                SizedBox(width: 44, child: Text(isAr ? 'السنة' : 'YEAR', style: headerStyle)),
+                Expanded(child: Text(isAr ? 'ذكور' : 'MALE', textAlign: TextAlign.right, style: headerStyle)),
+                Expanded(child: Text(isAr ? 'إناث' : 'FEMALE', textAlign: TextAlign.right, style: headerStyle)),
+                Expanded(child: Text(isAr ? 'الإجمالي' : 'TOTAL', textAlign: TextAlign.right, style: headerStyle)),
               ],
             ),
           ),
