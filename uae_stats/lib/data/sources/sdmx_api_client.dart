@@ -189,6 +189,71 @@ class SdmxApiClient {
     return _fetch(ApiConstants.cropLandDataUrl);
   }
 
+  /// Fetches Employed Population by Age & Gender (DF_LFEP_AGE).
+  Future<SdmxResult> fetchEmployedAgeGender() async {
+    return _fetch(ApiConstants.employedAgeGenderDataUrl);
+  }
+
+  /// Fetches Employed Population by Education Status (DF_LFEP_ED).
+  Future<SdmxResult> fetchEmployedEducation() async {
+    return _fetch(ApiConstants.employedEducationDataUrl);
+  }
+
+  /// Fetches Employed Population by Economic Activity (DF_LFEP_ECON).
+  Future<SdmxResult> fetchEconomicActivity() async {
+    return _fetch(ApiConstants.economicActivityDataUrl);
+  }
+
+  /// Fetches Employed Population by Employment Sector (DF_LFEP_SECT).
+  Future<SdmxResult> fetchEmploymentSector() async {
+    return _fetch(ApiConstants.employmentSectorDataUrl);
+  }
+
+  /// Fetches Unemployed Population by Education (DF_LFUNEMP_ED).
+  Future<SdmxResult> fetchUnemploymentEducation() async {
+    return _fetch(ApiConstants.unemploymentEducationDataUrl);
+  }
+
+  /// Fetches Employed Population by Occupation (DF_LFEP_OCC).
+  Future<SdmxResult> fetchWorkforceOccupation() async {
+    return _fetch(ApiConstants.workforceOccupationDataUrl);
+  }
+
+  /// Fetches Unemployed Population by Age & Gender (DF_LFUNEMP_AGE).
+  Future<SdmxResult> fetchUnemploymentAgeGender() async {
+    return _fetch(ApiConstants.unemploymentAgeGenderDataUrl);
+  }
+
+  /// Fetches Camel Population Census (DF_LSCAMEL).
+  Future<SdmxResult> fetchCamelPopulation() async {
+    return _fetch(ApiConstants.camelPopulationDataUrl);
+  }
+
+  /// Fetches Cattle Population Statistics (DF_LSCATTLE).
+  Future<SdmxResult> fetchCattlePopulation() async {
+    return _fetch(ApiConstants.cattlePopulationDataUrl);
+  }
+
+  /// Fetches Goat Population Census (DF_LSGOAT).
+  Future<SdmxResult> fetchGoatPopulation() async {
+    return _fetch(ApiConstants.goatPopulationDataUrl);
+  }
+
+  /// Fetches Sheep Population Statistics (DF_LSSHEEP).
+  Future<SdmxResult> fetchSheepPopulation() async {
+    return _fetch(ApiConstants.sheepPopulationDataUrl);
+  }
+
+  /// Fetches Annual Rainfall by weather station (DF_CLIMATE_RAIN).
+  Future<SdmxResult> fetchRainfall() async {
+    return _fetch(ApiConstants.rainfallDataUrl);
+  }
+
+  /// Fetches Produced Water by entity & source (DF_PW_Q_PRODWATER_SOURCE).
+  Future<SdmxResult> fetchProducedWater() async {
+    return _fetch(ApiConstants.producedWaterDataUrl);
+  }
+
   // ─── Core fetch + parse ───────────────────────────────────────────────────
 
   Future<SdmxResult> _fetch(String url) async {
@@ -210,9 +275,15 @@ class SdmxApiClient {
         : root;
 
     // ── 1. Extract dimension definitions ──
-    final structure = _nestedMap(data, ['structure']) ??
-        _nestedMap(root, ['structure']) ??
-        {};
+    // SDMX-JSON 2.0 uses `data.structures` (a list); 1.0 uses `data.structure`
+    // (a single object). Support both shapes.
+    final structuresList =
+        _nestedList(data, ['structures']) ?? _nestedList(root, ['structures']);
+    final structure = (structuresList != null && structuresList.isNotEmpty)
+        ? (structuresList.first as Map<String, dynamic>)
+        : (_nestedMap(data, ['structure']) ??
+            _nestedMap(root, ['structure']) ??
+            {});
     final dimObs = _nestedList(structure, ['dimensions', 'observation']) ?? [];
 
     if (dimObs.isEmpty) {

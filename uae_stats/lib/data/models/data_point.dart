@@ -16,6 +16,8 @@ class DataPoint {
     this.measure,
     this.unitMeasure,
     this.obsStatus,
+    this.level,
+    this.ageGroup,
   });
 
   /// The year or period string, e.g. "2024", "2024-Q1".
@@ -42,6 +44,14 @@ class DataPoint {
 
   /// Observation status, e.g. null = normal, "E" = estimated, "P" = provisional.
   final String? obsStatus;
+
+  /// Education level / stage code (education indicators only), e.g.
+  /// "NURSERY", "KG", "CYCLE1", "SECONDARY". Null when not applicable.
+  final String? level;
+
+  /// Age-group / band code (labour indicators only), e.g. "Y15T19",
+  /// "25-29", "Y_GE65". Null when not applicable.
+  final String? ageGroup;
 
   // ─── Convenience getters ──────────────────────────────────────────────────
 
@@ -71,6 +81,8 @@ class DataPoint {
       citizenship: json['citizenship'] as String?,
       measure: json['measure'] as String?,
       unitMeasure: json['unitMeasure'] as String?,
+      level: json['level'] as String?,
+      ageGroup: json['ageGroup'] as String?,
     );
   }
 
@@ -90,10 +102,37 @@ class DataPoint {
       citizenship: dimMap['CITIZENSHIP'] ??
           dimMap['NATIONALITY'] ??
           dimMap['CIVIL_STATUS'] ??
-          dimMap['CITIZEN'],
-      measure: dimMap['MEASURE'] ?? dimMap['INDICATOR'],
+          dimMap['CITIZEN'] ??
+          dimMap['WATER_SOURCE'], // DF_PW produced-water source (2nd category)
+      measure: dimMap['CLIMATE_INDIC'] ?? // RAIN_TOTAL vs RAINY_DAYS
+          dimMap['MEASURE'] ??
+          dimMap['INDICATOR'],
       unitMeasure: dimMap['UNIT_MEASURE'] ?? dimMap['UNIT'],
       obsStatus: obsStatus,
+      // 'level' doubles as the generic single-category breakdown dimension:
+      // education level (DF_LFEP_ED) or economic-activity sector (DF_LFEP_ECON).
+      level: dimMap['EDUCATION'] ??
+          dimMap['ECON_ACTIV'] ??       // DF_LFEP_ECON economic-activity sector
+          dimMap['EMP_SECTOR'] ??       // DF_LFEP_SECT employment sector
+          dimMap['OCCUPATION'] ??       // DF_LFEP_OCC occupation group
+          dimMap['STATION'] ??          // DF_CLIMATE_RAIN weather station
+          dimMap['PWT_ENTITY'] ??       // DF_PW produced-water entity
+          dimMap['ECONOMIC_ACTIVITY'] ??
+          dimMap['EDUCATION_LEVEL'] ??
+          dimMap['EDU_LEVEL'] ??
+          dimMap['EDUCATIONAL_LEVEL'] ??
+          dimMap['LEVEL'] ??
+          dimMap['ISCED'] ??
+          dimMap['STAGE'] ??
+          dimMap['GRADE'] ??
+          dimMap['SCHOOL_TYPE'],
+      ageGroup: dimMap['AGE'] ??
+          dimMap['AGE_GROUP'] ??
+          dimMap['AGEGRP'] ??
+          dimMap['AGE_BAND'] ??
+          dimMap['AGE_GRP'] ??
+          dimMap['AGEGROUP'] ??
+          dimMap['LS_AGE'], // livestock age class (L4YR / 4YR / 4YR_MIL / …)
     );
   }
 
@@ -108,6 +147,8 @@ class DataPoint {
         if (measure != null) 'measure': measure,
         if (unitMeasure != null) 'unitMeasure': unitMeasure,
         if (obsStatus != null) 'obsStatus': obsStatus,
+        if (level != null) 'level': level,
+        if (ageGroup != null) 'ageGroup': ageGroup,
       };
 
   factory DataPoint.fromJson(Map<String, dynamic> json) =>
@@ -124,6 +165,8 @@ class DataPoint {
     String? measure,
     String? unitMeasure,
     String? obsStatus,
+    String? level,
+    String? ageGroup,
   }) {
     return DataPoint(
       timePeriod: timePeriod ?? this.timePeriod,
@@ -134,6 +177,8 @@ class DataPoint {
       measure: measure ?? this.measure,
       unitMeasure: unitMeasure ?? this.unitMeasure,
       obsStatus: obsStatus ?? this.obsStatus,
+      level: level ?? this.level,
+      ageGroup: ageGroup ?? this.ageGroup,
     );
   }
 

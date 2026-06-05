@@ -1,7 +1,6 @@
 // lib/features/indicator_detail/presentation/screens/indicator_detail_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uae_stats/core/routing/app_router.dart';
@@ -41,14 +40,14 @@ const _navItems = [
   _NavItem(id: 'marriages',          label: 'Marriages',               group: 'demography'),
   _NavItem(id: 'divorces',           label: 'Divorces',                group: 'demography'),
   // Education
-  _NavItem(id: 'student_enrolment',  label: 'Student Enrolment',       group: 'demography'),
-  _NavItem(id: 'teaching_staff',     label: 'Teaching Staff',          group: 'demography'),
+  _NavItem(id: 'student_enrolment',  label: 'Student',                 group: 'demography'),
+  _NavItem(id: 'teaching_staff',     label: 'Teaching',                group: 'demography'),
   _NavItem(id: 'higher_education',   label: 'Higher Education',        group: 'demography'),
   // Health
   _NavItem(id: 'hospitals',              label: 'Hospitals',           group: 'demography'),
   _NavItem(id: 'health_clinics_centers', label: 'Clinics & Centers',   group: 'demography'),
   _NavItem(id: 'health_hospital_beds',   label: 'Hospital Beds',       group: 'demography'),
-  _NavItem(id: 'health_professionals',   label: 'Health Workforce',    group: 'demography'),
+  _NavItem(id: 'health_professionals',   label: 'Healthcare Professionals', group: 'demography'),
   // Labour
   _NavItem(id: 'labour_economic_activity',      label: 'Economic Activity',        group: 'demography'),
   _NavItem(id: 'labour_employed_age_gender',    label: 'Employed: Age & Gender',   group: 'demography'),
@@ -64,6 +63,14 @@ const _navItems = [
   _NavItem(id: 'crop_production',   label: 'Crop Statistics by Emirate', group: 'environment'),
   _NavItem(id: 'crop_area',         label: 'Cultivated Area',            group: 'environment'),
   _NavItem(id: 'crop_land_total',   label: 'Total Agricultural Area',    group: 'environment'),
+  // Livestock
+  _NavItem(id: 'livestock_camel',   label: 'Camel Population',           group: 'environment'),
+  _NavItem(id: 'livestock_cattle',  label: 'Cattle Population',          group: 'environment'),
+  _NavItem(id: 'livestock_goat',    label: 'Goat Population',            group: 'environment'),
+  _NavItem(id: 'livestock_sheep',   label: 'Sheep Population',           group: 'environment'),
+  // Ecology
+  _NavItem(id: 'ecology_rainfall',       label: 'Annual Rainfall',       group: 'environment'),
+  _NavItem(id: 'ecology_produced_water', label: 'Produced Water',        group: 'environment'),
 
   // ── Economy ─────────────────────────────────────────────────────────────────
   // National Accounts
@@ -116,16 +123,6 @@ class _IndicatorDetailScreenState
     extends ConsumerState<IndicatorDetailScreen> {
   late String _activeId;
   final ScrollController _scrollController = ScrollController();
-
-  static String _capitalise(String s) =>
-      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
-
-  static String _catAr(String c) => switch (c) {
-    'demography'  => 'الديموغرافيا',
-    'economy'     => 'الاقتصاد',
-    'environment' => 'البيئة',
-    _             => c,
-  };
 
   /// Returns the correct accent color for a given category string.
   static Color _accentFor(String category) => switch (category) {
@@ -231,21 +228,19 @@ class _IndicatorDetailScreenState
                     // Hero card
                     DetailHeroCard(data: data),
 
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20),
-                      child: IndicatorChart(
-                        allSeries: data.uaeTotalSeries,
-                        indicatorName: isAr ? data.meta.name.ar : data.meta.name.en,
-                        indicatorId: data.meta.id,
-                        accentColor: _accentFor(data.meta.category),
-                        femaleSeries: _showGenderSeries(data.meta.id)
-                            ? data.byGender['F'] ?? []
-                            : [],
-                        maleSeries: _showGenderSeries(data.meta.id)
-                            ? data.byGender['M'] ?? []
-                            : [],
-                      ),
+                    // IndicatorChart manages its own horizontal padding (20)
+                    // internally — no extra wrapper, so the card uses full width.
+                    IndicatorChart(
+                      allSeries: data.uaeTotalSeries,
+                      indicatorName: isAr ? data.meta.name.ar : data.meta.name.en,
+                      indicatorId: data.meta.id,
+                      accentColor: _accentFor(data.meta.category),
+                      femaleSeries: _showGenderSeries(data.meta.id)
+                          ? data.byGender['F'] ?? []
+                          : [],
+                      maleSeries: _showGenderSeries(data.meta.id)
+                          ? data.byGender['M'] ?? []
+                          : [],
                     ),
 
                     // Stats chips row
@@ -254,93 +249,16 @@ class _IndicatorDetailScreenState
 
                     // Breakdown
                     const SizedBox(height: 10),
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 20),
-                      child: BreakdownSection(data: data),
-                    ),
-
-                    // Metadata card
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: _MetadataCard(data: data),
+                    // BreakdownSection manages its own horizontal padding so
+                    // the tab bar can scroll edge-to-edge (full screen width).
+                    BreakdownSection(
+                      data: data,
+                      accentColor: _accentFor(data.meta.category),
                     ),
 
                     // Related indicators
                     const SizedBox(height: 10),
                     _RelatedIndicators(currentId: _activeId),
-
-                    // CTA buttons
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: ElevatedButton.icon(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: _accentFor(data.meta.category),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                                elevation: 0,
-                              ),
-                              icon: const SizedBox.shrink(),
-                              label: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    isAr ? 'مقارنة مع مؤشر آخر' : 'Compare with Another Indicator',
-                                    style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Icon(Icons.arrow_forward_rounded,
-                                      size: 16),
-                                ],
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          SizedBox(
-                            width: double.infinity,
-                            height: 52,
-                            child: OutlinedButton(
-                              onPressed: () => context.go(AppRoutes.home),
-                              style: OutlinedButton.styleFrom(
-                                foregroundColor: _accentFor(data.meta.category),
-                                side: BorderSide(
-                                  color: _accentFor(data.meta.category),
-                                  width: 1.5,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(14),
-                                ),
-                              ),
-                              child: Text(
-                                isAr
-                                    ? 'عرض جميع مؤشرات ${_catAr(data.meta.category)}'
-                                    : 'View All ${_capitalise(data.meta.category)} Indicators',
-                                style: const TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    // Citation footer
-                    _CitationFooter(data: data),
 
                     const SizedBox(height: 24),
                   ],
@@ -357,14 +275,11 @@ class _IndicatorDetailScreenState
     );
   }
 
-  // Only show Male/Female series for these indicators
+  // Only show Male/Female series for these indicators.
+  // Note: education indicators (student_enrolment, teaching_staff,
+  // higher_education) intentionally excluded — Total line only.
   static bool _showGenderSeries(String id) => const {
-    'student_enrolment',
-    'teaching_staff',
-    'higher_education',
     'health_professionals',
-    'labour_employed_age_gender',
-    'labour_unemployment_age_gender',
   }.contains(id);
 
   String _labelFor(String id) {
@@ -540,121 +455,6 @@ class _BreadcrumbShimmer extends StatelessWidget {
   }
 }
 
-// ─── Metadata card ────────────────────────────────────────────────────────────
-class _MetadataCard extends ConsumerWidget {
-  const _MetadataCard({required this.data});
-
-  final dynamic data;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isAr = ref.watch(localeProvider).languageCode == 'ar';
-    final meta = data.meta;
-    final rows = <_MetaRow>[
-      _MetaRow(
-        key: isAr ? 'تكرار التحديث' : 'Update Frequency',
-        value: isAr ? _freqAr(meta.frequency) : meta.frequencyLabel,
-      ),
-      _MetaRow(
-        key: isAr ? 'آخر تحديث' : 'Last Update',
-        value: data.preparedAtForDisplay ?? data.latestPeriod,
-      ),
-      _MetaRow(
-        key: isAr ? 'نطاق البيانات' : 'Data Coverage',
-        value: data.dataRange,
-      ),
-      _MetaRow(
-        key: isAr ? 'الوحدة' : 'Unit',
-        value: isAr ? meta.unit.ar : meta.unit.en,
-      ),
-    ];
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.pearlGray,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            isAr ? 'حول هذا المؤشر' : 'About This Indicator',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: AppColors.slate900,
-            ),
-          ),
-          const SizedBox(height: 14),
-          ...rows.map((r) => _MetaRowWidget(row: r)),
-        ],
-      ),
-    );
-  }
-
-  static String _freqAr(String f) => switch (f) {
-    'A' => 'سنوي',
-    'M' => 'شهري',
-    'Q' => 'ربع سنوي',
-    _   => f,
-  };
-}
-
-class _MetaRow {
-  const _MetaRow({required this.key, required this.value});
-  final String key;
-  final String value;
-}
-
-class _MetaRowWidget extends StatelessWidget {
-  const _MetaRowWidget({required this.row});
-  final _MetaRow row;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 9),
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0x1A0073AB),
-            width: 1,
-          ),
-        ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              row.key,
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.slate600,
-                height: 1.5,
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              row.value,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: AppColors.slate900,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 // ─── Related indicators ───────────────────────────────────────────────────────
 
@@ -714,13 +514,13 @@ class _RelatedIndicators extends ConsumerWidget {
     'deaths':     _RelatedConfig(label: 'Deaths',           iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
     'marriages':  _RelatedConfig(label: 'Marriages',        iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'divorces':   _RelatedConfig(label: 'Divorces',         iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
-    'student_enrolment':      _RelatedConfig(label: 'Student Enrolment',     iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
-    'teaching_staff':         _RelatedConfig(label: 'Teaching Staff',        iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'student_enrolment':      _RelatedConfig(label: 'Student',              iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'teaching_staff':         _RelatedConfig(label: 'Teaching',             iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'higher_education':       _RelatedConfig(label: 'Higher Education',      iconColor: AppColors.teal, bgColor: AppColors.tealTint),
     'hospitals':              _RelatedConfig(label: 'Hospitals',             iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
     'health_clinics_centers': _RelatedConfig(label: 'Clinics and Centers',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'health_hospital_beds':   _RelatedConfig(label: 'Hospital Beds',         iconColor: AppColors.teal, bgColor: AppColors.tealTint),
-    'health_professionals':   _RelatedConfig(label: 'Health Workforce',      iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'health_professionals':   _RelatedConfig(label: 'Healthcare Professionals', iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
     // Economy
     'gdp_current':            _RelatedConfig(label: 'GDP (Current Prices)',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'gdp_constant':           _RelatedConfig(label: 'GDP (Constant Prices)',  iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
@@ -879,81 +679,6 @@ class _RelatedIndicators extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// ─── Citation footer ──────────────────────────────────────────────────────────
-class _CitationFooter extends StatelessWidget {
-  const _CitationFooter({required this.data});
-
-  final dynamic data;
-
-  static String _monthName(int m) => const [
-        '', 'January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December',
-      ][m];
-
-  @override
-  Widget build(BuildContext context) {
-    final dataYear = data.latestPeriod as String;
-    final fetched = data.fetchedAt as DateTime;
-    final retrievedStr = '${_monthName(fetched.month)} ${fetched.year}';
-    final citation =
-        "Federal Competitiveness and Statistics Authority (FCSA), "
-        "'${data.meta.name.en} in the UAE — $dataYear', "
-        "Retrieved $retrievedStr from uaestat.fcsa.gov.ae";
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            citation,
-            style: const TextStyle(
-              fontSize: 11,
-              color: AppColors.slate400,
-              fontStyle: FontStyle.italic,
-              height: 1.65,
-            ),
-          ),
-          const SizedBox(height: 8),
-          GestureDetector(
-            onTap: () {
-              Clipboard.setData(ClipboardData(text: citation));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Citation copied to clipboard'),
-                  duration: const Duration(seconds: 2),
-                  backgroundColor: AppColors.slate900,
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              );
-            },
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.copy_rounded,
-                    size: 13, color: AppColors.demBlue),
-                SizedBox(width: 4),
-                Text(
-                  'Copy Citation',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.demBlue,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

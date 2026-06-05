@@ -16,23 +16,25 @@ import 'package:uae_stats/shared/providers/locale_provider.dart';
 
 enum _ChartType { line, bar, table }
 
-enum _ChartRange { y3, y5, y10, max }
+enum _ChartRange { y3, y5 }
 
 extension _RangeLabel on _ChartRange {
   String get label => switch (this) {
         _ChartRange.y3  => '3Y',
         _ChartRange.y5  => '5Y',
-        _ChartRange.y10 => '10Y',
-        _ChartRange.max => 'MAX',
       };
 
   int? get years => switch (this) {
         _ChartRange.y3  => 3,
         _ChartRange.y5  => 5,
-        _ChartRange.y10 => 10,
-        _ChartRange.max => null,
       };
 }
+
+// Line chart shows at most this many X-axis points to stay clutter-free.
+const int _kMaxLinePoints = 5;
+
+// Table view shows at most the latest N years to stay readable.
+const int _kMaxTableYears = 15;
 
 class IndicatorChart extends ConsumerStatefulWidget {
   const IndicatorChart({
@@ -68,58 +70,52 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
     _range = _defaultRange;
   }
 
-  // Indicators with long history use 10Y default; short data uses 3Y; rest 5Y
+  // Default range. Line view defaults to 5Y (≤5 points).
   _ChartRange get _defaultRange {
-    final id = widget.indicatorId;
     final n = widget.allSeries.length;
-    if (id == 'health_hospital_beds' || id == 'health_clinics_centers' ||
-        id == 'hospitals') { return _ChartRange.y10; }
-    if (id == 'health_professionals') return _ChartRange.max;
-    if (id.startsWith('trade_')) return _ChartRange.max;
-    if (id == 'gdp_current' || id == 'gdp_constant') return _ChartRange.max;
-    if (id == 'gdp_quarterly_current' || id == 'gdp_quarterly_constant') return _ChartRange.y5;
     if (n <= 3) return _ChartRange.y3;
     return _ChartRange.y5;
   }
 
-  // Which range chips to show based on data length
+  // Which range chips to show based on data length (10Y and MAX removed).
   List<_ChartRange> get _visibleRanges {
     final n = widget.allSeries.length;
-    if (n <= 3) return [_ChartRange.y3, _ChartRange.max];
-    if (n <= 5) return [_ChartRange.y3, _ChartRange.y5, _ChartRange.max];
-    if (n >= 10) return [_ChartRange.y5, _ChartRange.y10, _ChartRange.max];
-    return [_ChartRange.y3, _ChartRange.y5, _ChartRange.max];
-  }
-
-  // Section title based on indicator type
-  String get _sectionTitle {
-    final id = widget.indicatorId;
-    if (id == 'health_hospital_beds' || id == 'hospitals') return 'Historical Trend';
-    if (id == 'health_clinics_centers') return 'Growth Trend';
-    if (id == 'health_professionals') return 'Workforce Trend';
-    if (id == 'aircraft_movement') return 'Annual Aircraft Movements Trend';
-    if (id == 'prices_cpi_annual') return 'Annual CPI Trend (Base 2021=100)';
-    if (id == 'tourism_hotel_arrivals')       return 'Annual Hotel Guest Arrivals';
-    if (id == 'tourism_hotel_establishments') return 'Hotel Establishments Trend';
-    if (id == 'tourism_main_indicators')      return 'Tourism Revenue Trend';
-    if (id.startsWith('tourism_')) return 'Tourism Trend';
-    if (id == 'trade_total')           return 'Annual Trade Trend';
-    if (id == 'trade_imports_hs')      return 'Annual Imports by HS Section';
-    if (id == 'trade_non_oil_exports') return 'Non-Oil Exports Trend';
-    if (id == 'trade_reexports_annual') return 'Annual Re-Exports Trend';
-    if (id == 'trade_reexports_monthly') return 'Monthly Re-Exports';
-    if (id == 'trade_sector_country')  return 'Trade by Sector & Country';
-    if (id == 'gdp_current') return 'Annual GDP Trend (Current Prices)';
-    if (id == 'gdp_constant') return 'Annual GDP Trend (Constant Prices, Base 2010)';
-    if (id == 'gdp_quarterly_constant') return 'Quarterly GDP Trend (Constant Prices)';
-    if (id == 'gdp_quarterly_current')  return 'Quarterly GDP Trend (Current Prices)';
-    final n = widget.allSeries.length;
-    if (n <= 3) return '3-Year Trend';
-    return '5-Year Trend';
+    if (n <= 3) return [_ChartRange.y3];
+    return [_ChartRange.y3, _ChartRange.y5];
   }
 
   bool get _hasGender =>
       widget.femaleSeries.isNotEmpty && widget.maleSeries.isNotEmpty;
+
+  /// Share (% distribution) indicators — chart values are percentages, so
+  /// they render as "X.X%" rather than compact counts.
+  static const _shareIds = {
+    'labour_employed_age_gender',
+    'labour_employed_education',
+    'labour_economic_activity',
+    'labour_employment_sector',
+    'labour_unemployment_education',
+    'labour_workforce_occupation',
+    'labour_unemployment_age_gender',
+  };
+
+  bool get _isPercent => _shareIds.contains(widget.indicatorId);
+
+  /// Decimal-valued indicators (mm / MCM) — one decimal place, no compaction.
+  static const _decimalIds = {'ecology_rainfall', 'ecology_produced_water'};
+  bool get _isDecimal => _decimalIds.contains(widget.indicatorId);
+
+  String _fmtValue(double v) => _isPercent
+      ? '${v.toStringAsFixed(1)}%'
+      : _isDecimal
+          ? v.toStringAsFixed(1)
+          : NumberFormatter.compact(v);
+
+  String _fmtValueFull(double v) => _isPercent
+      ? '${v.toStringAsFixed(1)}%'
+      : _isDecimal
+          ? v.toStringAsFixed(1)
+          : NumberFormatter.full(v);
 
   List<DataPoint> get _series {
     final all = widget.allSeries;
@@ -136,6 +132,21 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
     return src.sublist(src.length - n);
   }
 
+  /// Caps a series to at most [_kMaxLinePoints] (last N points) so the line
+  /// chart never renders more than 5 X-axis values.
+  List<DataPoint> _capForLine(List<DataPoint> src) {
+    if (src.length <= _kMaxLinePoints) return src;
+    return src.sublist(src.length - _kMaxLinePoints);
+  }
+
+  /// Series for the Table view — latest [_kMaxTableYears] years only.
+  /// Independent of the range chips so long histories stay readable.
+  List<DataPoint> get _tableSeries {
+    final all = widget.allSeries;
+    if (all.length <= _kMaxTableYears) return all;
+    return all.sublist(all.length - _kMaxTableYears);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -143,42 +154,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ── Section header ────────────────────────────────────────────
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                _sectionTitle,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  color: AppColors.slate900,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {},
-                child: Row(
-                  children: [
-                    const Icon(Icons.open_in_full_rounded,
-                        size: 17, color: AppColors.slate600),
-                    const SizedBox(width: 4),
-                    Text(
-                      isAr ? 'توسيع' : 'Expand',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: AppColors.slate600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 12),
+        const SizedBox(height: 20),
 
         // ── Chart type toggle ─────────────────────────────────────────
         Padding(
@@ -199,7 +175,10 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
           const SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _DataTableCard(series: _series),
+            child: _DataTableCard(
+                series: _tableSeries,
+                isPercent: _isPercent,
+                isDecimal: _isDecimal),
           ),
         ] else ...[
           // Line or Bar chart card
@@ -211,18 +190,21 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                 borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
                 boxShadow: AppColors.shadowCard,
               ),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(10, 16, 12, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    isAr
-                        ? '${widget.indicatorName} السنوي في الإمارات'
-                        : 'Annual ${widget.indicatorName} in the UAE',
-                    style: const TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w500,
-                      color: AppColors.slate600,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 6),
+                    child: Text(
+                      isAr
+                          ? '${widget.indicatorName} السنوي في الإمارات'
+                          : 'Annual ${widget.indicatorName} in the UAE',
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.slate600,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 14),
@@ -291,11 +273,12 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
   // ─── Line Chart ────────────────────────────────────────────────────────────
 
   Widget _buildLineChart() {
-    final series = _series;
+    // Line view is capped at 5 X-axis points to stay clutter-free.
+    final series = _capForLine(_series);
     if (series.isEmpty) return const _EmptyChart();
 
-    final fSeries = _slice(widget.femaleSeries);
-    final mSeries = _slice(widget.maleSeries);
+    final fSeries = _capForLine(_slice(widget.femaleSeries));
+    final mSeries = _capForLine(_slice(widget.maleSeries));
 
     List<FlSpot> toSpots(List<DataPoint> pts) => pts
         .asMap()
@@ -366,7 +349,14 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
             strokeWidth: 1,
           ),
         ),
-        borderData: FlBorderData(show: false),
+        // Restore the X (bottom) and Y (left) axis lines.
+        borderData: FlBorderData(
+          show: true,
+          border: const Border(
+            left: BorderSide(color: AppColors.silver, width: 1),
+            bottom: BorderSide(color: AppColors.silver, width: 1),
+          ),
+        ),
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false)),
@@ -375,7 +365,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 62,
+              reservedSize: 34,
               interval: yInterval,
               getTitlesWidget: (val, meta) {
                 // Skip labels that coincide with axis min/max to avoid clipping
@@ -386,7 +376,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                   axisSide: meta.axisSide,
                   space: 6,
                   child: Text(
-                    NumberFormatter.compact(val),
+                    _fmtValue(val),
                     style: const TextStyle(
                         fontSize: 10, color: AppColors.slate400),
                     textAlign: TextAlign.right,
@@ -451,7 +441,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                 ),
                 children: [
                   TextSpan(
-                    text: '\n${NumberFormatter.full(pt.value)}',
+                    text: '\n${_fmtValueFull(pt.value)}',
                     style: const TextStyle(
                       color: AppColors.slate900,
                       fontSize: 15,
@@ -516,7 +506,14 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
             strokeWidth: 1,
           ),
         ),
-        borderData: FlBorderData(show: false),
+        // Restore the X (bottom) and Y (left) axis lines.
+        borderData: FlBorderData(
+          show: true,
+          border: const Border(
+            left: BorderSide(color: AppColors.silver, width: 1),
+            bottom: BorderSide(color: AppColors.silver, width: 1),
+          ),
+        ),
         titlesData: FlTitlesData(
           topTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: false)),
@@ -525,7 +522,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
           leftTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              reservedSize: 62,
+              reservedSize: 34,
               interval: yInterval,
               getTitlesWidget: (val, meta) {
                 if (val == meta.min || val == meta.max) {
@@ -535,7 +532,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                   axisSide: meta.axisSide,
                   space: 6,
                   child: Text(
-                    NumberFormatter.compact(val),
+                    _fmtValue(val),
                     style: const TextStyle(
                         fontSize: 10, color: AppColors.slate400),
                     textAlign: TextAlign.right,
@@ -586,7 +583,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                 ),
                 children: [
                   TextSpan(
-                    text: NumberFormatter.full(pt.value),
+                    text: _fmtValueFull(pt.value),
                     style: const TextStyle(
                       color: AppColors.slate900,
                       fontSize: 15,
@@ -748,42 +745,53 @@ class _RangeChips extends StatelessWidget {
       ? switch (r) {
           _ChartRange.y3  => '٣ س',
           _ChartRange.y5  => '٥ س',
-          _ChartRange.y10 => '١٠ س',
-          _ChartRange.max => 'الكل',
         }
       : r.label;
 
   @override
   Widget build(BuildContext context) {
     final ranges = visible ?? _ChartRange.values;
-    return Wrap(
-      alignment: WrapAlignment.center,
-      spacing: 8,
-      runSpacing: 8,
-      children: ranges.map((r) {
-        final active = r == selected;
-        return GestureDetector(
-          onTap: () => onChanged(r),
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            height: 32,
-            padding: const EdgeInsets.symmetric(horizontal: 18),
-            decoration: BoxDecoration(
-              color: active ? accentColor : AppColors.pearlGray,
-              borderRadius: BorderRadius.circular(999),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              _label(r),
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: active ? AppColors.white : AppColors.slate600,
+    // Horizontal segmented control: a single pearl-gray track with one
+    // equal-width segment per range. The active segment fills with the accent.
+    return Container(
+      height: 36,
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: AppColors.pearlGray,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          for (final r in ranges) ...[
+            Expanded(
+              child: GestureDetector(
+                onTap: () => onChanged(r),
+                behavior: HitTestBehavior.opaque,
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: 28,
+                  decoration: BoxDecoration(
+                    color: r == selected ? accentColor : Colors.transparent,
+                    borderRadius: BorderRadius.circular(9),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    _label(r),
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: r == selected
+                          ? AppColors.white
+                          : AppColors.slate600,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
-        );
-      }).toList(),
+            if (r != ranges.last) const SizedBox(width: 3),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -791,8 +799,17 @@ class _RangeChips extends StatelessWidget {
 // ─── Inline data table (shown when Table tab is active) ───────────────────────
 
 class _DataTableCard extends ConsumerWidget {
-  const _DataTableCard({required this.series});
+  const _DataTableCard(
+      {required this.series, this.isPercent = false, this.isDecimal = false});
   final List<DataPoint> series;
+  final bool isPercent;
+  final bool isDecimal;
+
+  String _fmtValueFull(double v) => isPercent
+      ? '${v.toStringAsFixed(1)}%'
+      : isDecimal
+          ? v.toStringAsFixed(1)
+          : NumberFormatter.full(v);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -880,7 +897,7 @@ class _DataTableCard extends ConsumerWidget {
                   ),
                   Expanded(
                     child: Text(
-                      NumberFormatter.full(pt.value),
+                      _fmtValueFull(pt.value),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 14,

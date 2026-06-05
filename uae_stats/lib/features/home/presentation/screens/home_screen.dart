@@ -203,9 +203,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     title: isArabic ? 'البيئة' : 'Environment',
                     subtitle: isArabic ? 'الزراعة · الطاقة · المناخ · الموارد' : 'Agriculture · Energy · Climate · Resources',
                     tiles: const [
-                      _TileData.group(icon: Icons.grass_outlined, label: 'Agriculture', subtitle: 'Crop Statistics, Total Area, Total Production', count: 3),
+                      _TileData.group(icon: Icons.grass_outlined, label: 'Agriculture', subtitle: 'Crops, Land Area, Livestock Census', count: 7),
                       _TileData.group(icon: Icons.bolt_outlined, label: 'Energy', subtitle: 'Electricity, Oil & Gas, Renewable', count: 3),
-                      _TileData.fullWidth(icon: Icons.park_outlined, label: 'Environment', subtitle: 'Air Quality, Reserves, Climate, Waste…', value: '', change: 0, year: '', count: 7),
+                      _TileData.fullWidth(icon: Icons.cloud_outlined, label: 'Environment', subtitle: 'Ecology · Temperature, Rainfall, Water', value: '', change: 0, year: '', count: 3),
                     ],
                   ),
                 ),
@@ -372,24 +372,107 @@ class _HeroCard extends ConsumerWidget {
 }
 
 // ── Key figures horizontal carousel ──────────────────────────────────────────
-class _KeyFiguresCarousel extends ConsumerWidget {
+class _KeyFiguresCarousel extends ConsumerStatefulWidget {
   const _KeyFiguresCarousel();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_KeyFiguresCarousel> createState() =>
+      _KeyFiguresCarouselState();
+}
+
+class _KeyFiguresCarouselState extends ConsumerState<_KeyFiguresCarousel> {
+  final ScrollController _controller = ScrollController();
+
+  // One card (160) + separator (12) — the scroll step per arrow tap.
+  static const double _step = 172;
+
+  bool _canScrollLeft = false;
+  bool _canScrollRight = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_onScroll);
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!_controller.hasClients) return;
+    final pos = _controller.position;
+    final left = _controller.offset > 4;
+    final right = _controller.offset < pos.maxScrollExtent - 4;
+    if (left != _canScrollLeft || right != _canScrollRight) {
+      setState(() {
+        _canScrollLeft = left;
+        _canScrollRight = right;
+      });
+    }
+  }
+
+  void _scrollBy(double delta) {
+    if (!_controller.hasClients) return;
+    final target = (_controller.offset + delta)
+        .clamp(0.0, _controller.position.maxScrollExtent);
+    _controller.animateTo(
+      target,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final async = ref.watch(homeCarouselProvider);
 
     return SizedBox(
       height: 152,
-      child: async.when(
-        loading: () => _buildList(_loadingItems),
-        error: (_, __) => _buildList(_loadingItems),
-        data: (items) => _buildList(items),
+      child: Stack(
+        children: [
+          async.when(
+            loading: () => _buildList(_loadingItems),
+            error: (_, __) => _buildList(_loadingItems),
+            data: (items) => _buildList(items),
+          ),
+          // Left arrow
+          Positioned(
+            left: 4,
+            top: 0,
+            bottom: 8,
+            child: Center(
+              child: _CarouselArrow(
+                icon: Icons.chevron_left_rounded,
+                visible: _canScrollLeft,
+                onTap: () => _scrollBy(-_step),
+              ),
+            ),
+          ),
+          // Right arrow
+          Positioned(
+            right: 4,
+            top: 0,
+            bottom: 8,
+            child: Center(
+              child: _CarouselArrow(
+                icon: Icons.chevron_right_rounded,
+                visible: _canScrollRight,
+                onTap: () => _scrollBy(_step),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  static Widget _buildList(List<HomeKpiItem> items) => ListView.separated(
+  Widget _buildList(List<HomeKpiItem> items) => ListView.separated(
+    controller: _controller,
     scrollDirection: Axis.horizontal,
     padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
     itemCount: items.length,
@@ -409,6 +492,52 @@ class _KeyFiguresCarousel extends ConsumerWidget {
       categoryColor: [AppColors.demBlue, _kGold, _kGold, AppColors.envGreen, _kGold][i],
     ),
   );
+}
+
+// ── Carousel navigation arrow ─────────────────────────────────────────────────
+class _CarouselArrow extends StatelessWidget {
+  const _CarouselArrow({
+    required this.icon,
+    required this.visible,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final bool visible;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedOpacity(
+      opacity: visible ? 1 : 0,
+      duration: const Duration(milliseconds: 200),
+      child: IgnorePointer(
+        ignoring: !visible,
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+              color: AppColors.white,
+              shape: BoxShape.circle,
+              border: Border.all(color: _kSilver),
+              boxShadow: const [
+                BoxShadow(
+                  color: Color(0x1A0F172A),
+                  blurRadius: 12,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            alignment: Alignment.center,
+            child: Icon(icon, size: 22, color: _kSlate600),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _KeyFigureCard extends StatelessWidget {
@@ -758,6 +887,9 @@ class _TileState extends State<_Tile> {
           _showTourismSheet(context);
         } else if (d.label == 'Labor Force') {
           _showLaborSheet(context);
+        } else if (d.label == 'Environment') {
+          // Climate / ecology indicators (only Mean Temperature is wired today).
+          context.push(AppRoutes.indicatorPath('ecology_mean_temp'));
         } else if (d.id != null) { context.push(AppRoutes.indicatorPath(d.id!)); }
       },
       child: AnimatedContainer(
@@ -900,7 +1032,9 @@ class _FullWidthTileState extends State<_FullWidthTile> {
         } else if (d.label == 'Tourism') {
           _showTourismSheet(context);
         } else if (d.label == 'Environment') {
-          // placeholder for future Environment sheet
+          _showEcologySheet(context);
+        } else if (d.id != null) {
+          context.push(AppRoutes.indicatorPath(d.id!));
         }
       },
       child: AnimatedContainer(
@@ -992,16 +1126,27 @@ void _showAgricultureSheet(BuildContext context) {
 class _AgricultureSheet extends ConsumerWidget {
   const _AgricultureSheet();
 
-  static const _ids    = ['crop_production', 'crop_area', 'crop_land_total'];
+  static const _ids    = [
+    'crop_production', 'crop_area', 'crop_land_total',
+    'livestock_camel', 'livestock_cattle', 'livestock_goat', 'livestock_sheep',
+  ];
   static const _icons  = {
     'crop_production': Icons.grass_outlined,
     'crop_area':       Icons.crop_square_rounded,
     'crop_land_total': Icons.terrain_outlined,
+    'livestock_camel':  Icons.pets_outlined,
+    'livestock_cattle': Icons.pets_outlined,
+    'livestock_goat':   Icons.pets_outlined,
+    'livestock_sheep':  Icons.pets_outlined,
   };
   static const _labels = {
     'crop_production': 'Crop Statistics by Emirate',
     'crop_area':       'Agricultural Cultivated Area',
     'crop_land_total': 'Total Agricultural Land Use',
+    'livestock_camel':  'Camel Population',
+    'livestock_cattle': 'Cattle Population',
+    'livestock_goat':   'Goat Population',
+    'livestock_sheep':  'Sheep Population',
   };
 
   @override
@@ -1039,7 +1184,7 @@ class _AgricultureSheet extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Agriculture', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
-                  Text('Environment · 3 Indicators', style: TextStyle(fontSize: 12, color: _kSlate600)),
+                  Text('Environment · 7 Indicators', style: TextStyle(fontSize: 12, color: _kSlate600)),
                 ],
               )),
               GestureDetector(
@@ -1104,6 +1249,116 @@ class _AgricultureSheet extends ConsumerWidget {
                   Icon(Icons.arrow_forward_rounded, size: 16),
                 ]),
               ),
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── Ecology bottom sheet ──────────────────────────────────────────────────────
+void _showEcologySheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _EcologySheet(),
+  );
+}
+
+class _EcologySheet extends ConsumerWidget {
+  const _EcologySheet();
+
+  static const _ids = ['ecology_mean_temp', 'ecology_rainfall', 'ecology_produced_water'];
+  static const _icons = {
+    'ecology_mean_temp':      Icons.thermostat_outlined,
+    'ecology_rainfall':       Icons.water_drop_outlined,
+    'ecology_produced_water': Icons.opacity_outlined,
+  };
+  static const _labels = {
+    'ecology_mean_temp':      'Mean Temperature',
+    'ecology_rainfall':       'Annual Rainfall',
+    'ecology_produced_water': 'Produced Water',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+    return DraggableScrollableSheet(
+      initialChildSize: 0.50,
+      minChildSize: 0.36,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW, height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(color: _kSilver, borderRadius: BorderRadius.circular(999)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: AppColors.envGreenTint, borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.cloud_outlined, size: 20, color: AppColors.envGreen),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Ecology', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
+                  Text('Environment · 3 Indicators', style: TextStyle(fontSize: 12, color: _kSlate600)),
+                ],
+              )),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: const BoxDecoration(color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!, label: _labels[id]!,
+                    iconColor: AppColors.envGreen, iconBg: AppColors.envGreenTint,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!, label: _labels[id]!,
+                    summary: summary,
+                    iconColor: AppColors.envGreen, iconBg: AppColors.envGreenTint,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
             ),
           ),
         ]),
@@ -1213,15 +1468,15 @@ class _VitalsSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -1510,15 +1765,15 @@ class _EducationSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -1695,15 +1950,15 @@ class _HealthSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));
@@ -2557,15 +2812,15 @@ class _LaborSheet extends ConsumerWidget {
                   error: (_, __) => _VitalRowEmpty(
                     icon: _icons[id]!,
                     label: _labels[id]!,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                   ),
                   data: (summary) => _VitalRow(
                     icon: _icons[id]!,
                     label: _labels[id]!,
                     summary: summary,
-                    iconColor: _kGold,
-                    iconBg: _kSage,
+                    iconColor: _kDemBlue,
+                    iconBg: _kDemBlueBg,
                     onTap: () {
                       Navigator.pop(context);
                       context.push(AppRoutes.indicatorPath(id));

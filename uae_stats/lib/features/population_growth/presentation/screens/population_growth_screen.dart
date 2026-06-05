@@ -21,6 +21,7 @@ import 'package:uae_stats/data/models/indicator_data.dart';
 import 'package:uae_stats/data/providers/indicator_providers.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
+import 'package:uae_stats/shared/widgets/hero_action_buttons.dart';
 import 'package:uae_stats/shared/widgets/language_toggle_button.dart';
 import 'package:uae_stats/shared/widgets/shimmer_box.dart';
 
@@ -453,28 +454,7 @@ class _GrowthHeroCard extends StatefulWidget {
   State<_GrowthHeroCard> createState() => _GrowthHeroCardState();
 }
 
-class _GrowthHeroCardState extends State<_GrowthHeroCard>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulseCtrl;
-  late final Animation<double> _pulse;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulseCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    )..repeat(reverse: true);
-    _pulse = Tween<double>(begin: 0.3, end: 1.0)
-        .animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
-  }
-
-  @override
-  void dispose() {
-    _pulseCtrl.dispose();
-    super.dispose();
-  }
-
+class _GrowthHeroCardState extends State<_GrowthHeroCard> {
   double get _growthPct {
     final s = widget.data.uaeTotalSeries;
     if (s.length < 2) return 0;
@@ -505,13 +485,8 @@ class _GrowthHeroCardState extends State<_GrowthHeroCard>
     return '(${s[s.length - 3].timePeriod} – ${s[s.length - 2].timePeriod})';
   }
 
-  static String _fmtDate(DateTime dt) {
-    const m = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ];
-    return '${dt.day} ${m[dt.month - 1]} ${dt.year}';
-  }
+  /// Dataset updated label — latest data year (coverage end period).
+  String _datasetUpdatedDisplay() => widget.data.dataEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -562,30 +537,17 @@ class _GrowthHeroCardState extends State<_GrowthHeroCard>
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          AnimatedBuilder(
-                            animation: _pulse,
-                            builder: (_, __) => Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF4ADE80),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF4ADE80)
-                                        .withValues(alpha: 0.25 * _pulse.value),
-                                    blurRadius: 6,
-                                    spreadRadius: 3,
-                                  ),
-                                ],
-                              ),
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF4ADE80),
+                              shape: BoxShape.circle,
                             ),
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            widget.data.fromCache
-                                ? 'Cached data'
-                                : 'Live · ${_fmtDate(widget.data.fetchedAt)}',
+                            'Updated ${_datasetUpdatedDisplay()}',
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.white.withValues(alpha: 0.7),
@@ -675,10 +637,9 @@ class _GrowthHeroCardState extends State<_GrowthHeroCard>
                         )
                       else
                         const SizedBox.shrink(),
-                      const Icon(
-                        Icons.trending_up_rounded,
-                        size: 24,
-                        color: AppColors.champagneGold,
+                      HeroActionButtons(
+                        indicatorName: widget.data.meta.name.en,
+                        data: widget.data,
                       ),
                     ],
                   ),

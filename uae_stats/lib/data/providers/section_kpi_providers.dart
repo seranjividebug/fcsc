@@ -538,6 +538,9 @@ Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
     'home_gdp'         => 'assets/data/seeds/gdp_current_seed.json',
     'gdp_quarterly'    => 'assets/data/seeds/gdp_quarterly_current_seed.json',
     'ecology_mean_temp' => 'assets/data/seeds/climate_temp_seed.json',
+    // Home-carousel Aircraft Movements — seed fallback when live API/CORS fails.
+    'home_air_passengers_v2' => 'assets/data/seeds/aircraft_movement_seed.json',
+    'aircraft_movement'      => 'assets/data/seeds/aircraft_movement_seed.json',
     _ => null,
   };
   if (seedPath == null) return null;

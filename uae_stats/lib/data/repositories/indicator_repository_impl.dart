@@ -246,13 +246,19 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       'crop_production'                => _api.fetchCropStatistics(),
       'crop_area'                      => _api.fetchCropStatistics(),
       'crop_land_total'                => _api.fetchCropLand(),
-      'labour_economic_activity'       => Future.value(const SdmxResult(points: [])),
-      'labour_employed_age_gender'     => Future.value(const SdmxResult(points: [])),
-      'labour_employed_education'      => Future.value(const SdmxResult(points: [])),
-      'labour_employment_sector'       => Future.value(const SdmxResult(points: [])),
-      'labour_unemployment_education'  => Future.value(const SdmxResult(points: [])),
-      'labour_workforce_occupation'    => Future.value(const SdmxResult(points: [])),
-      'labour_unemployment_age_gender' => Future.value(const SdmxResult(points: [])),
+      'labour_economic_activity'       => _api.fetchEconomicActivity(),
+      'labour_employed_age_gender'     => _api.fetchEmployedAgeGender(),
+      'labour_employed_education'      => _api.fetchEmployedEducation(),
+      'labour_employment_sector'       => _api.fetchEmploymentSector(),
+      'labour_unemployment_education'  => _api.fetchUnemploymentEducation(),
+      'labour_workforce_occupation'    => _api.fetchWorkforceOccupation(),
+      'labour_unemployment_age_gender' => _api.fetchUnemploymentAgeGender(),
+      'livestock_camel'                => _api.fetchCamelPopulation(),
+      'livestock_cattle'               => _api.fetchCattlePopulation(),
+      'livestock_goat'                 => _api.fetchGoatPopulation(),
+      'livestock_sheep'                => _api.fetchSheepPopulation(),
+      'ecology_rainfall'               => _api.fetchRainfall(),
+      'ecology_produced_water'         => _api.fetchProducedWater(),
       _                                => Future.value(const SdmxResult(points: [])),
     };
   }
@@ -273,6 +279,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     final isPrices = id.startsWith('prices_');
     final isEcology = id.startsWith('ecology_');
     final isCrop    = id.startsWith('crop_');
+    final isLivestock = id.startsWith('livestock_');
     return IndicatorMeta(
       id: id,
       dataflowId: '',
@@ -281,7 +288,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       name: _nameFor(id),
       category: (isGdp || isTrade || isTourism || isPrices || isAir)
           ? 'economy'
-          : (isEcology || isCrop) ? 'environment'
+          : (isEcology || isCrop || isLivestock) ? 'environment'
           : id.startsWith('labour_') ? 'demography' : 'demography',
       subCategory: isGdp ? 'national_accounts'
           : isTrade ? 'international_trade'
@@ -289,7 +296,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           : isPrices ? 'prices'
           : isAir ? 'air_transport'
           : isEcology ? 'ecology'
-          : isCrop ? 'agriculture'
+          : (isCrop || isLivestock) ? 'agriculture'
           : 'vitals',
       unit: isGdp || isTrade
           ? const LocalizedString(en: 'AED Million', ar: 'مليون درهم')
@@ -299,14 +306,25 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           ? const LocalizedString(en: 'Index', ar: 'مؤشر')
           : isAir
           ? const LocalizedString(en: 'Movements', ar: 'حركة')
+          : id == 'ecology_rainfall'
+          ? const LocalizedString(en: 'mm', ar: 'مم')
+          : id == 'ecology_produced_water'
+          ? const LocalizedString(en: 'MCM', ar: 'مليون م³')
           : isEcology
           ? const LocalizedString(en: '°C', ar: '°م')
           : isCrop && id == 'crop_land_total'
           ? const LocalizedString(en: 'K Donum', ar: 'ألف دونم')
           : isCrop
           ? const LocalizedString(en: 'Metric Tonnes', ar: 'طن متري')
+          : isLivestock
+          ? const LocalizedString(en: 'Head', ar: 'رأس')
           : const LocalizedString(en: 'Persons', ar: 'أشخاص'),
-      unitCode: isGdp || isTrade ? 'AED_MN' : isAir ? 'MOV' : isEcology ? 'CEL' : 'PS',
+      unitCode: isGdp || isTrade ? 'AED_MN'
+          : isAir ? 'MOV'
+          : id == 'ecology_rainfall' ? 'MM'
+          : id == 'ecology_produced_water' ? 'MCM'
+          : isEcology ? 'CEL'
+          : isLivestock ? 'HEAD' : 'PS',
       frequency: 'A',
       sourceCode: 'FCSA',
       sourceName: const LocalizedString(
@@ -324,14 +342,14 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'deaths'            => const LocalizedString(en: 'Deaths',                    ar: 'الوفيات'),
         'marriages'         => const LocalizedString(en: 'Marriages',                 ar: 'الزيجات'),
         'divorces'          => const LocalizedString(en: 'Divorces',                  ar: 'الطلاق'),
-        'student_enrolment' => const LocalizedString(en: 'Student Enrolment',         ar: 'تسجيل الطلاب'),
-        'teaching_staff'    => const LocalizedString(en: 'Teaching Staff',            ar: 'الكوادر التدريسية'),
-        'higher_education'  => const LocalizedString(en: 'Higher Education Students', ar: 'طلاب التعليم العالي'),
+        'student_enrolment' => const LocalizedString(en: 'Student',                   ar: 'الطلاب'),
+        'teaching_staff'    => const LocalizedString(en: 'Teaching',                  ar: 'التدريس'),
+        'higher_education'  => const LocalizedString(en: 'Higher Education',          ar: 'التعليم العالي'),
         'hospitals'         => const LocalizedString(en: 'Hospitals',                 ar: 'المستشفيات'),
         'health_services'   => const LocalizedString(en: 'Health Services',           ar: 'الخدمات الصحية'),
         'health_clinics_centers' => const LocalizedString(en: 'Clinics and Centers',  ar: 'العيادات والمراكز'),
         'health_hospital_beds'   => const LocalizedString(en: 'Hospital Beds',        ar: 'أسرة المستشفيات'),
-        'health_professionals'           => const LocalizedString(en: 'Health Workforce',               ar: 'القوى العاملة الصحية'),
+        'health_professionals'           => const LocalizedString(en: 'Healthcare Professionals',        ar: 'المهنيون الصحيون'),
         'prices_cpi_annual'              => const LocalizedString(en: 'CPI Annual',                    ar: 'مؤشر أسعار المستهلك السنوي'),
         'tourism_hotel_arrivals'         => const LocalizedString(en: 'Hotel Guest Arrivals by Nationality', ar: 'وصول ضيوف الفنادق حسب الجنسية'),
         'tourism_hotel_establishments'   => const LocalizedString(en: 'Hotel Establishments',           ar: 'المنشآت الفندقية'),
@@ -357,6 +375,12 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'labour_employment_sector'       => const LocalizedString(en: 'Employment by Sector',           ar: 'التوظيف حسب القطاع'),
         'labour_unemployment_education'  => const LocalizedString(en: 'Unemployment by Education',      ar: 'البطالة حسب التعليم'),
         'labour_workforce_occupation'    => const LocalizedString(en: 'Workforce by Occupation',        ar: 'القوى العاملة حسب المهنة'),
+        'livestock_camel'                => const LocalizedString(en: 'Camel Population',                ar: 'تعداد الإبل'),
+        'livestock_cattle'               => const LocalizedString(en: 'Cattle Population',               ar: 'تعداد الأبقار'),
+        'livestock_goat'                 => const LocalizedString(en: 'Goat Population',                 ar: 'تعداد الماعز'),
+        'livestock_sheep'                => const LocalizedString(en: 'Sheep Population',                ar: 'تعداد الأغنام'),
+        'ecology_rainfall'               => const LocalizedString(en: 'Annual Rainfall',                 ar: 'هطول الأمطار السنوي'),
+        'ecology_produced_water'         => const LocalizedString(en: 'Produced Water',                  ar: 'المياه المنتجة'),
         'labour_unemployment_age_gender' => const LocalizedString(en: 'Unemployment by Age & Gender',   ar: 'البطالة حسب العمر والجنس'),
         _ => LocalizedString(en: id, ar: id),
       };

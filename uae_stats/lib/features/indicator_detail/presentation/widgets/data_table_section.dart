@@ -32,26 +32,16 @@ class DataTableSection extends ConsumerWidget {
         const SizedBox(height: 20),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                isAr ? 'البيانات التفصيلية' : 'Detailed Data',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  color: AppColors.slate900,
-                ),
+          child: Align(
+            alignment: AlignmentDirectional.centerStart,
+            child: Text(
+              isAr ? 'البيانات التفصيلية' : 'Detailed Data',
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+                color: AppColors.slate900,
               ),
-              Text(
-                isAr ? 'تصدير ←' : 'Export →',
-                style: const TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.demBlue,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
 
@@ -59,14 +49,57 @@ class DataTableSection extends ConsumerWidget {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: _hasGender
+          child: (data.isRainfall || data.isProducedWater)
+              // Decimal-valued national trend (mm / MCM).
+              ? _FullDataTable(
+                  series: data.uaeTotalSeries,
+                  isAr: isAr,
+                  isDecimal: true,
+                )
+              : data.isLivestock
+              // Livestock head counts by gender (Female / Male / Total).
               ? _GenderDataTable(
                   total: data.uaeTotalSeries,
-                  male: data.byGender['M']!,
-                  female: data.byGender['F']!,
+                  male: data.livestockGenderSeries('M'),
+                  female: data.livestockGenderSeries('F'),
                   isAr: isAr,
                 )
-              : _FullDataTable(series: data.uaeTotalSeries, isAr: isAr),
+              : data.isEmployedEducation
+              // University Degree+ share by gender (Male/Female/Total),
+              // consistent with the hero KPI — not the 100% distribution row.
+              ? _GenderDataTable(
+                  total: data.universityShareSeries('_T'),
+                  male: data.universityShareSeries('M'),
+                  female: data.universityShareSeries('F'),
+                  isAr: isAr,
+                  isPercent: true,
+                )
+              : data.isEmploymentSector
+                  // Private Sector share by gender (Male/Female/Total).
+                  ? _GenderDataTable(
+                      total: data.sectorShareSeries('PRI', '_T'),
+                      male: data.sectorShareSeries('PRI', 'M'),
+                      female: data.sectorShareSeries('PRI', 'F'),
+                      isAr: isAr,
+                      isPercent: true,
+                    )
+                  : (data.isEconomicActivity ||
+                          data.isTopCategoryShare ||
+                          data.meta.id == 'labour_unemployment_age_gender')
+                      // % distribution — show the headline-category trend
+                      // (top occupation / education, or Youth 15–34 share).
+                      ? _FullDataTable(
+                          series: data.uaeTotalSeries,
+                          isAr: isAr,
+                          isPercent: true)
+                  : _hasGender
+                      ? _GenderDataTable(
+                          total: data.uaeTotalSeries,
+                          male: data.byGender['M']!,
+                          female: data.byGender['F']!,
+                          isAr: isAr,
+                        )
+                      : _FullDataTable(series: data.uaeTotalSeries, isAr: isAr),
         ),
       ],
     );
@@ -91,6 +124,16 @@ class _StatsChipsRow extends StatelessWidget {
     final slice = series.length > n ? series.sublist(series.length - n) : series;
     final vals = slice.map((p) => p.value).toList();
     final label = '${n}Y';
+    final pct = data.isEmployedEducation ||
+        data.isEmploymentSector ||
+        data.isTopCategoryShare ||
+        data.meta.id == 'labour_unemployment_age_gender'; // share → format %
+    final dec = data.isRainfall || data.isProducedWater; // mm / MCM → 1 decimal
+    String fmtVal(double v) => pct
+        ? '${v.toStringAsFixed(1)}%'
+        : dec
+            ? v.toStringAsFixed(1)
+            : NumberFormatter.compact(v);
 
     double min = 0, max = 0, avg = 0, growth = 0;
     String minYear = '', maxYear = '';
@@ -117,17 +160,17 @@ class _StatsChipsRow extends StatelessWidget {
           return switch (index) {
             0 => _StatChip(
                 overline: isAr ? 'أدنى $label' : '$label MIN',
-                value: NumberFormatter.compact(min),
+                value: fmtVal(min),
                 caption: minYear,
               ),
             1 => _StatChip(
                 overline: isAr ? 'أعلى $label' : '$label MAX',
-                value: NumberFormatter.compact(max),
+                value: fmtVal(max),
                 caption: maxYear,
               ),
             2 => _StatChip(
                 overline: isAr ? 'متوسط $label' : '$label AVG',
-                value: NumberFormatter.compact(avg),
+                value: fmtVal(avg),
                 caption: isAr ? 'سنوي' : 'annual',
               ),
             _ => _StatChip(
@@ -206,9 +249,21 @@ class _StatChip extends StatelessWidget {
 // ─── Full data table (all available data) ─────────────────────────────────────
 
 class _FullDataTable extends StatelessWidget {
-  const _FullDataTable({required this.series, required this.isAr});
+  const _FullDataTable(
+      {required this.series,
+      required this.isAr,
+      this.isPercent = false,
+      this.isDecimal = false});
   final List<DataPoint> series;
   final bool isAr;
+  final bool isPercent;
+  final bool isDecimal;
+
+  String _fmtV(double v) => isPercent
+      ? '${v.toStringAsFixed(1)}%'
+      : isDecimal
+          ? v.toStringAsFixed(1)
+          : NumberFormatter.full(v);
 
   @override
   Widget build(BuildContext context) {
@@ -300,7 +355,7 @@ class _FullDataTable extends StatelessWidget {
                   // Value — flex, center aligned
                   Expanded(
                     child: Text(
-                      NumberFormatter.full(pt.value),
+                      _fmtV(pt.value),
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 14,
@@ -364,12 +419,19 @@ class _GenderDataTable extends StatelessWidget {
     required this.male,
     required this.female,
     required this.isAr,
+    this.isPercent = false,
   });
 
   final List<DataPoint> total;
   final List<DataPoint> male;
   final List<DataPoint> female;
   final bool isAr;
+
+  /// When true, cell values are % shares rendered as "X.X%".
+  final bool isPercent;
+
+  String _fmt(double v) =>
+      isPercent ? '${v.toStringAsFixed(1)}%' : NumberFormatter.full(v);
 
   @override
   Widget build(BuildContext context) {
@@ -426,7 +488,7 @@ class _GenderDataTable extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      m != null ? NumberFormatter.full(m) : '—',
+                      m != null ? _fmt(m) : '—',
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w500,
@@ -437,7 +499,7 @@ class _GenderDataTable extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      f != null ? NumberFormatter.full(f) : '—',
+                      f != null ? _fmt(f) : '—',
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                         fontSize: 13, fontWeight: FontWeight.w500,
@@ -448,7 +510,7 @@ class _GenderDataTable extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      NumberFormatter.full(pt.value),
+                      _fmt(pt.value),
                       textAlign: TextAlign.right,
                       style: const TextStyle(
                         fontSize: 14, fontWeight: FontWeight.w700,

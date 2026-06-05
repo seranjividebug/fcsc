@@ -46,6 +46,11 @@ dependencies:
   intl: ^0.20.2
   connectivity_plus: ^6.0.3
 
+  # Sharing, file export, external links (indicator action menu)
+  share_plus: ^10.1.1
+  url_launcher: ^6.3.1
+  excel: ^4.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -7,12 +7,25 @@ abstract final class ApiConstants {
   static const String restBase = '$baseUrl/rest';
 
   // ─── Headers ─────────────────────────────────────────────────────────────
+  // A browser-like User-Agent + Origin/Referer are required: the FCSC release
+  // gateway returns HTTP 403 to the default Dart user-agent. (Ignored on web,
+  // where the browser controls these headers.)
+  static const String _userAgent =
+      'Mozilla/5.0 (Linux; Android) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126 Mobile Safari/537.36';
+  static const String _portalOrigin = 'https://uaestat.fcsc.gov.ae';
+
   static const Map<String, String> sdmxJsonHeaders = {
     'Accept': 'application/vnd.sdmx.data+json;version=1.0',
+    'User-Agent': _userAgent,
+    'Origin': _portalOrigin,
+    'Referer': '$_portalOrigin/',
   };
 
   static const Map<String, String> sdmxStructureHeaders = {
     'Accept': 'application/vnd.sdmx.structure+json;version=1.0',
+    'User-Agent': _userAgent,
+    'Origin': _portalOrigin,
+    'Referer': '$_portalOrigin/',
   };
 
   // ─── Common query params ──────────────────────────────────────────────────
@@ -238,6 +251,63 @@ abstract final class ApiConstants {
   static const String dfLabour          = 'DF_LF_ALL';
   static const String dfLabourVersion   = '2.0.0';
 
+  static const String dfLfepAge         = 'DF_LFEP_AGE';
+  static const String dfLfepAgeVersion  = '2.0.0';
+
+  static const String dfLfepEd          = 'DF_LFEP_ED';
+  static const String dfLfepEdVersion   = '2.0.0';
+
+  static const String dfLfepEcon        = 'DF_LFEP_ECON';
+  static const String dfLfepEconVersion = '2.0.0';
+
+  static const String dfLfepSect        = 'DF_LFEP_SECT';
+  static const String dfLfepSectVersion = '2.0.0';
+
+  static const String dfLfUnempEd        = 'DF_LFUNEMP_ED';
+  static const String dfLfUnempEdVersion = '2.0.0';
+
+  static const String dfLfepOcc          = 'DF_LFEP_OCC';
+  static const String dfLfepOccVersion   = '2.0.0';
+
+  static const String dfLfUnempAge        = 'DF_LFUNEMP_AGE';
+  static const String dfLfUnempAgeVersion = '2.0.0';
+
+  /// Employed Population (15+) by Gender and Age Group (DF_LFEP_AGE) — annual.
+  /// Wide key (15 dims) → all dimensions, frequency = Annual, from 2020.
+  static String get employedAgeGenderDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfepAge,$dfLfepAgeVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
+  /// Employed Population (15+) by Gender and Education Status (DF_LFEP_ED).
+  static String get employedEducationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfepEd,$dfLfepEdVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
+  /// Employed Population (15+) by Gender and Economic Activity (DF_LFEP_ECON).
+  static String get economicActivityDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfepEcon,$dfLfepEconVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
+  /// Employed Population (15+) by Gender and Employment Sector (DF_LFEP_SECT).
+  static String get employmentSectorDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfepSect,$dfLfepSectVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
+  /// Unemployed Population (15+) by Gender and Education (DF_LFUNEMP_ED).
+  static String get unemploymentEducationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfUnempEd,$dfLfUnempEdVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
+  /// Employed Population (15+) by Gender and Occupation (DF_LFEP_OCC).
+  static String get workforceOccupationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfepOcc,$dfLfepOccVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
+  /// Unemployed Population (15+) by Gender and Age Group (DF_LFUNEMP_AGE).
+  static String get unemploymentAgeGenderDataUrl =>
+      '$restBase/data/$_agencyId,$dfLfUnempAge,$dfLfUnempAgeVersion/.A...............'
+      '?startPeriod=2020&$flatDimension';
+
   // ─── Environment dataflows ───────────────────────────────────────────────
   static const String dfCrops           = 'DF_CROP_ALL';
   static const String dfCropsVersion    = '3.0.0';
@@ -257,12 +327,54 @@ abstract final class ApiConstants {
       '?startPeriod=2016&$flatDimension';
   static const String dfLivestock       = 'DF_LSALL';
   static const String dfLivestockVersion= '1.2.0';
+  // Livestock census dataflows (shared DSD_LS: REF_AREA·FREQ·UNIT·SOURCE·
+  // MEASURE·GENDER·LS_AGE·TIME). Head counts, annual, by emirate/gender/age.
+  static const String dfLsCamel         = 'DF_LSCAMEL';
+  static const String dfLsCamelVersion  = '1.2.0';
+  static const String dfLsCattle        = 'DF_LSCATTLE';
+  static const String dfLsCattleVersion = '1.2.0';
+  static const String dfLsGoat          = 'DF_LSGOAT';
+  static const String dfLsGoatVersion   = '1.2.0';
+  static const String dfLsSheep         = 'DF_LSSHEEP';
+  static const String dfLsSheepVersion  = '1.2.0';
+
+  /// Camel population census — annual, all dimensions, from 2015.
+  static String get camelPopulationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLsCamel,$dfLsCamelVersion/.A.....'
+      '?startPeriod=2015&$flatDimension';
+
+  /// Cattle population census — annual, all dimensions, from 2015.
+  static String get cattlePopulationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLsCattle,$dfLsCattleVersion/.A.....'
+      '?startPeriod=2015&$flatDimension';
+
+  /// Goat population census — annual, all dimensions, from 2015.
+  static String get goatPopulationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLsGoat,$dfLsGoatVersion/.A.....'
+      '?startPeriod=2015&$flatDimension';
+
+  /// Sheep population census — annual, all dimensions, from 2015.
+  static String get sheepPopulationDataUrl =>
+      '$restBase/data/$_agencyId,$dfLsSheep,$dfLsSheepVersion/.A.....'
+      '?startPeriod=2015&$flatDimension';
   static const String dfClimateTemp     = 'DF_CLIMATE_TEMP';
   static const String dfClimateTempVersion = '3.7.0';
   static const String dfClimateRain     = 'DF_CLIMATE_RAIN';
   static const String dfClimateRainVersion = '3.7.0';
   static const String dfWaterDesal      = 'DF_PW_QUANTITY_DESL_WATER';
   static const String dfWaterDesalVersion = '5.7.0';
+  static const String dfProducedWater   = 'DF_PW_Q_PRODWATER_SOURCE';
+  static const String dfProducedWaterVersion = '5.7.0';
+
+  /// Annual Rainfall — monthly by weather station, from 2016-01.
+  static String get rainfallDataUrl =>
+      '$restBase/data/$_agencyId,$dfClimateRain,$dfClimateRainVersion/...M...'
+      '?startPeriod=2016-01&$flatDimension';
+
+  /// Produced Water by entity & source — annual, all dimensions, from 2016.
+  static String get producedWaterDataUrl =>
+      '$restBase/data/$_agencyId,$dfProducedWater,$dfProducedWaterVersion/.A..........'
+      '?startPeriod=2016&$flatDimension';
   static const String dfNatReserves     = 'DF_NR_ALL';
   static const String dfNatReservesVersion = '5.8.0';
   static const String dfElectricity     = 'DF_CE';

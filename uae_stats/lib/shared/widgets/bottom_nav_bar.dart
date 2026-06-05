@@ -40,8 +40,8 @@ class AppBottomNavBar extends StatelessWidget {
               _NavTab(
                 index: 0,
                 activeIndex: activeTab,
-                icon: Icons.flag_outlined,
-                activeIcon: Icons.flag_rounded,
+                icon: Icons.home_outlined,
+                activeIcon: Icons.home_rounded,
                 label: 'Home',
                 onTap: () {
                   HapticFeedback.lightImpact();

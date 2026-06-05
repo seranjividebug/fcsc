@@ -13,6 +13,7 @@ import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/models/indicator_data.dart';
 import 'package:uae_stats/shared/providers/locale_provider.dart';
+import 'package:uae_stats/shared/widgets/hero_action_buttons.dart';
 
 class DetailHeroCard extends ConsumerStatefulWidget {
   const DetailHeroCard({super.key, required this.data});
@@ -22,28 +23,7 @@ class DetailHeroCard extends ConsumerStatefulWidget {
   ConsumerState<DetailHeroCard> createState() => _DetailHeroCardState();
 }
 
-class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _pulseCtrl;
-  late final Animation<double> _pulse;
-
-  @override
-  void initState() {
-    super.initState();
-    _pulseCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 2000),
-    )..repeat(reverse: true);
-    _pulse = Tween<double>(begin: 0.3, end: 1.0)
-        .animate(CurvedAnimation(parent: _pulseCtrl, curve: Curves.easeInOut));
-  }
-
-  @override
-  void dispose() {
-    _pulseCtrl.dispose();
-    super.dispose();
-  }
-
+class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
   // ─── Derived display strings ─────────────────────────────────────────────
 
   bool get _isArabic => ref.watch(localeProvider).languageCode == 'ar';
@@ -79,7 +59,89 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
 
   String get _period => widget.data.latestPeriod;
 
-  String get _subtitle => _subtitleFor(widget.data.meta.id, _period, _isArabic);
+  String get _subtitle {
+    // Economic Activity: name the leading sector dynamically.
+    if (widget.data.meta.id == 'labour_economic_activity') {
+      final code = widget.data.topSectorCode;
+      final sector = _econSectorName(code);
+      return _isArabic
+          ? 'أكبر قطاع توظيف ($sector) في $_period'
+          : 'largest employment sector ($sector) in $_period';
+    }
+    // Unemployment by Education: name the leading education segment.
+    if (widget.data.meta.id == 'labour_unemployment_education') {
+      final code = widget.data.topSectorCode;
+      final lvl = _eduLevelName(code);
+      return _isArabic
+          ? 'من المتعطلين يحملون مؤهل $lvl ($_period)'
+          : 'of unemployed population holds $lvl education ($_period)';
+    }
+    // Workforce by Occupation: name the leading occupation group dynamically.
+    if (widget.data.meta.id == 'labour_workforce_occupation') {
+      final code = widget.data.topSectorCode;
+      final occ = _occupationName(code);
+      return _isArabic
+          ? 'أكبر مجموعة مهنية ($occ) في $_period'
+          : 'largest occupation group ($occ) in $_period';
+    }
+    return _subtitleFor(widget.data.meta.id, _period, _isArabic);
+  }
+
+  static String _eduLevelName(String? code) {
+    const m = {
+      'ILLIT': 'Illiterate', 'RANDW': 'Reads & Writes', 'PRI': 'Primary',
+      'LSEC': 'Lower Secondary', 'SEC': 'Upper Secondary',
+      'PSNT': 'Post-Secondary Non-Tertiary', 'SCTE': 'Short-Cycle Tertiary',
+      'BACH': 'Bachelor', 'HDIP': 'Higher Diploma', 'MAST': "Master's",
+      'DOCT': 'Doctoral',
+    };
+    return code == null ? 'a given level' : (m[code.toUpperCase()] ?? code);
+  }
+
+  static String _econSectorName(String? code) {
+    const m = {
+      'A': 'Agriculture & Fishing', 'B': 'Mining & Quarrying',
+      'C': 'Manufacturing', 'D': 'Electricity & Gas', 'E': 'Water & Waste',
+      'F': 'Construction', 'G': 'Wholesale & Retail Trade',
+      'H': 'Transportation & Storage', 'I': 'Accommodation & Food',
+      'J': 'Information & Communication', 'K': 'Financial & Insurance',
+      'L': 'Real Estate', 'M': 'Professional & Technical',
+      'N': 'Administrative & Support', 'O': 'Public Administration',
+      'P': 'Education', 'Q': 'Health & Social Work',
+      'R': 'Arts & Recreation', 'S': 'Other Services',
+      'X1': 'Households as Employers', 'X2': 'Extraterritorial Orgs',
+      'X3': 'Unspecified',
+    };
+    return code == null ? 'leading sector' : (m[code.toUpperCase()] ?? code);
+  }
+
+  static String _occupationName(String? code) {
+    const m = {
+      'MAN': 'Managers', 'PROF': 'Professionals',
+      'TECH': 'Technicians', 'CLER': 'Clerical Support',
+      'SERV': 'Service & Sales', 'SKIL': 'Skilled Agricultural',
+      'CRAF': 'Craft & Trade', 'PLAN': 'Plant & Machine Operators',
+      'ELEM': 'Elementary Occupations', 'NO_STA': 'Not Stated',
+    };
+    return code == null ? 'leading group' : (m[code.toUpperCase()] ?? code);
+  }
+
+  /// Indicators whose headline value carries one decimal place (mm, MCM).
+  bool get _isDecimalIndicator => const {
+        'ecology_rainfall',
+        'ecology_produced_water',
+      }.contains(widget.data.meta.id);
+
+  /// Indicators whose headline value is a percentage share (not a count).
+  bool get _isShareIndicator => const {
+        'labour_employed_age_gender',
+        'labour_employed_education',
+        'labour_economic_activity',
+        'labour_employment_sector',
+        'labour_unemployment_education',
+        'labour_workforce_occupation',
+        'labour_unemployment_age_gender',
+      }.contains(widget.data.meta.id);
 
   double get _value => widget.data.latestValue;
 
@@ -98,23 +160,15 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
     return _isArabic ? 'مقارنة بـ $prev' : 'vs $prev';
   }
 
-  String get _liveLabel =>
-      _isArabic ? 'مباشر · ${_fmtDateAr(widget.data.fetchedAt)}' : 'Live · ${_fmtDate(widget.data.fetchedAt)}';
+  /// Dataset updated label — shows the latest data year (coverage end period),
+  /// e.g. "Updated 2024".
+  String get _updatedLabel {
+    final period = widget.data.dataEnd;
+    return _isArabic ? 'تم التحديث $period' : 'Updated $period';
+  }
 
   String _cap(String s) =>
       s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
-
-  static String _fmtDate(DateTime dt) {
-    const m = ['Jan','Feb','Mar','Apr','May','Jun',
-                'Jul','Aug','Sep','Oct','Nov','Dec'];
-    return '${dt.day} ${m[dt.month - 1]} ${dt.year}';
-  }
-
-  static String _fmtDateAr(DateTime dt) {
-    const m = ['يناير','فبراير','مارس','أبريل','مايو','يونيو',
-                'يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
-    return '${dt.day} ${m[dt.month - 1]} ${dt.year}';
-  }
 
   static String _subtitleFor(String id, String period, bool ar) => switch (id) {
         'births'  => ar ? 'مولود حي مسجل في $period' : 'live births registered in $period',
@@ -140,6 +194,22 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
         'crop_production' => ar ? 'إنتاج المحاصيل الزراعية · $period' : 'Agricultural crop production · $period',
         'crop_area' => ar ? 'المساحة الزراعية المزروعة · $period' : 'Agricultural cultivated area · $period',
         'crop_land_total' => ar ? 'إجمالي مساحة الأراضي الزراعية · $period' : 'Total agricultural land area · $period',
+        'hospitals' => ar ? 'مستشفى في دولة الإمارات في $period' : 'hospitals across the UAE in $period',
+        'health_clinics_centers' => ar
+            ? 'عيادة ومركز صحي مرخّص يعمل في دولة الإمارات في $period'
+            : 'licensed clinics & health centers operating across the UAE in $period',
+        'health_hospital_beds' => ar ? 'سرير مستشفى في دولة الإمارات في $period' : 'hospital beds across the UAE in $period',
+        'health_professionals' => ar ? 'إجمالي العاملين في الرعاية الصحية في $period' : 'total healthcare professionals in $period',
+        'labour_employed_age_gender' => ar ? 'حصة الفئة العمرية الرئيسية (25–44 سنة) من المشتغلين في $period' : 'of UAE employed population aged 25–44 years in $period',
+        'labour_employment_sector' => ar ? 'من المشتغلين (15 سنة فأكثر) يعملون في القطاع الخاص · $period' : 'of employed persons (15+) work in the private sector · $period',
+        'labour_employed_education' => ar ? 'من المشتغلين (15 سنة فأكثر) يحملون شهادة جامعية في $period' : 'of employed persons (15+) hold a university degree ($period)',
+        'labour_unemployment_age_gender' => ar ? 'من المتعطلين تتراوح أعمارهم بين 15 و34 سنة في $period' : 'of unemployed population aged 15–34 years in $period',
+        'livestock_camel'  => ar ? 'رأس إبل مسجّل في الإمارات في $period' : 'camels registered across the UAE in $period',
+        'livestock_cattle' => ar ? 'رأس أبقار مسجّل في الإمارات في $period' : 'cattle registered across the UAE in $period',
+        'livestock_goat'   => ar ? 'رأس ماعز مسجّل في الإمارات في $period' : 'goats registered across the UAE in $period',
+        'livestock_sheep'  => ar ? 'رأس أغنام مسجّل في الإمارات في $period' : 'sheep registered across the UAE in $period',
+        'ecology_rainfall' => ar ? 'مم متوسط هطول الأمطار عبر محطات الأرصاد في $period' : 'mm avg. rainfall across UAE weather stations in $period',
+        'ecology_produced_water' => ar ? 'مليون م³ من المياه المنتجة في الإمارات في $period' : 'million m³ of water produced across the UAE in $period',
         _ => ar ? 'كما في $period' : 'as of $period',
       };
 
@@ -200,29 +270,18 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Pulsing live dot
-                          AnimatedBuilder(
-                            animation: _pulse,
-                            builder: (_, __) => Container(
-                              width: 6,
-                              height: 6,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF4ADE80),
-                                shape: BoxShape.circle,
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: const Color(0xFF4ADE80)
-                                        .withValues(alpha: 0.25 * _pulse.value),
-                                    blurRadius: 6,
-                                    spreadRadius: 3,
-                                  ),
-                                ],
-                              ),
+                          // Green status dot + dataset updated date
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF4ADE80),
+                              shape: BoxShape.circle,
                             ),
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            _liveLabel,
+                            _updatedLabel,
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.white.withValues(alpha: 0.7),
@@ -258,7 +317,11 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        NumberFormatter.full(val),
+                        _isShareIndicator
+                            ? '${val.toStringAsFixed(1)}%'
+                            : _isDecimalIndicator
+                                ? val.toStringAsFixed(1)
+                                : NumberFormatter.full(val),
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 58,
@@ -328,11 +391,12 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard>
                         ),
                       ),
 
-                      // Gold trending icon
-                      const Icon(
-                        Icons.trending_up_rounded,
-                        size: 24,
-                        color: AppColors.champagneGold,
+                      // Bookmark + overflow circular buttons
+                      HeroActionButtons(
+                        indicatorName: _isArabic
+                            ? widget.data.meta.name.ar
+                            : widget.data.meta.name.en,
+                        data: widget.data,
                       ),
                     ],
                   ),
