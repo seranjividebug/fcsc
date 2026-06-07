@@ -105,6 +105,7 @@ class DataPoint {
           dimMap['CITIZEN'] ??
           dimMap['WATER_SOURCE'], // DF_PW produced-water source (2nd category)
       measure: dimMap['CLIMATE_INDIC'] ?? // RAIN_TOTAL vs RAINY_DAYS
+          dimMap['RE_MEASURE'] ??       // DF_RE: REP (capacity) vs EP (production)
           dimMap['MEASURE'] ??
           dimMap['INDICATOR'],
       unitMeasure: dimMap['UNIT_MEASURE'] ?? dimMap['UNIT'],
@@ -117,6 +118,10 @@ class DataPoint {
           dimMap['OCCUPATION'] ??       // DF_LFEP_OCC occupation group
           dimMap['STATION'] ??          // DF_CLIMATE_RAIN weather station
           dimMap['PWT_ENTITY'] ??       // DF_PW produced-water entity
+          dimMap['GEN_TYPE'] ??         // DF_GEN_TYPE generator type
+          dimMap['PLANT_TYPE'] ??       // DF_RE renewable plant type
+          dimMap['OG_SECTOR'] ??        // DF_CO crude-oil sector (RE/EX/IM/PR)
+          dimMap['NR_TYPE'] ??          // DF_NR reserve type (MRN/TRS/RAM)
           dimMap['ECONOMIC_ACTIVITY'] ??
           dimMap['EDUCATION_LEVEL'] ??
           dimMap['EDU_LEVEL'] ??
@@ -132,7 +137,8 @@ class DataPoint {
           dimMap['AGE_BAND'] ??
           dimMap['AGE_GRP'] ??
           dimMap['AGEGROUP'] ??
-          dimMap['LS_AGE'], // livestock age class (L4YR / 4YR / 4YR_MIL / …)
+          dimMap['LS_AGE'] ?? // livestock age class (L4YR / 4YR / 4YR_MIL / …)
+          dimMap['EST_YEAR'], // DF_NR designation-year cohort
     );
   }
 

@@ -16,6 +16,7 @@ import 'package:uae_stats/data/providers/home_carousel_provider.dart';
 import 'package:uae_stats/data/providers/indicator_providers.dart';
 import 'package:uae_stats/data/providers/section_kpi_providers.dart';
 import 'package:uae_stats/shared/providers/locale_provider.dart';
+import 'package:uae_stats/shared/widgets/app_drawer.dart';
 import 'package:uae_stats/shared/widgets/app_logo.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
@@ -77,6 +78,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       backgroundColor: _kOffWhite,
+      drawer: const AppDrawer(),
       body: Column(children: [
         // ── App bar ──────────────────────────────────────────────────────────
         SafeArea(
@@ -85,16 +87,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: AppSpacing.appBarHeight,
             color: AppColors.white,
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            child: const Row(children: [
-              Icon(Icons.menu, size: 24, color: _kSlate600),
-              SizedBox(width: 12),
-              AppLogo(),
-              SizedBox(width: 8),
-              Text('UAE Stats',
+            child: Row(children: [
+              Builder(
+                builder: (ctx) => GestureDetector(
+                  onTap: () => Scaffold.of(ctx).openDrawer(),
+                  behavior: HitTestBehavior.opaque,
+                  child: const Icon(Icons.menu, size: 24, color: _kSlate600),
+                ),
+              ),
+              const SizedBox(width: 12),
+              const AppLogo(),
+              const SizedBox(width: 8),
+              const Text('UAE Stats',
                 style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700,
                   color: _kSlate900, letterSpacing: -0.34)),
-              Spacer(),
-              LanguageToggleButton(foregroundColor: _kSlate600),
+              const Spacer(),
+              const LanguageToggleButton(foregroundColor: _kSlate600),
             ]),
           ),
         ),
@@ -205,7 +213,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     tiles: const [
                       _TileData.group(icon: Icons.grass_outlined, label: 'Agriculture', subtitle: 'Crops, Land Area, Livestock Census', count: 7),
                       _TileData.group(icon: Icons.bolt_outlined, label: 'Energy', subtitle: 'Electricity, Oil & Gas, Renewable', count: 3),
-                      _TileData.fullWidth(icon: Icons.cloud_outlined, label: 'Environment', subtitle: 'Ecology · Temperature, Rainfall, Water', value: '', change: 0, year: '', count: 3),
+                      _TileData.fullWidth(icon: Icons.cloud_outlined, label: 'Environment', subtitle: 'Ecology · Temp, Rainfall, Water, Reserves', value: '', change: 0, year: '', count: 5),
                     ],
                   ),
                 ),
@@ -869,6 +877,8 @@ class _TileState extends State<_Tile> {
       onTap: () {
         if (d.label == 'Agriculture') {
           _showAgricultureSheet(context);
+        } else if (d.label == 'Energy') {
+          _showEnergySheet(context);
         } else if (d.label == 'Vitals') {
           _showVitalsSheet(context);
         } else if (d.label == 'Education') {
@@ -1271,16 +1281,23 @@ void _showEcologySheet(BuildContext context) {
 class _EcologySheet extends ConsumerWidget {
   const _EcologySheet();
 
-  static const _ids = ['ecology_mean_temp', 'ecology_rainfall', 'ecology_produced_water'];
+  static const _ids = [
+    'ecology_mean_temp', 'ecology_rainfall', 'ecology_produced_water',
+    'ecology_natural_reserves', 'ecology_ramsar_wetlands',
+  ];
   static const _icons = {
-    'ecology_mean_temp':      Icons.thermostat_outlined,
-    'ecology_rainfall':       Icons.water_drop_outlined,
-    'ecology_produced_water': Icons.opacity_outlined,
+    'ecology_mean_temp':       Icons.thermostat_outlined,
+    'ecology_rainfall':        Icons.water_drop_outlined,
+    'ecology_produced_water':  Icons.opacity_outlined,
+    'ecology_natural_reserves':Icons.park_outlined,
+    'ecology_ramsar_wetlands': Icons.water_outlined,
   };
   static const _labels = {
-    'ecology_mean_temp':      'Mean Temperature',
-    'ecology_rainfall':       'Annual Rainfall',
-    'ecology_produced_water': 'Produced Water',
+    'ecology_mean_temp':       'Mean Temperature',
+    'ecology_rainfall':        'Annual Rainfall',
+    'ecology_produced_water':  'Produced Water',
+    'ecology_natural_reserves':'Protected Natural Areas',
+    'ecology_ramsar_wetlands': 'RAMSAR Wetlands',
   };
 
   @override
@@ -1318,6 +1335,118 @@ class _EcologySheet extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Ecology', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
+                  Text('Environment · 5 Indicators', style: TextStyle(fontSize: 12, color: _kSlate600)),
+                ],
+              )),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 32, height: 32,
+                  decoration: const BoxDecoration(color: _kPearl, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, size: 16, color: _kSlate600),
+                ),
+              ),
+            ]),
+          ),
+          const SizedBox(height: 16),
+          const Divider(height: 1, color: _kPearl),
+          Expanded(
+            child: ListView.separated(
+              controller: ctrl,
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: _ids.length,
+              separatorBuilder: (_, __) => const Divider(height: 1, indent: 20, color: _kPearl),
+              itemBuilder: (_, i) {
+                final id = _ids[i];
+                final async = summaries[i];
+                return async.when(
+                  loading: () => const _VitalRowShimmer(),
+                  error: (_, __) => _VitalRowEmpty(
+                    icon: _icons[id]!, label: _labels[id]!,
+                    iconColor: AppColors.envGreen, iconBg: AppColors.envGreenTint,
+                  ),
+                  data: (summary) => _VitalRow(
+                    icon: _icons[id]!, label: _labels[id]!,
+                    summary: summary,
+                    iconColor: AppColors.envGreen, iconBg: AppColors.envGreenTint,
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(AppRoutes.indicatorPath(id));
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+        ]),
+      ),
+    );
+  }
+}
+
+// ── Energy bottom sheet ───────────────────────────────────────────────────────
+void _showEnergySheet(BuildContext context) {
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    barrierColor: Colors.black.withValues(alpha: 0.45),
+    builder: (_) => const _EnergySheet(),
+  );
+}
+
+class _EnergySheet extends ConsumerWidget {
+  const _EnergySheet();
+
+  static const _ids = [
+    'energy_generation_capacity', 'energy_renewable', 'energy_crude_oil',
+  ];
+  static const _icons = {
+    'energy_generation_capacity': Icons.bolt_outlined,
+    'energy_renewable':           Icons.solar_power_outlined,
+    'energy_crude_oil':           Icons.oil_barrel_outlined,
+  };
+  static const _labels = {
+    'energy_generation_capacity': 'Generation Capacity',
+    'energy_renewable':           'Renewable Energy',
+    'energy_crude_oil':           'Crude Oil',
+  };
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final summaries = _ids.map((id) => ref.watch(indicatorSummaryProvider(id))).toList();
+    return DraggableScrollableSheet(
+      initialChildSize: 0.50,
+      minChildSize: 0.36,
+      maxChildSize: 0.92,
+      builder: (_, ctrl) => Container(
+        decoration: const BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusSheet)),
+          boxShadow: AppColors.shadowSheet,
+        ),
+        child: Column(children: [
+          const SizedBox(height: 12),
+          Center(
+            child: Container(
+              width: AppSpacing.sheetHandleW, height: AppSpacing.sheetHandleH,
+              decoration: BoxDecoration(color: _kSilver, borderRadius: BorderRadius.circular(999)),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              Container(
+                width: 40, height: 40,
+                decoration: BoxDecoration(color: AppColors.envGreenTint, borderRadius: BorderRadius.circular(10)),
+                child: const Icon(Icons.bolt_outlined, size: 20, color: AppColors.envGreen),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Energy', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700, color: _kSlate900)),
                   Text('Environment · 3 Indicators', style: TextStyle(fontSize: 12, color: _kSlate600)),
                 ],
               )),

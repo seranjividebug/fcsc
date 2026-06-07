@@ -254,6 +254,31 @@ class SdmxApiClient {
     return _fetch(ApiConstants.producedWaterDataUrl);
   }
 
+  /// Fetches Installed Generation Capacity by type (DF_GEN_TYPE).
+  Future<SdmxResult> fetchGenerationCapacity() async {
+    return _fetch(ApiConstants.generationCapacityDataUrl);
+  }
+
+  /// Fetches Crude Oil reserves/production/trade (DF_CO).
+  Future<SdmxResult> fetchCrudeOil() async {
+    return _fetch(ApiConstants.crudeOilDataUrl);
+  }
+
+  /// Fetches Renewable Energy capacity & production (DF_RE).
+  Future<SdmxResult> fetchRenewableEnergy() async {
+    return _fetch(ApiConstants.renewableEnergyDataUrl);
+  }
+
+  /// Fetches Protected Natural Areas / reserves (DF_NR_RESERVE).
+  Future<SdmxResult> fetchNaturalReserves() async {
+    return _fetch(ApiConstants.naturalReservesDataUrl);
+  }
+
+  /// Fetches RAMSAR Wetland protected areas (DF_NR_RAMSAR).
+  Future<SdmxResult> fetchRamsarWetlands() async {
+    return _fetch(ApiConstants.ramsarWetlandsDataUrl);
+  }
+
   // ─── Core fetch + parse ───────────────────────────────────────────────────
 
   Future<SdmxResult> _fetch(String url) async {

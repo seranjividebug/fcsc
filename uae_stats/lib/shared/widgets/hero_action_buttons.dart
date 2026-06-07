@@ -13,15 +13,17 @@
 import 'package:excel/excel.dart' as xls;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/models/indicator_data.dart';
+import 'package:uae_stats/shared/providers/bookmark_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Bookmark + overflow buttons. Stateful so the bookmark toggles its own
-/// filled/outline state.
-class HeroActionButtons extends StatefulWidget {
+/// Bookmark + overflow buttons. Bookmark state is persisted via
+/// [bookmarkProvider] (Hive-backed), keyed by the indicator id.
+class HeroActionButtons extends ConsumerStatefulWidget {
   const HeroActionButtons({
     super.key,
     required this.indicatorName,
@@ -36,11 +38,10 @@ class HeroActionButtons extends StatefulWidget {
   final IndicatorData? data;
 
   @override
-  State<HeroActionButtons> createState() => _HeroActionButtonsState();
+  ConsumerState<HeroActionButtons> createState() => _HeroActionButtonsState();
 }
 
-class _HeroActionButtonsState extends State<HeroActionButtons> {
-  bool _bookmarked = false;
+class _HeroActionButtonsState extends ConsumerState<HeroActionButtons> {
 
   void _toast(String msg) {
     if (!mounted) return;
@@ -176,17 +177,24 @@ class _HeroActionButtonsState extends State<HeroActionButtons> {
 
   @override
   Widget build(BuildContext context) {
+    final id = widget.data?.meta.id;
+    final bookmarked = id != null && ref.watch(isBookmarkedProvider(id));
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _HeroCircleButton(
-          icon: _bookmarked
+          icon: bookmarked
               ? Icons.bookmark_rounded
               : Icons.bookmark_outline_rounded,
-          onTap: () {
+          onTap: () async {
+            if (id == null) {
+              _toast('Bookmark not available');
+              return;
+            }
             HapticFeedback.lightImpact();
-            setState(() => _bookmarked = !_bookmarked);
-            _toast(_bookmarked
+            final nowSaved =
+                await ref.read(bookmarkProvider.notifier).toggle(id);
+            _toast(nowSaved
                 ? '${widget.indicatorName} bookmarked'
                 : 'Bookmark removed');
           },

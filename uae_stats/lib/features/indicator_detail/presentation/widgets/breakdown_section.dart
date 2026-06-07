@@ -215,6 +215,42 @@ const _waterSourceNames = {
   'GWWD': 'Ground Water (no desal.)',
 };
 
+// DF_GEN_TYPE generator-type codes → readable names.
+const _genTypeNames = {
+  'CCT': 'Combined Cycle Turbine',
+  'STT': 'Steam Turbine',
+  'GAT': 'Gas Turbine',
+  'SET': 'Solar Energy',
+  'NE':  'Nuclear Energy',
+  'WE':  'Wind Energy',
+  'WSE': 'Waste Energy',
+  'DIE': 'Diesel Engine',
+};
+
+// DF_RE renewable plant-type codes → readable names.
+const _plantTypeNames = {
+  'SP':  'Solar Photovoltaic',
+  'CP':  'Concentrated Solar (CSP)',
+  'WT':  'Wind Turbine',
+  'WTE': 'Waste to Energy',
+  'LG':  'Biogas',
+};
+
+// DF_CO crude-oil sector codes → readable names.
+const _oilSectorNames = {
+  'RE': 'Reserves',
+  'PR': 'Production',
+  'EX': 'Exports',
+  'IM': 'Imports',
+};
+
+// DF_NR reserve-type codes → readable names.
+const _reserveTypeNames = {
+  'MRN': 'Marine',
+  'TRS': 'Terrestrial',
+  'RAM': 'Ramsar Wetlands',
+};
+
 String _ageLabel(String code) {
   final c = code.toUpperCase();
   if (c == 'NO_STA' || c == 'NOSTA' || c == 'NS') return 'Not Stated';
@@ -547,6 +583,56 @@ class _BreakdownSectionState extends ConsumerState<BreakdownSection> {
         'MCM',
       );
 
+  // ── Energy / Reserves breakdowns ──────────────────────────────────────────
+
+  bool get _isGeneration => widget.data.isGenerationCapacity;
+  bool get _isCrudeOil => widget.data.isCrudeOil;
+  bool get _isRenewable => widget.data.isRenewableEnergy;
+  bool get _isReserves => widget.data.isNaturalReserves;
+  bool get _isRamsar => widget.data.isRamsarWetlands;
+
+  List<BreakdownItem> _genByType() => _unitBars(
+        widget.data.categoryBreakdown(),
+        (c) => _genTypeNames[c.toUpperCase()] ?? _prettifyCode(c),
+        'MW',
+      );
+
+  List<BreakdownItem> _renewableByCapacity() => _unitBars(
+        widget.data.categoryBreakdown(reMeasure: 'REP'),
+        (c) => _plantTypeNames[c.toUpperCase()] ?? _prettifyCode(c),
+        'MW',
+      );
+
+  List<BreakdownItem> _renewableByProduction() => _unitBars(
+        widget.data.categoryBreakdown(reMeasure: 'EP'),
+        (c) => _plantTypeNames[c.toUpperCase()] ?? _prettifyCode(c),
+        'GWh',
+      );
+
+  List<BreakdownItem> _oilTradeFlow() => _unitBars(
+        widget.data.crudeOilTradeFlow,
+        (c) => _oilSectorNames[c.toUpperCase()] ?? _prettifyCode(c),
+        '000 bbl/d',
+      );
+
+  List<BreakdownItem> _reservesByType() => _unitBars(
+        widget.data.reservesByType,
+        (c) => _reserveTypeNames[c.toUpperCase()] ?? _prettifyCode(c),
+        'km²',
+      );
+
+  List<BreakdownItem> _reservesByEmirate() => _unitBars(
+        widget.data.reservesByEmirate,
+        (c) => _emirateNames[c.toUpperCase()] ?? _prettifyCode(c),
+        'km²',
+      );
+
+  List<BreakdownItem> _ramsarByCohort() => _unitBars(
+        widget.data.ramsarByCohort,
+        (c) => 'Est. $c',
+        'km²',
+      );
+
   List<BreakdownItem> _overallBreakdown() {
     // Livestock: show the per-emirate distribution as the overall view.
     if (_isLivestock) {
@@ -600,6 +686,62 @@ class _BreakdownSectionState extends ConsumerState<BreakdownSection> {
       final tabs = <_TabDef>[];
       if (widget.data.rainfallByStation.isNotEmpty) {
         tabs.add(_TabDef(isAr ? 'حسب المحطة' : 'By Station', _rainfallByStation));
+      }
+      return tabs;
+    }
+    // Generation Capacity — By Generator Type.
+    if (_isGeneration) {
+      final tabs = <_TabDef>[];
+      if (widget.data.categoryBreakdown().isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب نوع المولد' : 'By Generator Type', _genByType));
+      }
+      return tabs;
+    }
+    // Renewable Energy — By Capacity / By Production.
+    if (_isRenewable) {
+      final tabs = <_TabDef>[];
+      if (widget.data.categoryBreakdown(reMeasure: 'REP').isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب القدرة' : 'By Capacity', _renewableByCapacity));
+      }
+      if (widget.data.categoryBreakdown(reMeasure: 'EP').isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب الإنتاج' : 'By Production', _renewableByProduction));
+      }
+      return tabs;
+    }
+    // Crude Oil — By Trade Flow.
+    if (_isCrudeOil) {
+      final tabs = <_TabDef>[];
+      if (widget.data.crudeOilTradeFlow.isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب تدفق التجارة' : 'By Trade Flow', _oilTradeFlow));
+      }
+      return tabs;
+    }
+    // Protected Natural Areas — By Type / By Emirate.
+    if (_isReserves) {
+      final tabs = <_TabDef>[];
+      if (widget.data.reservesByType.isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب النوع' : 'By Reserve Type', _reservesByType));
+      }
+      if (widget.data.reservesByEmirate.isNotEmpty) {
+        tabs.add(_TabDef(isAr ? 'حسب الإمارة' : 'By Emirate', _reservesByEmirate));
+      }
+      return tabs;
+    }
+    // RAMSAR Wetlands — By Type / By Designation Year.
+    if (_isRamsar) {
+      final tabs = <_TabDef>[];
+      if (widget.data.reservesByType.isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب النوع' : 'By Reserve Type', _reservesByType));
+      }
+      if (widget.data.ramsarByCohort.isNotEmpty) {
+        tabs.add(_TabDef(
+            isAr ? 'حسب سنة الإدراج' : 'By Designation Year', _ramsarByCohort));
       }
       return tabs;
     }

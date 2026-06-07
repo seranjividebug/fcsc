@@ -28,6 +28,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   await Hive.openBox<String>('indicator_cache');
   await Hive.openBox('kpi_cache');
+  await Hive.openBox<String>('bookmarks'); // saved indicator IDs (insertion order)
 
   // Clear stale cache for education & health IDs so they always re-fetch
   // (previously cached zero-values caused persistent empty display)

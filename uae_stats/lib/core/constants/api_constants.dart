@@ -383,6 +383,37 @@ abstract final class ApiConstants {
   static const String dfRenewableVersion= '1.9.0';
   static const String dfOilGas          = 'DF_CO';
   static const String dfOilGasVersion   = '4.1.0';
+  static const String dfGenType         = 'DF_GEN_TYPE';
+  static const String dfGenTypeVersion  = '5.3.0';
+  static const String dfNrReserve       = 'DF_NR_RESERVE';
+  static const String dfNrReserveVersion= '5.8.0';
+  static const String dfNrRamsar        = 'DF_NR_RAMSAR';
+  static const String dfNrRamsarVersion = '5.8.0';
+
+  /// Installed electricity generation capacity by generator type — annual.
+  static String get generationCapacityDataUrl =>
+      '$restBase/data/$_agencyId,$dfGenType,$dfGenTypeVersion/A...............'
+      '?startPeriod=2016&$flatDimension';
+
+  /// Crude oil reserves/production/exports/imports — annual.
+  static String get crudeOilDataUrl =>
+      '$restBase/data/$_agencyId,$dfOilGas,$dfOilGasVersion/.A..........'
+      '?startPeriod=2015&$flatDimension';
+
+  /// Renewable energy capacity & production by plant type — annual.
+  static String get renewableEnergyDataUrl =>
+      '$restBase/data/$_agencyId,$dfRenewable,$dfRenewableVersion/.A....'
+      '?startPeriod=2015&$flatDimension';
+
+  /// Protected natural areas (reserves) by type/emirate/site — annual.
+  static String get naturalReservesDataUrl =>
+      '$restBase/data/$_agencyId,$dfNrReserve,$dfNrReserveVersion/...A...'
+      '?startPeriod=2017&$flatDimension';
+
+  /// RAMSAR wetland protected areas by cohort & type — annual.
+  static String get ramsarWetlandsDataUrl =>
+      '$restBase/data/$_agencyId,$dfNrRamsar,$dfNrRamsarVersion/...A...'
+      '?startPeriod=2023&$flatDimension';
 
   /// Climate Mean Temperature — monthly, all stations, from 2016.
   static String get climateTempDataUrl =>

@@ -137,6 +137,21 @@ class IndicatorData {
       final s = _producedWaterTotalSeries;
       if (s.isNotEmpty) return s;
     }
+    // Generation / Renewable capacity — category-total (MW) series.
+    if (isGenerationCapacity || isRenewableEnergy) {
+      final s = _categoryTotalSeries;
+      if (s.isNotEmpty) return s;
+    }
+    // Crude Oil — headline is proven reserves (OG_SECTOR = RE).
+    if (isCrudeOil) {
+      final s = crudeOilSeries('RE');
+      if (s.isNotEmpty) return s;
+    }
+    // Protected Natural Areas / RAMSAR — national grand-total (km²) series.
+    if (isNaturalReserves || isRamsarWetlands) {
+      final s = _reserveTotalSeries;
+      if (s.isNotEmpty) return s;
+    }
     if (meta.id == 'labour_employed_age_gender') {
       final s = _primeAgeShareSeries;
       if (s.isNotEmpty) return s;
@@ -666,6 +681,155 @@ class IndicatorData {
       if (!_isTotal(p.level)) continue;        // entity total only
       if (_isTotal(p.citizenship)) continue;   // skip source total
       out[p.citizenship!] = p.value;
+    }
+    return out;
+  }
+
+  // ─── Energy & natural-reserve helpers ─────────────────────────────────────
+
+  bool get isGenerationCapacity => meta.id == 'energy_generation_capacity';
+  bool get isCrudeOil => meta.id == 'energy_crude_oil';
+  bool get isRenewableEnergy => meta.id == 'energy_renewable';
+  bool get isNaturalReserves => meta.id == 'ecology_natural_reserves';
+  bool get isRamsarWetlands => meta.id == 'ecology_ramsar_wetlands';
+
+  /// Indicators whose headline value carries one decimal place (MW/km²).
+  bool get isDecimalCount =>
+      isGenerationCapacity ||
+      isRenewableEnergy ||
+      isNaturalReserves ||
+      isRamsarWetlands;
+
+  /// Generation capacity (or renewable capacity): grand-total series — the
+  /// GEN_TYPE/PLANT_TYPE = _T rows. For renewable, restrict to REP (capacity).
+  List<DataPoint> get _categoryTotalSeries {
+    final out = <DataPoint>[];
+    for (final p in allPoints) {
+      if (p.refArea != 'AE' && p.refArea != null) continue;
+      if (!_isTotal(p.level)) continue; // GEN_TYPE/PLANT_TYPE total
+      if (isRenewableEnergy && p.measure != null && p.measure != 'REP') continue;
+      if (!_isTotal(p.ageGroup)) continue;
+      out.add(p);
+    }
+    out.sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
+    return out;
+  }
+
+  /// Latest-year category → value map (GEN_TYPE / PLANT_TYPE), excluding total.
+  /// For renewable, [reMeasure] selects REP (MW capacity) or EP (GWh output).
+  Map<String, double> categoryBreakdown({String? reMeasure}) {
+    final latest = latestPeriod;
+    final out = <String, double>{};
+    for (final p in allPoints) {
+      if (p.refArea != 'AE' && p.refArea != null) continue;
+      if (p.timePeriod != latest) continue;
+      if (_isTotal(p.level)) continue;
+      if (reMeasure != null && p.measure != reMeasure) continue;
+      out[p.level!] = p.value;
+    }
+    return out;
+  }
+
+  /// Crude oil: series for a given OG_SECTOR ('RE' reserves, 'PR', 'EX', 'IM').
+  List<DataPoint> crudeOilSeries(String sectorCode) {
+    final out = <DataPoint>[];
+    for (final p in allPoints) {
+      if (p.level != sectorCode) continue;
+      out.add(p);
+    }
+    out.sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
+    return out;
+  }
+
+  /// Crude oil: latest-year trade-flow map (Production / Exports / Imports).
+  Map<String, double> get crudeOilTradeFlow {
+    final latest = latestPeriod;
+    final out = <String, double>{};
+    for (final p in allPoints) {
+      if (p.timePeriod != latest) continue;
+      const flows = {'PR', 'EX', 'IM'};
+      if (!flows.contains(p.level)) continue;
+      out[p.level!] = p.value;
+    }
+    return out;
+  }
+
+  /// Natural reserves: national grand-total series (REF_AREA=AE, type=_T,
+  /// cohort=_T). Falls back to the latest year that publishes a total.
+  List<DataPoint> get _reserveTotalSeries {
+    final out = <DataPoint>[];
+    for (final p in allPoints) {
+      if (p.refArea != 'AE') continue;          // national total only
+      if (!_isTotal(p.level)) continue;         // NR_TYPE = _T
+      if (!_isTotal(p.ageGroup)) continue;      // EST_YEAR = _T
+      out.add(p);
+    }
+    out.sort((a, b) => a.timePeriod.compareTo(b.timePeriod));
+    return out;
+  }
+
+  /// Natural reserves: latest-year area by emirate (REF_AREA = AE-xx totals).
+  Map<String, double> get reservesByEmirate {
+    // Latest year that has emirate-total rows.
+    String latest = '';
+    for (final p in allPoints) {
+      if ((p.refArea ?? '').startsWith('AE-') &&
+          _isTotal(p.level) &&
+          _isTotal(p.ageGroup) &&
+          p.timePeriod.compareTo(latest) > 0) {
+        latest = p.timePeriod;
+      }
+    }
+    final out = <String, double>{};
+    for (final p in allPoints) {
+      final ra = p.refArea ?? '';
+      if (!ra.startsWith('AE-')) continue;
+      if (!_isTotal(p.level) || !_isTotal(p.ageGroup)) continue;
+      if (p.timePeriod != latest) continue;
+      out[ra] = p.value;
+    }
+    return out;
+  }
+
+  /// Reserves / RAMSAR: latest-year area by reserve type (Marine/Terrestrial/
+  /// Ramsar) — sums each NR_TYPE across sites/cohorts (excludes totals).
+  Map<String, double> get reservesByType {
+    // Use the AE-level cohort-total rows when present (RAMSAR), else sum sites.
+    final latest = latestPeriod;
+    final out = <String, double>{};
+    // Prefer AE + EST_YEAR=_T per NR_TYPE (works for RAMSAR).
+    for (final p in allPoints) {
+      if (p.refArea != 'AE') continue;
+      if (p.timePeriod != latest) continue;
+      if (!_isTotal(p.ageGroup)) continue;   // cohort total
+      if (_isTotal(p.level)) continue;        // skip NR_TYPE total
+      out[p.level!] = (out[p.level!] ?? 0) + p.value;
+    }
+    if (out.isNotEmpty) return out;
+    // Fallback: sum across all sites by NR_TYPE (DF_NR_RESERVE).
+    for (final p in allPoints) {
+      if (p.timePeriod != latest) continue;
+      if (_isTotal(p.level)) continue;
+      if (!_isTotal(p.ageGroup)) continue;
+      final ra = p.refArea ?? '';
+      if (ra == 'AE' || ra.startsWith('AE-')) continue; // skip aggregates
+      out[p.level!] = (out[p.level!] ?? 0) + p.value;
+    }
+    return out;
+  }
+
+  /// RAMSAR: latest-year area by designation-year cohort (EST_YEAR, type=_T).
+  Map<String, double> get ramsarByCohort {
+    final latest = latestPeriod;
+    final out = <String, double>{};
+    for (final p in allPoints) {
+      if (p.refArea != 'AE') continue;
+      if (p.timePeriod != latest) continue;
+      if (!_isTotal(p.level)) continue;       // NR_TYPE = _T
+      if (_isTotal(p.ageGroup)) continue;     // skip cohort total
+      final v = p.value;
+      if (v <= 0) continue;                   // omit empty cohorts
+      out[p.ageGroup!] = v;
     }
     return out;
   }

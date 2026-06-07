@@ -102,7 +102,14 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
   bool get _isPercent => _shareIds.contains(widget.indicatorId);
 
   /// Decimal-valued indicators (mm / MCM) — one decimal place, no compaction.
-  static const _decimalIds = {'ecology_rainfall', 'ecology_produced_water'};
+  static const _decimalIds = {
+    'ecology_rainfall',
+    'ecology_produced_water',
+    'energy_generation_capacity',
+    'energy_renewable',
+    'ecology_natural_reserves',
+    'ecology_ramsar_wetlands',
+  };
   bool get _isDecimal => _decimalIds.contains(widget.indicatorId);
 
   String _fmtValue(double v) => _isPercent

@@ -259,6 +259,11 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       'livestock_sheep'                => _api.fetchSheepPopulation(),
       'ecology_rainfall'               => _api.fetchRainfall(),
       'ecology_produced_water'         => _api.fetchProducedWater(),
+      'energy_generation_capacity'     => _api.fetchGenerationCapacity(),
+      'energy_crude_oil'               => _api.fetchCrudeOil(),
+      'energy_renewable'               => _api.fetchRenewableEnergy(),
+      'ecology_natural_reserves'       => _api.fetchNaturalReserves(),
+      'ecology_ramsar_wetlands'        => _api.fetchRamsarWetlands(),
       _                                => Future.value(const SdmxResult(points: [])),
     };
   }
@@ -280,6 +285,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     final isEcology = id.startsWith('ecology_');
     final isCrop    = id.startsWith('crop_');
     final isLivestock = id.startsWith('livestock_');
+    final isEnergy = id.startsWith('energy_');
     return IndicatorMeta(
       id: id,
       dataflowId: '',
@@ -288,13 +294,14 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
       name: _nameFor(id),
       category: (isGdp || isTrade || isTourism || isPrices || isAir)
           ? 'economy'
-          : (isEcology || isCrop || isLivestock) ? 'environment'
+          : (isEcology || isCrop || isLivestock || isEnergy) ? 'environment'
           : id.startsWith('labour_') ? 'demography' : 'demography',
       subCategory: isGdp ? 'national_accounts'
           : isTrade ? 'international_trade'
           : isTourism ? 'tourism'
           : isPrices ? 'prices'
           : isAir ? 'air_transport'
+          : isEnergy ? 'energy'
           : isEcology ? 'ecology'
           : (isCrop || isLivestock) ? 'agriculture'
           : 'vitals',
@@ -310,6 +317,12 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           ? const LocalizedString(en: 'mm', ar: 'مم')
           : id == 'ecology_produced_water'
           ? const LocalizedString(en: 'MCM', ar: 'مليون م³')
+          : (id == 'energy_generation_capacity' || id == 'energy_renewable')
+          ? const LocalizedString(en: 'MW', ar: 'ميجاوات')
+          : id == 'energy_crude_oil'
+          ? const LocalizedString(en: 'Mn Bbl', ar: 'مليون برميل')
+          : (id == 'ecology_natural_reserves' || id == 'ecology_ramsar_wetlands')
+          ? const LocalizedString(en: 'km²', ar: 'كم²')
           : isEcology
           ? const LocalizedString(en: '°C', ar: '°م')
           : isCrop && id == 'crop_land_total'
@@ -323,6 +336,9 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           : isAir ? 'MOV'
           : id == 'ecology_rainfall' ? 'MM'
           : id == 'ecology_produced_water' ? 'MCM'
+          : (id == 'energy_generation_capacity' || id == 'energy_renewable') ? 'MW'
+          : id == 'energy_crude_oil' ? 'MILBAR'
+          : (id == 'ecology_natural_reserves' || id == 'ecology_ramsar_wetlands') ? 'KM2'
           : isEcology ? 'CEL'
           : isLivestock ? 'HEAD' : 'PS',
       frequency: 'A',
@@ -381,6 +397,11 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'livestock_sheep'                => const LocalizedString(en: 'Sheep Population',                ar: 'تعداد الأغنام'),
         'ecology_rainfall'               => const LocalizedString(en: 'Annual Rainfall',                 ar: 'هطول الأمطار السنوي'),
         'ecology_produced_water'         => const LocalizedString(en: 'Produced Water',                  ar: 'المياه المنتجة'),
+        'energy_generation_capacity'     => const LocalizedString(en: 'Generation Capacity',             ar: 'طاقة توليد الكهرباء'),
+        'energy_crude_oil'               => const LocalizedString(en: 'Crude Oil',                       ar: 'النفط الخام'),
+        'energy_renewable'               => const LocalizedString(en: 'Renewable Energy',                ar: 'الطاقة المتجددة'),
+        'ecology_natural_reserves'       => const LocalizedString(en: 'Protected Natural Areas',         ar: 'المناطق الطبيعية المحمية'),
+        'ecology_ramsar_wetlands'        => const LocalizedString(en: 'RAMSAR Wetlands',                 ar: 'مواقع رامسار'),
         'labour_unemployment_age_gender' => const LocalizedString(en: 'Unemployment by Age & Gender',   ar: 'البطالة حسب العمر والجنس'),
         _ => LocalizedString(en: id, ar: id),
       };

@@ -71,6 +71,12 @@ const _navItems = [
   // Ecology
   _NavItem(id: 'ecology_rainfall',       label: 'Annual Rainfall',       group: 'environment'),
   _NavItem(id: 'ecology_produced_water', label: 'Produced Water',        group: 'environment'),
+  _NavItem(id: 'ecology_natural_reserves', label: 'Protected Areas',     group: 'environment'),
+  _NavItem(id: 'ecology_ramsar_wetlands',  label: 'RAMSAR Wetlands',     group: 'environment'),
+  // Energy
+  _NavItem(id: 'energy_generation_capacity', label: 'Generation Capacity', group: 'environment'),
+  _NavItem(id: 'energy_crude_oil',           label: 'Crude Oil',           group: 'environment'),
+  _NavItem(id: 'energy_renewable',           label: 'Renewable Energy',    group: 'environment'),
 
   // ── Economy ─────────────────────────────────────────────────────────────────
   // National Accounts

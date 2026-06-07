@@ -7,6 +7,10 @@ import 'package:uae_stats/features/economy/presentation/screens/economy_screen.d
 import 'package:uae_stats/features/environment/presentation/screens/environment_screen.dart';
 import 'package:uae_stats/features/home/presentation/screens/home_screen.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/screens/indicator_detail_screen.dart';
+import 'package:uae_stats/features/more/presentation/screens/about_screen.dart';
+import 'package:uae_stats/features/more/presentation/screens/bookmarks_screen.dart';
+import 'package:uae_stats/features/more/presentation/screens/faq_screen.dart';
+import 'package:uae_stats/features/more/presentation/screens/feedback_screen.dart';
 import 'package:uae_stats/features/population_growth/presentation/screens/population_growth_screen.dart';
 import 'package:uae_stats/features/search/presentation/screens/search_screen.dart';
 import 'package:uae_stats/features/splash/presentation/splash_screen.dart';
@@ -21,6 +25,10 @@ abstract final class AppRoutes {
   static const String indicator         = '/indicator/:id';
   static const String populationGrowth  = '/population-growth';
   static const String search            = '/search';
+  static const String bookmarks         = '/bookmarks';
+  static const String faq               = '/faq';
+  static const String feedback          = '/feedback';
+  static const String about             = '/about';
 
   static String indicatorPath(String id) => '/indicator/$id';
 }
@@ -63,6 +71,22 @@ final appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.search,
       builder: (context, state) => const SearchScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.bookmarks,
+      builder: (context, state) => const BookmarksScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.faq,
+      builder: (context, state) => const FaqScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.feedback,
+      builder: (context, state) => const FeedbackScreen(),
+    ),
+    GoRoute(
+      path: AppRoutes.about,
+      builder: (context, state) => const AboutScreen(),
     ),
   ],
 

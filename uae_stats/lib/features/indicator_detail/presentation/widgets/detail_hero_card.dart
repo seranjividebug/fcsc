@@ -126,10 +126,14 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
     return code == null ? 'leading group' : (m[code.toUpperCase()] ?? code);
   }
 
-  /// Indicators whose headline value carries one decimal place (mm, MCM).
+  /// Indicators whose headline value carries one decimal place (mm, MCM, MW, km²).
   bool get _isDecimalIndicator => const {
         'ecology_rainfall',
         'ecology_produced_water',
+        'energy_generation_capacity',
+        'energy_renewable',
+        'ecology_natural_reserves',
+        'ecology_ramsar_wetlands',
       }.contains(widget.data.meta.id);
 
   /// Indicators whose headline value is a percentage share (not a count).
@@ -210,6 +214,11 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
         'livestock_sheep'  => ar ? 'رأس أغنام مسجّل في الإمارات في $period' : 'sheep registered across the UAE in $period',
         'ecology_rainfall' => ar ? 'مم متوسط هطول الأمطار عبر محطات الأرصاد في $period' : 'mm avg. rainfall across UAE weather stations in $period',
         'ecology_produced_water' => ar ? 'مليون م³ من المياه المنتجة في الإمارات في $period' : 'million m³ of water produced across the UAE in $period',
+        'energy_generation_capacity' => ar ? 'ميجاوات من طاقة توليد الكهرباء المركبة في $period' : 'MW of installed electricity generation capacity in $period',
+        'energy_renewable' => ar ? 'ميجاوات من طاقة الطاقة المتجددة المركبة في $period' : 'MW of installed renewable energy capacity in $period',
+        'energy_crude_oil' => ar ? 'مليون برميل من احتياطيات النفط الخام المؤكدة في $period' : 'million barrels of proven crude oil reserves in $period',
+        'ecology_natural_reserves' => ar ? 'كم² من المناطق المحمية في الإمارات في $period' : 'km² of protected natural areas across the UAE in $period',
+        'ecology_ramsar_wetlands' => ar ? 'كم² من مواقع رامسار للأراضي الرطبة في $period' : 'km² across UAE RAMSAR-designated wetland sites in $period',
         _ => ar ? 'كما في $period' : 'as of $period',
       };
 

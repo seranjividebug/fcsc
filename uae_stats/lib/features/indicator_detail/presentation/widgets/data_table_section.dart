@@ -49,8 +49,10 @@ class DataTableSection extends ConsumerWidget {
 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: (data.isRainfall || data.isProducedWater)
-              // Decimal-valued national trend (mm / MCM).
+          child: (data.isRainfall ||
+                  data.isProducedWater ||
+                  data.isDecimalCount)
+              // Decimal-valued national trend (mm / MCM / MW / km²).
               ? _FullDataTable(
                   series: data.uaeTotalSeries,
                   isAr: isAr,
@@ -128,7 +130,9 @@ class _StatsChipsRow extends StatelessWidget {
         data.isEmploymentSector ||
         data.isTopCategoryShare ||
         data.meta.id == 'labour_unemployment_age_gender'; // share → format %
-    final dec = data.isRainfall || data.isProducedWater; // mm / MCM → 1 decimal
+    final dec = data.isRainfall ||
+        data.isProducedWater ||
+        data.isDecimalCount; // mm / MCM / MW / km² → 1 decimal
     String fmtVal(double v) => pct
         ? '${v.toStringAsFixed(1)}%'
         : dec
