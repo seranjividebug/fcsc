@@ -9,30 +9,43 @@
 
 workflows:
   # ── iOS release (TestFlight / App Store) — requires Apple signing ──────────
+  # PREREQUISITE: in Codemagic → Teams/App settings → connect an App Store
+  # Connect API key, then set its name as the integration below. Codemagic
+  # fetches/creates the signing certificate + provisioning profile for the
+  # bundle id and generates the export-options plist automatically.
   ios-release:
     name: iOS Release
     instance_type: mac_mini_m2
     max_build_duration: 60
     working_directory: uae_stats
+    integrations:
+      app_store_connect: CODEMAGIC_ASC_KEY   # ← rename to your ASC API key name
     environment:
       flutter: stable
       xcode: latest
       cocoapods: default
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.sightspectrum.uaestats
       vars:
         BUNDLE_ID: "com.sightspectrum.uaestats"
     scripts:
       - name: Flutter pub get
         script: flutter pub get
+      - name: Set up code signing settings on Xcode project
+        script: xcode-project use-profiles
       - name: Install CocoaPods
         script: |
           find . -name "Podfile" -execdir pod install \;
       - name: Flutter build IPA
         script: |
           flutter build ipa --release \
+            --build-name=1.0.0 \
+            --build-number=$(($(($BUILD_NUMBER)) + 1)) \
             --export-options-plist=/Users/builder/export_options.plist
     artifacts:
       - build/ios/ipa/*.ipa
-      - flutter_drive.log
+      - /tmp/xcodebuild_logs/*.log
 
   # ── iOS unsigned — validates the build WITHOUT Apple credentials ──────────
   # Use this first to confirm the project compiles on the Mac. Produces a
