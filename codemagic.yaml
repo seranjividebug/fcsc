@@ -1,0 +1,77 @@
+# Codemagic CI/CD configuration for the UAE Stats Flutter app.
+# The Flutter project lives in the `uae_stats/` subfolder (monorepo layout),
+# so every step sets its working directory accordingly.
+#
+# iOS signing: connect an App Store Connect API key in Codemagic and fill in
+# the `ios_signing` / `app_store_connect` values, or configure signing in the
+# Codemagic UI (Settings → Code signing). Until signing is set up, use the
+# `ios-unsigned` workflow below to validate that the project compiles.
+
+workflows:
+  # ── iOS release (TestFlight / App Store) — requires Apple signing ──────────
+  ios-release:
+    name: iOS Release
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    working_directory: uae_stats
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+      vars:
+        BUNDLE_ID: "com.sightspectrum.uaestats"
+    scripts:
+      - name: Flutter pub get
+        script: flutter pub get
+      - name: Install CocoaPods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Flutter build IPA
+        script: |
+          flutter build ipa --release \
+            --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - flutter_drive.log
+
+  # ── iOS unsigned — validates the build WITHOUT Apple credentials ──────────
+  # Use this first to confirm the project compiles on the Mac. Produces a
+  # .app (not an installable IPA, since it isn't signed).
+  ios-unsigned:
+    name: iOS Unsigned (compile check)
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    working_directory: uae_stats
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Flutter pub get
+        script: flutter pub get
+      - name: Install CocoaPods
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Flutter build iOS (no codesign)
+        script: flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/*.app
+
+  # ── Android release APK + AAB ─────────────────────────────────────────────
+  android-release:
+    name: Android Release
+    instance_type: linux_x2
+    max_build_duration: 60
+    working_directory: uae_stats
+    environment:
+      flutter: stable
+    scripts:
+      - name: Flutter pub get
+        script: flutter pub get
+      - name: Build APK
+        script: flutter build apk --release
+      - name: Build AAB
+        script: flutter build appbundle --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/bundle/release/*.aab
