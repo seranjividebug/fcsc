@@ -1,0 +1,74 @@
+[
+ {
+  "timePeriod": "2017",
+  "value": 80.9,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2018",
+  "value": 81.3,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2019",
+  "value": 81.6,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 80.2,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2021",
+  "value": 80.8,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2022",
+  "value": 81.5,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 82.4,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 83.0,
+  "measure": "LFPR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "sourceDetail": "FCSC"
+ }
+]

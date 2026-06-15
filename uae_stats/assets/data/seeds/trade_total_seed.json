@@ -5,5 +5,25 @@
   { "timePeriod": "2020", "value": 1403170.0, "measure": "TRADE_TOT", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
   { "timePeriod": "2021", "value": 1786530.0, "measure": "TRADE_TOT", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
   { "timePeriod": "2022", "value": 2167100.0, "measure": "TRADE_TOT", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 2476090.0, "measure": "TRADE_TOT", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
+  { "timePeriod": "2023", "value": 2476090.0, "measure": "TRADE_TOT", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+
+  { "timePeriod": "2023", "value": 1439030.0, "measure": "TRADE_FLOW", "refArea": "AE", "gender": "_T", "level": "IMP",        "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 1037060.0, "measure": "TRADE_FLOW", "refArea": "AE", "gender": "_T", "level": "NONOIL_EXP", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 616170.0,  "measure": "TRADE_FLOW", "refArea": "AE", "gender": "_T", "level": "REEXP",      "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+
+  { "timePeriod": "2023", "value": 421900.0, "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "14", "categoryLabel": "Pearls & Precious Metals",  "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 381550.0, "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "16", "categoryLabel": "Machinery & Electronics",   "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 142950.0, "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "17", "categoryLabel": "Vehicles of Transport",     "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 86310.0,  "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "5",  "categoryLabel": "Mineral Products",          "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 78830.0,  "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "6",  "categoryLabel": "Chemicals",                 "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 73320.0,  "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "15", "categoryLabel": "Base Metals",               "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 37610.0,  "measure": "TRADE_IMP_SEC", "refArea": "AE", "gender": "_T", "level": "11", "categoryLabel": "Textiles",                  "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+
+  { "timePeriod": "2023", "value": 331280.0, "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "14", "categoryLabel": "Pearls & Precious Metals",  "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 244610.0, "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "16", "categoryLabel": "Machinery & Electronics",   "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 82710.0,  "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "15", "categoryLabel": "Base Metals",               "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 79010.0,  "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "17", "categoryLabel": "Vehicles of Transport",     "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 55600.0,  "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "5",  "categoryLabel": "Mineral Products",          "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 49010.0,  "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "6",  "categoryLabel": "Chemicals",                 "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2023", "value": 44620.0,  "measure": "TRADE_EXP_SEC", "refArea": "AE", "gender": "_T", "level": "4",  "categoryLabel": "Foodstuffs & Beverages",    "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
 ]

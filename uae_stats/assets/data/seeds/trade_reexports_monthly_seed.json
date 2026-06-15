@@ -19,5 +19,21 @@
   { "timePeriod": "2025-06", "value": 48660.0, "measure": "REEXP_MON", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
   { "timePeriod": "2025-07", "value": 62700.0, "measure": "REEXP_MON", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
   { "timePeriod": "2025-08", "value": 57610.0, "measure": "REEXP_MON", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2025-09", "value": 62090.0, "measure": "REEXP_MON", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
+  { "timePeriod": "2025-09", "value": 62090.0, "measure": "REEXP_MON", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 78907.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "Saudi Arabia", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 67930.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "Iraq", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 41413.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "India", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 27408.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "United States", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 25675.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "Kuwait", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 24264.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "Qatar", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 22692.0, "measure": "MRE_CTRY", "refArea": "AE", "gender": "_T", "categoryLabel": "Oman", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 509900.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "GCC & Middle East", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 131300.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "South & SE Asia", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 121100.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "Europe", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 110200.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "Central Asia & CIS", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 93800.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "Africa", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 55000.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "Americas & Oceania", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 51700.0, "measure": "MRE_REG", "refArea": "AE", "gender": "_T", "categoryLabel": "East Asia", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
+  { "timePeriod": "2025", "value": 252.0, "measure": "MRE_DEST", "refArea": "AE", "gender": "_T", "unitMeasure": "COUNT", "sourceDetail": "FCSA" },
+  { "timePeriod": "2024", "value": 625800.0, "measure": "MRE_FULLYR", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
 ]

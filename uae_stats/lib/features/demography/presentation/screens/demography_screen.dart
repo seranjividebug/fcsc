@@ -3,7 +3,6 @@
 // Demography section screen — Blue theme (#0073AB).
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/theme/app_spacing.dart';
@@ -14,6 +13,7 @@ import 'package:uae_stats/shared/widgets/app_logo.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
 import 'package:uae_stats/shared/widgets/kpi_stat_card.dart';
+import 'package:uae_stats/shared/widgets/language_toggle_button.dart';
 
 const _kAccent    = AppColors.demBlue;
 const _kAccentBg  = AppColors.demBlueTint;
@@ -27,8 +27,6 @@ class DemographyScreen extends ConsumerStatefulWidget {
 }
 
 class _DemographyScreenState extends ConsumerState<DemographyScreen> {
-  bool _expanded = true;
-
   @override
   Widget build(BuildContext context) {
     final locale    = ref.watch(localeProvider);
@@ -55,31 +53,25 @@ class _DemographyScreenState extends ConsumerState<DemographyScreen> {
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 14),
-                      child: _SectionHeader(
-                        expanded: _expanded,
-                        isArabic: isArabic,
-                        onToggle: () =>
-                            setState(() => _expanded = !_expanded),
-                      ),
+                      child: _SectionHeader(isArabic: isArabic),
                     ),
                   ),
-                  if (_expanded)
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(14, 8, 14, 12),
-                        child: kpisAsync.when(
-                          loading: () => const _SectionsSkeleton(),
-                          error: (_, __) => _ErrorRetry(
-                            onRetry: () =>
-                                ref.invalidate(demographyKpisProvider),
-                          ),
-                          data: (groups) => _SectionsContent(
-                            groups: groups,
-                            isArabic: isArabic,
-                          ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(14, 8, 14, 12),
+                      child: kpisAsync.when(
+                        loading: () => const _SectionsSkeleton(),
+                        error: (_, __) => _ErrorRetry(
+                          onRetry: () =>
+                              ref.invalidate(demographyKpisProvider),
+                        ),
+                        data: (groups) => _SectionsContent(
+                          groups: groups,
+                          isArabic: isArabic,
                         ),
                       ),
                     ),
+                  ),
                   const SliverToBoxAdapter(child: SizedBox(height: 8)),
                 ],
               ),
@@ -103,7 +95,8 @@ class _AppBar extends ConsumerWidget {
     return Container(
       height: AppSpacing.appBarHeight,
       color: AppColors.white,
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      // 4px right padding aligns the language toggle with every other screen.
+      padding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, 4, 0),
       child: Row(
         children: [
           const Icon(Icons.menu, size: 24, color: AppColors.slate600),
@@ -120,69 +113,8 @@ class _AppBar extends ConsumerWidget {
             ),
           ),
           const Spacer(),
-          _LangToggle(isArabic: isArabic),
+          const LanguageToggleButton(foregroundColor: AppColors.slate600),
         ],
-      ),
-    );
-  }
-}
-
-// ─── Language toggle ──────────────────────────────────────────────────────────
-
-class _LangToggle extends ConsumerWidget {
-  const _LangToggle({required this.isArabic});
-  final bool isArabic;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.lightImpact();
-        ref.read(localeProvider.notifier).toggle();
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusPill),
-          border: Border.all(color: AppColors.silver),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              'ع',
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
-                color: isArabic ? _kAccent : AppColors.slate400,
-              ),
-            ),
-            const SizedBox(width: 4),
-            Container(
-              width: 28,
-              height: 16,
-              decoration: BoxDecoration(
-                color: _kAccent.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: AnimatedAlign(
-                duration: const Duration(milliseconds: 200),
-                alignment:
-                    isArabic ? Alignment.centerLeft : Alignment.centerRight,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  margin: const EdgeInsets.symmetric(horizontal: 2),
-                  decoration: const BoxDecoration(
-                    color: _kAccent,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -191,84 +123,70 @@ class _LangToggle extends ConsumerWidget {
 // ─── Section header card ──────────────────────────────────────────────────────
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({
-    required this.expanded,
-    required this.isArabic,
-    required this.onToggle,
-  });
+  const _SectionHeader({required this.isArabic});
 
-  final bool expanded;
   final bool isArabic;
-  final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
+    // Static, non-collapsible category header — purely a contextual label.
     return Container(
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
         boxShadow: AppColors.shadowCard,
       ),
-      child: InkWell(
-        onTap: onToggle,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: _kAccentBg,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(_kIcon, size: 20, color: _kAccent),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                color: _kAccentBg,
+                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Category',
-                      style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.slate400,
-                        letterSpacing: 0.6,
-                      ),
+              child: const Icon(_kIcon, size: 20, color: _kAccent),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isArabic ? 'الفئة' : 'Category',
+                    style: const TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.slate400,
+                      letterSpacing: 0.6,
                     ),
-                    const SizedBox(height: 1),
-                    Text(
-                      isArabic ? 'الديموغرافيا' : 'Demography',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.slate900,
-                        letterSpacing: -0.2,
-                      ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    isArabic ? 'الديموغرافيا' : 'Demography',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.slate900,
+                      letterSpacing: -0.2,
                     ),
-                    const SizedBox(height: 2),
-                    const Text(
-                      'Population · Vitals · Education · Health · Labour',
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: AppColors.slate600,
-                          height: 1.3),
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    isArabic
+                        ? 'السكان · الأحوال الحيوية · التعليم · الصحة · العمل'
+                        : 'Population · Vitals · Education · Health · Labour',
+                    style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.slate600,
+                        height: 1.3),
+                  ),
+                ],
               ),
-              Icon(
-                expanded
-                    ? Icons.expand_less_rounded
-                    : Icons.expand_more_rounded,
-                size: 22,
-                color: AppColors.slate400,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

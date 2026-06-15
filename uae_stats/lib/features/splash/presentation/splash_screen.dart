@@ -21,9 +21,6 @@ import 'package:uae_stats/core/routing/app_router.dart';
 import 'package:uae_stats/shared/providers/locale_provider.dart';
 
 // ── Colours from HTML spec ────────────────────────────────────────────────────
-const _kGreenDeep  = Color(0xFF003D33);
-const _kGreenMid   = Color(0xFF004A3E);
-const _kGreenMain  = Color(0xFF00594C);
 const _kGold       = Color(0xFFC8973A);
 const _kGoldLight  = Color(0xFFE3B86A);
 const _kFlagRed    = Color(0xFFEF3340);
@@ -125,23 +122,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       width: double.infinity,
       height: double.infinity,
       decoration: const BoxDecoration(
+        // White / off-white splash theme.
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: [0.0, 0.40, 0.65, 1.0],
-          colors: [_kGreenDeep, Color(0xFF004540), _kGreenMid, _kGreenMain],
+          stops: [0.0, 0.5, 1.0],
+          colors: [Color(0xFFFFFFFF), Color(0xFFFCFBF7), Color(0xFFF7F4EC)],
         ),
       ),
       child: Stack(
         children: [
-          // ── Lattice pattern ──────────────────────────────────────────────
-          Positioned.fill(
+          // ── Lattice pattern (faint gold on white) ────────────────────────
+          const Positioned.fill(
             child: Opacity(
-              opacity: 0.065,
-              child: CustomPaint(painter: _LatticePainter()),
+              opacity: 0.05,
+              child: CustomPaint(painter: _LatticePainter(color: _kGold)),
             ),
           ),
-          // ── Radial glow ──────────────────────────────────────────────────
+          // ── Radial glow (warm gold tint) ─────────────────────────────────
           Positioned(
             top: MediaQuery.of(context).size.height * 0.42,
             left: MediaQuery.of(context).size.width * 0.5 - 155,
@@ -150,7 +148,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
-                  colors: [Color(0x0EFFFFFF), Colors.transparent],
+                  colors: [Color(0x14C8973A), Colors.transparent],
                   stops: [0.0, 0.65],
                 ),
               ),
@@ -160,9 +158,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           Positioned(
             bottom: 50,
             left: MediaQuery.of(context).size.width * 0.5 - 125,
-            child: Opacity(
-              opacity: 0.042,
-              child: CustomPaint(size: const Size(250, 90), painter: _UaeMapPainter()),
+            child: const Opacity(
+              opacity: 0.06,
+              child: CustomPaint(
+                  size: Size(250, 90),
+                  painter: _UaeMapPainter(color: _kGold)),
             ),
           ),
           // ── Main content ─────────────────────────────────────────────────
@@ -175,14 +175,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   child: IntrinsicHeight(
                     child: Column(
               children: [
-                // Language toggle
-                Align(
-                  alignment: AlignmentDirectional.topEnd,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                    child: _LangPill(isArabic: isArabic),
-                  ),
-                ),
+                // (Language toggle removed from splash — language is chosen
+                //  in-app via the app-bar toggle.)
+                const SizedBox(height: 8),
                 const Spacer(flex: 2),
                 // Emblem
                 FadeTransition(
@@ -199,7 +194,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       style: TextStyle(
                         fontFamily: 'Plus Jakarta Sans',
                         fontSize: 40, fontWeight: FontWeight.w700,
-                        color: Colors.white, letterSpacing: -0.7, height: 1.0,
+                        color: Color(0xFF0F172A), letterSpacing: -0.7, height: 1.0,
                       ),
                     ),
                   ),
@@ -212,7 +207,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     textDirection: TextDirection.rtl,
                     style: TextStyle(
                       fontSize: 21, fontWeight: FontWeight.w600,
-                      color: Color(0xC2FFFFFF), height: 1.4,
+                      color: Color(0xCC1F2937), height: 1.4,
                     ),
                   ),
                 ),
@@ -241,7 +236,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 11.5, fontWeight: FontWeight.w500,
-                        color: Color(0x9EFFFFFF), letterSpacing: 1.9, height: 1.6,
+                        color: Color(0x99475569), letterSpacing: 1.9, height: 1.6,
                       ),
                     ),
                   ),
@@ -256,7 +251,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 12, fontWeight: FontWeight.w400,
-                      color: Color(0x66FFFFFF), height: 1.6,
+                      color: Color(0x80475569), height: 1.6,
                     ),
                   ),
                 ),
@@ -290,7 +285,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 const SizedBox(height: 9),
                 const Text(
                   'v${AppConstants.appVersion}  ·  ${AppConstants.fcscWebsite}',
-                  style: TextStyle(fontSize: 9.5, color: Color(0x38FFFFFF), letterSpacing: 0.6),
+                  style: TextStyle(fontSize: 9.5, color: Color(0x59475569), letterSpacing: 0.6),
                 ),
                 const SizedBox(height: 20),
               ],
@@ -316,9 +311,32 @@ class _FcscEmblem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Decorative compass ring (CustomPaint) with the brand logo.png centred in
+    // the inner circle — the painter skips drawing the flag so the logo shows.
+    const innerDiameter = 34.0; // matches painter innerR (17) * 2
     return SizedBox(
       width: 104, height: 104,
-      child: CustomPaint(painter: _EmblemPainter()),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          CustomPaint(size: const Size(104, 104), painter: _EmblemPainter()),
+          // Logo sits slightly above centre, like the flag emblem did (cy-4).
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: ClipOval(
+              child: SizedBox(
+                width: innerDiameter,
+                height: innerDiameter,
+                child: Image.asset(
+                  'assets/images/logo.png',
+                  fit: BoxFit.cover,
+                  filterQuality: FilterQuality.high,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -330,11 +348,11 @@ class _EmblemPainter extends CustomPainter {
     final cy = size.height / 2;
     final r = size.width / 2;
 
-    // Outer ring fill + stroke
+    // Outer ring fill + stroke (dark/gold tint so it shows on the white bg).
     canvas.drawCircle(Offset(cx, cy), r - 1,
-      Paint()..color = Colors.white.withValues(alpha: 0.04));
+      Paint()..color = const Color(0xFF0F172A).withValues(alpha: 0.02));
     canvas.drawCircle(Offset(cx, cy), r - 1,
-      Paint()..color = Colors.white.withValues(alpha: 0.15)
+      Paint()..color = _kGold.withValues(alpha: 0.30)
               ..style = PaintingStyle.stroke
               ..strokeWidth = 1.1);
 
@@ -367,33 +385,15 @@ class _EmblemPainter extends CustomPainter {
     const innerR = 17.0;
     final innerCy = cy - 4; // slightly above centre like HTML (cy=48 in 104px)
     canvas.drawCircle(Offset(cx, innerCy), innerR,
-      Paint()..color = Colors.white.withValues(alpha: 0.06));
+      Paint()..color = const Color(0xFFF7F4EC));
     canvas.drawCircle(Offset(cx, innerCy), innerR,
-      Paint()..color = Colors.white.withValues(alpha: 0.16)
+      Paint()..color = _kGold.withValues(alpha: 0.45)
               ..style = PaintingStyle.stroke
               ..strokeWidth = 0.9);
 
-    // UAE flag clipped inside inner circle
-    final clipPath = Path()..addOval(Rect.fromCircle(center: Offset(cx, innerCy), radius: innerR));
-    canvas.save();
-    canvas.clipPath(clipPath);
-    final flagL = cx - innerR;
-    final flagT = innerCy - innerR;
-    const flagH = innerR * 2;
-    const segW  = (innerR * 2) / 4;
-    canvas.drawRect(Rect.fromLTWH(flagL,            flagT, segW,       flagH),
-      Paint()..color = _kFlagRed.withValues(alpha: 0.92));
-    canvas.drawRect(Rect.fromLTWH(flagL + segW,     flagT, segW,       flagH),
-      Paint()..color = _kFlagGreen.withValues(alpha: 0.90));
-    canvas.drawRect(Rect.fromLTWH(flagL + segW * 2, flagT, segW,       flagH),
-      Paint()..color = _kFlagWhite.withValues(alpha: 0.94));
-    canvas.drawRect(Rect.fromLTWH(flagL + segW * 3, flagT, segW + 1,   flagH),
-      Paint()..color = _kFlagBlack.withValues(alpha: 0.82));
-    canvas.restore();
-
-    // Gold centre pin
-    canvas.drawCircle(Offset(cx, innerCy), 2.8,
-      Paint()..color = _kGold.withValues(alpha: 0.94));
+    // NB: the UAE-flag fill + gold centre pin that used to sit here are now
+    // replaced by the brand logo.png, overlaid in [_FcscEmblem]. The inner
+    // circle border above still frames it.
 
     // Curved "FCSC · UAE" text arc
     _drawArcText(canvas, size, cx, cy);
@@ -414,15 +414,15 @@ class _EmblemPainter extends CustomPainter {
   }
 
   void _drawArcText(Canvas canvas, Size size, double cx, double cy) {
-    // Draw "FCSA · UAE" along a bottom arc (matches HTML textPath)
-    const text = 'FCSA · UAE';
+    // Draw "FCSC · UAE" along a bottom arc (matches HTML textPath)
+    const text = 'FCSC · UAE';
     const fontSize = 7.0;
     final tp = TextPainter(
       text: const TextSpan(
         text: text,
         style: TextStyle(
           fontSize: fontSize, fontWeight: FontWeight.w600,
-          color: Color(0x5CFFFFFF), letterSpacing: 2.4,
+          color: Color(0x8C8A6D2E), letterSpacing: 2.4,
           fontFamily: 'Inter',
         ),
       ),
@@ -442,7 +442,7 @@ class _EmblemPainter extends CustomPainter {
           text: text[i],
           style: const TextStyle(
             fontSize: fontSize, fontWeight: FontWeight.w600,
-            color: Color(0x5CFFFFFF), letterSpacing: 0,
+            color: Color(0x8C8A6D2E), letterSpacing: 0,
             fontFamily: 'Inter',
           ),
         ),
@@ -469,15 +469,18 @@ class _EmblemPainter extends CustomPainter {
 // ── Lattice painter (8-pointed star grid) ─────────────────────────────────────
 
 class _LatticePainter extends CustomPainter {
+  const _LatticePainter({this.color = Colors.white});
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
     const cellSize = 80.0;
     final paint = Paint()
-      ..color = Colors.white
+      ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.7;
     final innerPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.4)
+      ..color = color.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 0.35;
 
@@ -485,7 +488,8 @@ class _LatticePainter extends CustomPainter {
       for (double y = 0; y < size.height + cellSize; y += cellSize) {
         _drawStar(canvas, paint, Offset(x, y), cellSize * 0.45, 16);
         _drawStar(canvas, innerPaint, Offset(x, y), cellSize * 0.22, 16);
-        canvas.drawCircle(Offset(x, y), 1.2, Paint()..color = Colors.white.withValues(alpha: 0.2));
+        canvas.drawCircle(Offset(x, y), 1.2,
+            Paint()..color = color.withValues(alpha: 0.2));
       }
     }
   }
@@ -511,9 +515,12 @@ class _LatticePainter extends CustomPainter {
 // ── UAE Map watermark painter ─────────────────────────────────────────────────
 
 class _UaeMapPainter extends CustomPainter {
+  const _UaeMapPainter({this.color = Colors.white});
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+    final paint = Paint()..color = color..style = PaintingStyle.fill;
     // Simplified UAE silhouette path (matches HTML SVG path)
     final path = Path();
     final pts = [
@@ -537,48 +544,6 @@ class _UaeMapPainter extends CustomPainter {
 }
 
 
-// ── Language pill ─────────────────────────────────────────────────────────────
-
-class _LangPill extends ConsumerWidget {
-  const _LangPill({required this.isArabic});
-  final bool isArabic;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () => ref.read(localeProvider.notifier).toggle(),
-      child: Container(
-        height: 36,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.10),
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.18)),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _label('EN', active: !isArabic),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Text('\u2009|\u2009',
-                style: TextStyle(color: Colors.white.withValues(alpha: 0.3), fontSize: 12)),
-            ),
-            _label('عربي', active: isArabic),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _label(String t, {required bool active}) => Text(t,
-    style: TextStyle(
-      fontSize: 12, fontWeight: FontWeight.w600,
-      color: active ? Colors.white : Colors.white.withValues(alpha: 0.38),
-      letterSpacing: 0.04,
-    ));
-}
-
 // ── Progress section ──────────────────────────────────────────────────────────
 
 class _ProgressSection extends StatelessWidget {
@@ -594,7 +559,7 @@ class _ProgressSection extends StatelessWidget {
         child: Stack(children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.10),
+              color: const Color(0xFF475569).withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(999),
             ),
           ),
@@ -622,7 +587,7 @@ class _ProgressSection extends StatelessWidget {
                 color: Color(0xF2C8973A), letterSpacing: 0.5))
           : const Text('Loading official data…',
               key: ValueKey('loading'),
-              style: TextStyle(fontSize: 11, color: Color(0x75FFFFFF), letterSpacing: 0.8)),
+              style: TextStyle(fontSize: 11, color: Color(0x8C475569), letterSpacing: 0.8)),
       ),
     ]);
   }
@@ -657,7 +622,7 @@ class _OfficialBadge extends StatelessWidget {
         const Text('OFFICIAL GOVERNMENT APP',
           style: TextStyle(
             fontSize: 10, fontWeight: FontWeight.w500,
-            color: Color(0x7AFFFFFF), letterSpacing: 2.2,
+            color: Color(0x99475569), letterSpacing: 2.2,
           )),
       ],
     );

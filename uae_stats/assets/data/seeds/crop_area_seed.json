@@ -1,12 +1,232 @@
 [
-  { "timePeriod": "2015", "value": 245867.0,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2016", "value": 502009.0,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2017", "value": 560664.0,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2018", "value": 524734.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 580060.5,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 579308.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 611596.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 577753.8,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 565449.1,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2024", "value": 562274.9,  "measure": "CROP_AREA", "refArea": "AE", "gender": "_T", "unitMeasure": "DONUM", "sourceDetail": "FCSA" }
+ {
+  "timePeriod": "2015",
+  "value": 245867.0,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2016",
+  "value": 502009.0,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2017",
+  "value": 560664.0,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2018",
+  "value": 524734.9,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2019",
+  "value": 580060.5,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 579308.9,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2021",
+  "value": 611596.9,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2022",
+  "value": 577753.8,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 565449.1,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 562274.9,
+  "measure": "CROP_AREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 392250.6,
+  "measure": "CROP_AREA",
+  "refArea": "AE-AZ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Abu Dhabi",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 387447.4,
+  "measure": "CROP_AREA",
+  "refArea": "AE-AZ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Abu Dhabi",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 28021.3,
+  "measure": "CROP_AREA",
+  "refArea": "AE-DU",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Dubai",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 27107.5,
+  "measure": "CROP_AREA",
+  "refArea": "AE-DU",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Dubai",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 45564.2,
+  "measure": "CROP_AREA",
+  "refArea": "AE-SH",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Sharjah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 47326.2,
+  "measure": "CROP_AREA",
+  "refArea": "AE-SH",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Sharjah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 12896.4,
+  "measure": "CROP_AREA",
+  "refArea": "AE-AJ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Ajman",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 14445.7,
+  "measure": "CROP_AREA",
+  "refArea": "AE-AJ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Ajman",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 52059.9,
+  "measure": "CROP_AREA",
+  "refArea": "AE-RK",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Ras Al Khaimah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 55663.4,
+  "measure": "CROP_AREA",
+  "refArea": "AE-RK",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Ras Al Khaimah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 25129.1,
+  "measure": "CROP_AREA",
+  "refArea": "AE-FJ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fujairah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 27636.2,
+  "measure": "CROP_AREA",
+  "refArea": "AE-FJ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fujairah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 6353.4,
+  "measure": "CROP_AREA",
+  "refArea": "AE-UQ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Umm Al Quwain",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 5822.7,
+  "measure": "CROP_AREA",
+  "refArea": "AE-UQ",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Umm Al Quwain",
+  "sourceDetail": "FCSA"
+ }
 ]

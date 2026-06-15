@@ -28,6 +28,12 @@ class _CarouselEntry {
   final Color categoryColor;
 }
 
+// Client-requested order:
+//   1. Population (Demography)
+//   2. Yearly GDP (Economy)
+//   3. CPI Inflation (Economy)
+//   4. Tourist / Visitor Arrivals (Economy) — replaces Aircraft Movements
+//   5. Renewable Energy (Environment)
 const _carouselConfigs = <_CarouselEntry>[
   _CarouselEntry(
     cfg: KpiConfig(
@@ -50,8 +56,29 @@ const _carouselConfigs = <_CarouselEntry>[
   ),
   _CarouselEntry(
     cfg: KpiConfig(
+      id: 'home_gdp',
+      nameEn: 'Yearly GDP',
+      nameAr: 'الناتج المحلي الإجمالي',
+      unitEn: 'AED Mn',
+      unitAr: 'مليون درهم',
+      displayUnit: KpiDisplayUnit.aedMnToTrillions,
+      icon: Icons.trending_up_rounded,
+      // Use GDP Current dataflow — filter for UAE total (_T) annual row
+      dataflowId: ApiConstants.dfGdpCurr,
+      dataflowVersion: ApiConstants.dfGdpCurrVersion,
+      filter: '.A.............',
+      measure: 'GDP_CUR',
+      startPeriod: '2015',
+    ),
+    category: 'Economy',
+    iconColor: AppColors.champagneGold,
+    iconBg: AppColors.royalSand,
+    categoryColor: AppColors.champagneGold,
+  ),
+  _CarouselEntry(
+    cfg: KpiConfig(
       id: 'home_inflation',
-      nameEn: 'CPI Inflation',
+      nameEn: 'Inflation',
       nameAr: 'معدل التضخم',
       unitEn: '%',
       unitAr: '٪',
@@ -69,17 +96,23 @@ const _carouselConfigs = <_CarouselEntry>[
   ),
   _CarouselEntry(
     cfg: KpiConfig(
-      id: 'home_air_passengers_v2',
-      nameEn: 'Aircraft Movements',
-      nameAr: 'حركة الطائرات',
-      unitEn: 'Flights',
-      unitAr: 'رحلة',
-      displayUnit: KpiDisplayUnit.thousands,
-      icon: Icons.flight_rounded,
-      dataflowId: ApiConstants.dfAir,
-      dataflowVersion: ApiConstants.dfAirVersion,
-      filter: '.A....',
-      measure: 'ACFT_MOV',
+      id: 'home_visitor_arrivals',
+      nameEn: 'Guest Arrivals',
+      nameAr: 'وصول النزلاء',
+      unitEn: 'Persons',
+      unitAr: 'أشخاص',
+      displayUnit: KpiDisplayUnit.millions,
+      icon: Icons.luggage_outlined,
+      // Total hotel guests = visitor arrivals (DF_ALL_HOT). The DSD has 8
+      // dimensions: MEASURE.UNIT_MEASURE.REF_AREA.FREQ.H_TYPE.H_INDICATOR.
+      // GUEST_REGION.SOURCE_DETAIL. We pin the fully-qualified key for the
+      // national total guests series — H=Hotels, NUMBER, AE, Annual,
+      // H_TYPE _Z (n/a), H_INDICATOR GHH (Guests), GUEST_REGION _T (Total),
+      // FCSC. Verified latest 2022 = 25,215,050. No MEASURE filter needed
+      // (the key is already specific to a single observation per year).
+      dataflowId: ApiConstants.dfHotels,
+      dataflowVersion: ApiConstants.dfHotelsVersion,
+      filter: 'H.NUMBER.AE.A._Z.GHH._T.FCSC',
       startPeriod: '2016',
     ),
     category: 'Economy',
@@ -106,30 +139,26 @@ const _carouselConfigs = <_CarouselEntry>[
     iconBg: AppColors.envGreenTint,
     categoryColor: AppColors.envGreen,
   ),
-  _CarouselEntry(
-    cfg: KpiConfig(
-      id: 'home_gdp',
-      nameEn: 'Yearly GDP',
-      nameAr: 'الناتج المحلي الإجمالي',
-      unitEn: 'AED Mn',
-      unitAr: 'مليون درهم',
-      displayUnit: KpiDisplayUnit.aedMnToTrillions,
-      icon: Icons.trending_up_rounded,
-      // Use GDP Current dataflow — filter for UAE total (_T) annual row
-      dataflowId: ApiConstants.dfGdpCurr,
-      dataflowVersion: ApiConstants.dfGdpCurrVersion,
-      filter: '.A.............',
-      measure: 'GDP_CUR',
-      startPeriod: '2015',
-    ),
-    category: 'Economy',
-    iconColor: AppColors.champagneGold,
-    iconBg: AppColors.royalSand,
-    categoryColor: AppColors.champagneGold,
-  ),
 ];
 
 // ─── Provider ─────────────────────────────────────────────────────────────────
+
+/// Card title with its unit in parentheses, e.g. "Yearly GDP (AED)" /
+/// "Renewable (GWh)". The unit lives ONLY in the title — the value below is
+/// the bare scaled number (e.g. "2.03T", "5.68K"), never repeated with a unit.
+String _titleWithUnit(String id, String name) => switch (id) {
+      'home_gdp' => 'GDP',
+      'home_renewable' => 'Renewables',
+      _ => name,
+    };
+
+/// Small unit suffix shown next to the value (e.g. "5.68K GWh"). Only used
+/// where the unit reads better beside the figure than in the title.
+String _valueUnit(String id) => switch (id) {
+      'home_renewable' => 'GWh',
+      'home_gdp' => 'AED',
+      _ => '',
+    };
 
 final homeCarouselProvider = FutureProvider<List<HomeKpiItem>>((ref) async {
   final svc = ref.read(kpiSdmxServiceProvider);
@@ -144,8 +173,11 @@ final homeCarouselProvider = FutureProvider<List<HomeKpiItem>>((ref) async {
 
     return HomeKpiItem(
       category: c.category,
-      label: c.cfg.nameEn,
+      label: _titleWithUnit(c.cfg.id, c.cfg.nameEn),
+      // Bare value — unit is shown in the title, or beside the value via
+      // [valueUnit] (e.g. Renewables → "5.68K GWh").
       displayValue: card.displayValue,
+      valueUnit: _valueUnit(c.cfg.id),
       year: card.year,
       icon: c.cfg.icon,
       iconColor: c.iconColor,

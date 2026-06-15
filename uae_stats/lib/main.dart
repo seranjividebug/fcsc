@@ -26,13 +26,15 @@ Future<void> main() async {
 
   // ─── Hive (local cache) ───────────────────────────────────────────────────
   await Hive.initFlutter();
-  await Hive.openBox<String>('indicator_cache');
+  // Versioned cache box — bumping the name (see LocalCache.boxName) abandons
+  // all previously-cached entries after a data-shape change.
+  await Hive.openBox<String>('indicator_cache_v10');
   await Hive.openBox('kpi_cache');
   await Hive.openBox<String>('bookmarks'); // saved indicator IDs (insertion order)
 
   // Clear stale cache for education & health IDs so they always re-fetch
   // (previously cached zero-values caused persistent empty display)
-  final indicatorBox = Hive.box<String>('indicator_cache');
+  final indicatorBox = Hive.box<String>('indicator_cache_v10');
   const staleCacheIds = [
     'indicator_student_enrolment', 'indicator_student_enrolment_meta',
     'indicator_teaching_staff',    'indicator_teaching_staff_meta',

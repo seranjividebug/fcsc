@@ -1,11 +1,272 @@
 [
-  { "timePeriod": "2022", "value": 1624057.0, "measure": "GENERAL", "refArea": "AE", "gender": "_T", "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2023", "value": 1747827.0, "measure": "GENERAL", "refArea": "AE", "gender": "_T", "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2024", "value": 1811145.0, "measure": "GENERAL", "refArea": "AE", "gender": "_T", "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2022", "value": 819934.0,  "measure": "GENERAL", "refArea": "AE", "gender": "M",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2023", "value": 881635.0,  "measure": "GENERAL", "refArea": "AE", "gender": "M",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2024", "value": 920804.0,  "measure": "GENERAL", "refArea": "AE", "gender": "M",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2022", "value": 804123.0,  "measure": "GENERAL", "refArea": "AE", "gender": "F",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2023", "value": 866192.0,  "measure": "GENERAL", "refArea": "AE", "gender": "F",  "unitMeasure": "STU", "sourceDetail": "FCSC" },
-  { "timePeriod": "2024", "value": 890341.0,  "measure": "GENERAL", "refArea": "AE", "gender": "F",  "unitMeasure": "STU", "sourceDetail": "FCSC" }
+  {
+    "timePeriod": "2024",
+    "value": 1811145.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 920804.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 890341.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 57597.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "NURS",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 30110.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "NURS",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 27487.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "NURS",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 244467.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "KG",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 119159.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "KG",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 125308.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "KG",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 586477.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "CYC1",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 293701.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "CYC1",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 292776.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "CYC1",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 482614.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "CYC2",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 242864.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "CYC2",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 239750.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "CYC2",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 411688.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "SEC",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 221135.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "SEC",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 190553.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "SEC",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 28302.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "VOC",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 13835.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "VOC",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 14467.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "VOC",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 1624057.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 825671.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 798386.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 1747827.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 888595.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 859232.0,
+    "measure": "GENERAL",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "_T",
+    "unitMeasure": "STU",
+    "sourceDetail": "FCSC"
+  }
 ]

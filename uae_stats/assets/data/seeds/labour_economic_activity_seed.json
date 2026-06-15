@@ -1,17 +1,672 @@
 [
-  { "timePeriod": "2015", "value": 5134000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2016", "value": 5289000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2017", "value": 5456000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2018", "value": 5612000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 5801000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 5643000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 5789000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 6021000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 6234000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2015", "value": 3912000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 4418000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 4756000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2015", "value": 1222000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 1383000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 1478000.0, "measure": "ECON_ACT", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" }
+  {
+    "timePeriod": "2024",
+    "value": 1.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "A",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.4,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "A",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.0,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "A",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "B",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "B",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "B",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 10.0,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "C",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 11.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "C",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "C",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "D",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "D",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.3,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "D",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.0,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "E",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.1,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "E",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "E",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 21.4,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "F",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 25.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "F",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "F",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 13.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "G",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 14.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "G",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 8.9,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "G",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 5.3,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "H",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 5.9,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "H",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "H",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "I",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "I",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "I",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.3,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "J",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "J",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "J",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "K",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.3,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "K",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "K",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "L",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.0,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "L",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.9,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "L",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "M",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "M",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 5.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "M",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 9.3,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "N",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 9.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "N",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 7.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "N",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "O",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "O",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "O",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "P",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.3,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "P",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 8.4,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "P",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2.4,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "Q",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "Q",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 7.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "Q",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.7,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "R",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "R",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.4,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "R",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "S",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "S",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "S",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 7.9,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "X1",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.1,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "X1",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 29.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "X1",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.0,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "X2",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.0,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "X2",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.1,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "X2",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.5,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "X3",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.6,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "M",
+    "level": "X3",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.2,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "F",
+    "level": "X3",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 20.8,
+    "measure": "ECON_ACT",
+    "refArea": "AE",
+    "gender": "_T",
+    "level": "F",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  }
 ]

@@ -18,6 +18,7 @@ class DataPoint {
     this.obsStatus,
     this.level,
     this.ageGroup,
+    this.categoryLabel,
   });
 
   /// The year or period string, e.g. "2024", "2024-Q1".
@@ -53,6 +54,11 @@ class DataPoint {
   /// "25-29", "Y_GE65". Null when not applicable.
   final String? ageGroup;
 
+  /// Optional human-readable category name resolved from the SDMX structure
+  /// (e.g. the MEASURE/sector display name for Quarterly GDP). Used to label
+  /// breakdown bars without a hardcoded code→name table. Null when not set.
+  final String? categoryLabel;
+
   // ─── Convenience getters ──────────────────────────────────────────────────
 
   /// True if this observation represents the UAE national total
@@ -83,6 +89,8 @@ class DataPoint {
       unitMeasure: json['unitMeasure'] as String?,
       level: json['level'] as String?,
       ageGroup: json['ageGroup'] as String?,
+      categoryLabel: json['categoryLabel'] as String?,
+      obsStatus: json['obsStatus'] as String?,
     );
   }
 
@@ -112,7 +120,11 @@ class DataPoint {
       obsStatus: obsStatus,
       // 'level' doubles as the generic single-category breakdown dimension:
       // education level (DF_LFEP_ED) or economic-activity sector (DF_LFEP_ECON).
-      level: dimMap['EDUCATION'] ??
+      level: dimMap['MR_TYPE'] ??       // DF_MR_NA marriage couple-type
+          dimMap['DV_TYPE'] ??          // DF_DV_NA divorce couple-type
+          dimMap['EDU_CYC'] ??          // DF_EDU_STUD education cycle/level
+          dimMap['SECTOR'] ??           // DF_HEALTH_FACILITIES Govt/Private sector
+          dimMap['EDUCATION'] ??
           dimMap['ECON_ACTIV'] ??       // DF_LFEP_ECON economic-activity sector
           dimMap['EMP_SECTOR'] ??       // DF_LFEP_SECT employment sector
           dimMap['OCCUPATION'] ??       // DF_LFEP_OCC occupation group
@@ -121,6 +133,8 @@ class DataPoint {
           dimMap['GEN_TYPE'] ??         // DF_GEN_TYPE generator type
           dimMap['PLANT_TYPE'] ??       // DF_RE renewable plant type
           dimMap['OG_SECTOR'] ??        // DF_CO crude-oil sector (RE/EX/IM/PR)
+          dimMap['ISIC'] ??             // DF_NA_ISIC_* GDP economic-activity sector
+          dimMap['HS_SECTION'] ??       // DF_TRADE_* HS commodity section
           dimMap['NR_TYPE'] ??          // DF_NR reserve type (MRN/TRS/RAM)
           dimMap['ECONOMIC_ACTIVITY'] ??
           dimMap['EDUCATION_LEVEL'] ??
@@ -155,6 +169,7 @@ class DataPoint {
         if (obsStatus != null) 'obsStatus': obsStatus,
         if (level != null) 'level': level,
         if (ageGroup != null) 'ageGroup': ageGroup,
+        if (categoryLabel != null) 'categoryLabel': categoryLabel,
       };
 
   factory DataPoint.fromJson(Map<String, dynamic> json) =>
@@ -173,6 +188,7 @@ class DataPoint {
     String? obsStatus,
     String? level,
     String? ageGroup,
+    String? categoryLabel,
   }) {
     return DataPoint(
       timePeriod: timePeriod ?? this.timePeriod,
@@ -185,6 +201,7 @@ class DataPoint {
       obsStatus: obsStatus ?? this.obsStatus,
       level: level ?? this.level,
       ageGroup: ageGroup ?? this.ageGroup,
+      categoryLabel: categoryLabel ?? this.categoryLabel,
     );
   }
 

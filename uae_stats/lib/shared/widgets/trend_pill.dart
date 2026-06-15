@@ -61,8 +61,10 @@ class TrendPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_icon, size: iconSize, color: _fgColor),
-          const SizedBox(width: 2),
+          if (_direction != TrendDirection.flat) ...[
+            Icon(_icon, size: iconSize, color: _fgColor),
+            const SizedBox(width: 2),
+          ],
           Text(
             NumberFormatter.percentNoSign(value),
             style: TextStyle(
@@ -84,14 +86,37 @@ class HeroTrendPill extends StatelessWidget {
     super.key,
     required this.value,
     required this.vsLabel,
+    this.pointDelta = false,
   });
 
   final double value;
   final String vsLabel;
 
+  /// When true, renders a percentage-POINT delta ("+10.3 pp") instead of a
+  /// percent change ("+10.3%").
+  final bool pointDelta;
+
+  /// Value snapped to 0 when it would round to 0.0 at one decimal — avoids a
+  /// misleading "−0.0%" / "+0.0%" when there is effectively no change.
+  double get _rounded {
+    final r = double.parse(value.toStringAsFixed(1));
+    return r == 0 ? 0.0 : r;
+  }
+
+  String get _text {
+    final v = _rounded;
+    final sign = v > 0 ? '+' : (v < 0 ? '−' : '');
+    if (pointDelta) {
+      return '$sign${v.abs().toStringAsFixed(1)} pp';
+    }
+    if (v == 0) return '0.0%';
+    return NumberFormatter.percent(v);
+  }
+
   TrendDirection get _direction {
-    if (value > 0) return TrendDirection.up;
-    if (value < 0) return TrendDirection.down;
+    final v = _rounded;
+    if (v > 0) return TrendDirection.up;
+    if (v < 0) return TrendDirection.down;
     return TrendDirection.flat;
   }
 
@@ -101,35 +126,54 @@ class HeroTrendPill extends StatelessWidget {
         TrendDirection.flat => Icons.remove_rounded,
       };
 
+  // Solid light pill (green / red / grey) with strong colored text + arrow —
+  // a clean, high-contrast badge that reads on the dark hero. Up = green,
+  // Down = red, Flat = grey.
+  Color get _bg => switch (_direction) {
+        TrendDirection.up => const Color(0xFFE7F8EF),   // light green
+        TrendDirection.down => const Color(0xFFFDECEC), // light red/pink
+        TrendDirection.flat => const Color(0xFFEFF1F4), // light grey
+      };
+
+  Color get _fg => switch (_direction) {
+        TrendDirection.up => const Color(0xFF059669),   // green
+        TrendDirection.down => const Color(0xFFDC2626), // red
+        TrendDirection.flat => AppColors.slate600,
+      };
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
+        color: _bg,
         borderRadius: BorderRadius.circular(999),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(_icon, size: 14, color: AppColors.white),
-          const SizedBox(width: 4),
+          // No arrow/dash glyph when flat — a "−" before "0.0%" misreads as a
+          // negative value when there is no change.
+          if (_direction != TrendDirection.flat) ...[
+            Icon(_icon, size: 14, color: _fg),
+            const SizedBox(width: 4),
+          ],
           Text(
-            NumberFormatter.percent(value),
-            style: const TextStyle(
+            _text,
+            style: TextStyle(
               fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.white,
-              fontFeatures: [FontFeature.tabularFigures()],
+              fontWeight: FontWeight.w700,
+              color: _fg,
+              fontFeatures: const [FontFeature.tabularFigures()],
             ),
           ),
           const SizedBox(width: 6),
           Text(
             vsLabel,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: AppColors.white.withValues(alpha: 0.7),
+              color: AppColors.slate400,
             ),
           ),
         ],

@@ -1,11 +1,273 @@
 [
-  { "timePeriod": "2016", "value": 1034.9, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2017", "value": 1034.9, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2018", "value": 1034.9, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 1122.2, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 1122.6, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 1145.0, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 1127.4, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 1182.7, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" },
-  { "timePeriod": "2024", "value": 1185.9, "measure": "LAND_TOTAL", "refArea": "AE", "gender": "_T", "unitMeasure": "K_DONUM", "sourceDetail": "FCSA" }
+ {
+  "timePeriod": "2016",
+  "value": 1034.9,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2017",
+  "value": 1034.9,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2018",
+  "value": 1034.9,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2019",
+  "value": 1122.2,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 1122.6,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2021",
+  "value": 1145.0,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2022",
+  "value": 1127.4,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 1182.7,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 1185.9,
+  "measure": "LAND_TOTAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "K_DONUM",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 69.8,
+  "measure": "LAND_AD_SHARE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "categoryLabel": null,
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 414000.0,
+  "measure": "LAND_FRUIT",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": null,
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 49.4,
+  "measure": "LAND_PROD_SHARE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "categoryLabel": null,
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 827300.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Abu Dhabi",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 109800.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Ras Al Khaimah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 96100.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Sharjah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 59100.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Dubai",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 53000.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fujairah",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 27200.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Ajman",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 13400.0,
+  "measure": "LAND_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Umm Al Quwain",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 414200.0,
+  "measure": "LAND_USE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fallow Land",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 414000.0,
+  "measure": "LAND_USE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fruit Trees",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 185400.0,
+  "measure": "LAND_USE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Other Land Use",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 85100.0,
+  "measure": "LAND_USE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Field Crops",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 63100.0,
+  "measure": "LAND_USE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Vegetables",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 24000.0,
+  "measure": "LAND_USE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Forest Trees",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 586300.0,
+  "measure": "LAND_COVER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Productive Land",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 414200.0,
+  "measure": "LAND_COVER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fallow / Resting",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 185400.0,
+  "measure": "LAND_COVER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Other Uses",
+  "sourceDetail": "FCSA"
+ }
 ]

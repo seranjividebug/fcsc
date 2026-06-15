@@ -5,5 +5,14 @@
   { "timePeriod": "2019", "value": 27138846.0, "measure": "HTL_ARR", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
   { "timePeriod": "2020", "value": 14882258.0, "measure": "HTL_ARR", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
   { "timePeriod": "2021", "value": 19237022.0, "measure": "HTL_ARR", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 25215050.0, "measure": "HTL_ARR", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" }
+  { "timePeriod": "2022", "value": 25215050.0, "measure": "HTL_ARR", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 6421263.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "Asian Countries", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 5951182.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "European Countries", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 4300096.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "UAE Nationals", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 3068284.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "Arab Countries", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 2708149.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "GCC Countries", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 1368213.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "American Countries", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 1120562.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "African Countries", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 266768.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "Oceania", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" },
+  { "timePeriod": "2022", "value": 10533.0, "measure": "HTL_ARR_NAT", "refArea": "AE", "gender": "_T", "categoryLabel": "Other", "unitMeasure": "GUESTS", "sourceDetail": "FCSA" }
 ]

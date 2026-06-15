@@ -41,8 +41,10 @@ const _gdpYearly = KpiConfig(
   id: 'gdp_yearly',
   nameEn: 'Yearly GDP',
   nameAr: 'الناتج المحلي الإجمالي السنوي',
-  unitEn: 'AED Mn',
-  unitAr: 'مليون درهم',
+  // Value auto-scales to Trillions (e.g. "2.03T"); the unit overline must be
+  // just the currency, not "AED Mn", to avoid a unit/value contradiction.
+  unitEn: 'AED',
+  unitAr: 'درهم',
   displayUnit: KpiDisplayUnit.aedMnToTrillions,
   icon: Icons.account_balance_outlined,
   dataflowId: ApiConstants.dfGdpCurr,
@@ -71,7 +73,9 @@ const _totalTrade = KpiConfig(
   nameAr: 'إجمالي التجارة',
   unitEn: 'AED',
   unitAr: 'درهم',
-  displayUnit: KpiDisplayUnit.aedTrillions,
+  // Seed/API values are in AED Millions → use the Mn→Trillions scaler so
+  // 1,527,810 Mn renders as "1.53T", not "1.53M".
+  displayUnit: KpiDisplayUnit.aedMnToTrillions,
   icon: Icons.swap_horiz_rounded,
   dataflowId: ApiConstants.dfTradeHs,
   dataflowVersion: ApiConstants.dfTradeHsVersion,
@@ -84,7 +88,7 @@ const _import = KpiConfig(
   nameAr: 'الواردات',
   unitEn: 'AED',
   unitAr: 'درهم',
-  displayUnit: KpiDisplayUnit.aedTrillions,
+  displayUnit: KpiDisplayUnit.aedMnToTrillions,
   icon: Icons.store_outlined,
   dataflowId: ApiConstants.dfTradeHs,
   dataflowVersion: ApiConstants.dfTradeHsVersion,
@@ -98,7 +102,7 @@ const _nonOilExports = KpiConfig(
   nameAr: 'الصادرات غير النفطية',
   unitEn: 'AED',
   unitAr: 'درهم',
-  displayUnit: KpiDisplayUnit.aedTrillions,
+  displayUnit: KpiDisplayUnit.aedMnToTrillions,
   icon: Icons.local_shipping_outlined,
   dataflowId: ApiConstants.dfTradeHs,
   dataflowVersion: ApiConstants.dfTradeHsVersion,
@@ -112,7 +116,7 @@ const _reExport = KpiConfig(
   nameAr: 'إعادة التصدير',
   unitEn: 'AED',
   unitAr: 'درهم',
-  displayUnit: KpiDisplayUnit.aedTrillions,
+  displayUnit: KpiDisplayUnit.aedMnToTrillions,
   icon: Icons.compare_arrows_rounded,
   dataflowId: ApiConstants.dfTradeHs,
   dataflowVersion: ApiConstants.dfTradeHsVersion,
@@ -150,8 +154,8 @@ const _hotelEstablishments = KpiConfig(
 
 const _hotelGuestArrivals = KpiConfig(
   id: 'hotel_guest_arrivals',
-  nameEn: 'Hotel Guest Arrivals',
-  nameAr: 'وصول نزلاء الفنادق',
+  nameEn: 'Guest Arrivals',
+  nameAr: 'وصول الضيوف',
   unitEn: 'Persons',
   unitAr: 'أشخاص',
   displayUnit: KpiDisplayUnit.millions,
@@ -174,21 +178,6 @@ const _passengerTraffic = KpiConfig(
   dataflowVersion: ApiConstants.dfAirVersion,
   filter: '.A....',
   measure: 'ACFT_MOV',
-  startPeriod: '2016',
-);
-
-const _aircraftMovements = KpiConfig(
-  id: 'aircraft_movements',
-  nameEn: 'Aircraft Movements',
-  nameAr: 'حركة الطائرات',
-  unitEn: 'Flights',
-  unitAr: 'رحلة',
-  displayUnit: KpiDisplayUnit.millions,
-  icon: Icons.flight_takeoff_outlined,
-  dataflowId: ApiConstants.dfAir,
-  dataflowVersion: ApiConstants.dfAirVersion,
-  filter: '.A....',
-  measure: 'MOVEMENTS',
   startPeriod: '2016',
 );
 
@@ -221,20 +210,6 @@ const _population = KpiConfig(
   dataflowVersion: ApiConstants.dfPopulationVersion,
   filter: '....A..',
   measure: 'POP',
-);
-
-const _populationGrowth = KpiConfig(
-  id: 'population_growth',
-  nameEn: 'Population Growth',
-  nameAr: 'النمو السكاني',
-  unitEn: '%',
-  unitAr: '٪',
-  displayUnit: KpiDisplayUnit.percent,
-  icon: Icons.trending_up_rounded,
-  dataflowId: ApiConstants.dfPopulation,
-  dataflowVersion: ApiConstants.dfPopulationVersion,
-  filter: '....A..',
-  measure: 'POPGWTH',
 );
 
 const _marriages = KpiConfig(
@@ -283,8 +258,8 @@ const _generalEducation = KpiConfig(
 
 const _higherEducation = KpiConfig(
   id: 'higher_education_v2',
-  nameEn: 'Higher Education',
-  nameAr: 'التعليم العالي',
+  nameEn: 'Students by Level',
+  nameAr: 'الطلاب حسب المستوى',
   unitEn: 'Students',
   unitAr: 'طالب',
   displayUnit: KpiDisplayUnit.millions,
@@ -462,29 +437,39 @@ const _renewableEnergy = KpiConfig(
   startPeriod: '2015',
 );
 
-const _crudeOilProduction = KpiConfig(
-  id: 'crude_oil_production',
-  nameEn: 'Crude Oil Production',
-  nameAr: 'إنتاج النفط الخام',
-  unitEn: '1000 b/d',
-  unitAr: 'ألف ب/ي',
-  displayUnit: KpiDisplayUnit.thousands,
-  icon: Icons.local_gas_station,
-  dataflowId: ApiConstants.dfOilGas,
-  dataflowVersion: ApiConstants.dfOilGasVersion,
-  filter: '..A',
-  measure: 'CRUDE_OIL',
-);
-
 // ─── Provider helpers ─────────────────────────────────────────────────────────
 
 /// IDs whose raw API value is a CPI index — display value must be YoY % change.
 const _cpiIds = {'home_inflation', 'inflation_rate'};
 
+/// IDs that resolve from their bundled seed FIRST. The live release API for
+/// these either returns multi-row slices the KPI parser can't disambiguate
+/// (so the card shows a wrong partial value / bad trend, e.g. General Education
+/// −86%) or is Cloudflare/CORS-blocked on web (so the card is blank "—"). The
+/// seeds carry verified FCSC national totals, so prefer them for a correct,
+/// stable card; the live path remains the fallback for everything else.
+const _seedPreferredIds = {
+  'gdp_yearly', 'home_gdp', 'gdp_quarterly',
+  'general_education_v2', 'higher_education_v2',
+  'marriages', 'divorces',
+  'total_trade', 'import', 'non_oil_exports', 're_export',
+  'hotel_establishments', 'hotel_guest_arrivals',
+  'passenger_traffic_v2', 'cargo_traffic',
+  'total_crop_area', 'livestock', 'rainfall',
+  'desalinated_water', 'natural_reserves', 'electricity',
+};
+
 Future<KpiCardData> _resolve(KpiConfig cfg, KpiSdmxService svc) async {
-  // For GDP indicators, go directly to seed (API returns multi-sector rows
-  // that don't filter correctly through the KPI series parser)
-  if (cfg.id == 'gdp_yearly' || cfg.id == 'home_gdp' || cfg.id == 'gdp_quarterly') {
+  // CPI cards: prefer the verified annual seed so the YoY inflation value and
+  // its sparkline trajectory are stable (the live slice can be too thin to draw
+  // a line — see the missing-trajectory bug).
+  if (_cpiIds.contains(cfg.id)) {
+    final cpiSeed = await _resolveCpiSeed(cfg);
+    if (cpiSeed != null) return cpiSeed;
+  }
+  // Seed-preferred indicators: use the verified bundled seed before the live
+  // API (see [_seedPreferredIds]).
+  if (_seedPreferredIds.contains(cfg.id)) {
     final seed = await _resolveSeed(cfg);
     if (seed != null) return seed;
   }
@@ -541,6 +526,36 @@ Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
     // Home-carousel Aircraft Movements — seed fallback when live API/CORS fails.
     'home_air_passengers_v2' => 'assets/data/seeds/aircraft_movement_seed.json',
     'aircraft_movement'      => 'assets/data/seeds/aircraft_movement_seed.json',
+    // ── Section KPI cards — seed fallback so cards never show "—" when the
+    //    live release API is Cloudflare-blocked / CORS-fails (esp. on web). ──
+    // Demography · Education (live API returns a partial slice → −86% glitch;
+    // pin the national-total enrolment seed: ~1.81M students, healthy trend).
+    'general_education_v2'   => 'assets/data/seeds/student_enrolment_seed.json',
+    'higher_education_v2'    => 'assets/data/seeds/higher_education_seed.json',
+    // Demography · Vitals
+    'marriages'              => 'assets/data/seeds/marriages_seed.json',
+    'divorces'               => 'assets/data/seeds/divorces_seed.json',
+    // Demography · Labour Force (live API often CORS-blocked → seed fallback)
+    'labour_force'           => 'assets/data/seeds/labour_force_seed.json',
+    'unemployment_rate'      => 'assets/data/seeds/unemployment_rate_seed.json',
+    // Economy · International Trade (values in AED Millions)
+    'total_trade'            => 'assets/data/seeds/trade_total_seed.json',
+    'import'                 => 'assets/data/seeds/trade_imports_hs_seed.json',
+    'non_oil_exports'        => 'assets/data/seeds/trade_non_oil_exports_seed.json',
+    're_export'              => 'assets/data/seeds/trade_reexports_annual_seed.json',
+    // Economy · Tourism
+    'hotel_establishments'   => 'assets/data/seeds/tourism_hotel_establishments_seed.json',
+    'hotel_guest_arrivals'   => 'assets/data/seeds/tourism_hotel_arrivals_seed.json',
+    // Economy · Air Transport
+    'passenger_traffic_v2'   => 'assets/data/seeds/aircraft_movement_seed.json',
+    'cargo_traffic'          => 'assets/data/seeds/cargo_traffic_seed.json',
+    // Environment · Agriculture / Ecology / Energy
+    'total_crop_area'        => 'assets/data/seeds/crop_area_seed.json',
+    'livestock'              => 'assets/data/seeds/livestock_seed.json',
+    'rainfall'               => 'assets/data/seeds/rainfall_seed.json',
+    'desalinated_water'      => 'assets/data/seeds/desalinated_water_seed.json',
+    'natural_reserves'       => 'assets/data/seeds/natural_reserves_seed.json',
+    'electricity'            => 'assets/data/seeds/electricity_seed.json',
     _ => null,
   };
   if (seedPath == null) return null;
@@ -548,11 +563,61 @@ Future<KpiCardData?> _resolveSeed(KpiConfig cfg) async {
   try {
     final raw = await rootBundle.loadString(seedPath);
     final rows = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
-    final totals = rows
-        .where((row) =>
-            (row['refArea'] as String?) == 'AE' &&
-            (row['gender'] as String?) == '_T')
-        .toList()
+    // National total only: a row with NO breakdown level (or level == '_T').
+    // GDP/Trade seeds now also carry sector/flow rows (level = ISIC code,
+    // '_TNO', flow code, etc.) — those must NOT be picked as the headline.
+    bool isNationalTotal(Map<String, dynamic> row) {
+      if ((row['refArea'] as String?) != 'AE') return false;
+      // Gender total: accept null (single-gender seeds) or the '_T' sentinel.
+      final gender = row['gender'] as String?;
+      if (gender != null && gender != '_T') return false;
+      // Level total: accept null / '_T', or an explicit total code such as
+      // M_TOT / D_TOT (marriages / divorces). Reject all other sub-levels.
+      const totalLevelCodes = {'_T', 'M_TOT', 'D_TOT', 'TOTAL'};
+      final level = row['level'] as String?;
+      if (level != null && !totalLevelCodes.contains(level)) return false;
+      // Exclude any synthesized breakdown/summary rows (custom measures).
+      final m = (row['measure'] as String?) ?? '';
+      const headlineMeasures = {
+        'GDP_CUR', 'GDP_CON', 'QGDP_CUR', 'QGDP_CON', 'TRADE_TOT', 'IMP_HS',
+        'NON_OIL_EXP', 'TRADE_SEC', 'REEXP_ANN', 'REEXP_MON', 'TOUR_REV',
+        'HTL_ARR', 'HTL_EST', 'ACFT_MOV', 'MEAN_TEMP', 'RAINFALL', 'CPI_ANN',
+      };
+      // If the seed uses a known headline measure, require it; otherwise accept
+      // (covers seeds with a single measure and no breakdown rows).
+      if (headlineMeasures.contains(m)) return true;
+      // Reject obvious breakdown measures (prefixed families).
+      if (m.startsWith('TRADE_IMP_') ||
+          m.startsWith('TRADE_EXP_') ||
+          m.startsWith('EXP_') ||
+          m.startsWith('MRE_') ||
+          m.startsWith('TM_') ||
+          m.startsWith('MT_') ||
+          m.startsWith('RF_') ||
+          m.startsWith('NR_') ||
+          m.startsWith('RW_') ||
+          m.startsWith('GC_') ||
+          m.startsWith('ELEC_') ||
+          m.startsWith('CROP_EMIRATE') ||
+          m.startsWith('CROP_TYPE') ||
+          m.startsWith('CROP_BYAREA') ||
+          m.startsWith('CROP_FARM') ||
+          m.startsWith('LAND_EMIRATE') ||
+          m.startsWith('LAND_USE') ||
+          m.startsWith('LAND_COVER') ||
+          m.startsWith('LAND_AD_SHARE') ||
+          m.startsWith('LAND_FRUIT') ||
+          m.startsWith('LAND_PROD_SHARE') ||
+          m.startsWith('CPI_DIV_') ||
+          m.startsWith('TRADE_FLOW') ||
+          m.startsWith('QGDP_CON_Q') ||
+          m.startsWith('QGDP_CUR_Q')) {
+        return false;
+      }
+      return true;
+    }
+
+    final totals = rows.where(isNationalTotal).toList()
       ..sort((a, b) =>
           (a['timePeriod'] as String).compareTo(b['timePeriod'] as String));
     if (totals.isEmpty) return null;
@@ -627,10 +692,12 @@ Future<KpiCardData?> _resolveCpiSeed(KpiConfig cfg) async {
   try {
     final raw  = await rootBundle.loadString(seedPath);
     final rows = (jsonDecode(raw) as List).cast<Map<String, dynamic>>();
+    // All-Items CPI series only — exclude the per-division rows (CPI_DIV_*).
     final totals = rows
         .where((r) =>
             (r['refArea'] as String?) == 'AE' &&
-            (r['gender'] as String?) == '_T')
+            (r['gender'] as String?) == '_T' &&
+            (r['measure'] as String?) == 'CPI_ANN')
         .toList()
       ..sort((a, b) =>
           (a['timePeriod'] as String).compareTo(b['timePeriod'] as String));
@@ -688,7 +755,6 @@ final economyKpisProvider =
     _resolve(_hotelEstablishments, svc),
     _resolve(_hotelGuestArrivals, svc),
     _resolve(_passengerTraffic, svc),
-    _resolve(_aircraftMovements, svc),
     _resolve(_cargoTraffic, svc),
   ]);
 
@@ -716,7 +782,7 @@ final economyKpisProvider =
     KpiSectionGroup(
       titleEn: 'Air Transport',
       titleAr: 'النقل الجوي',
-      cards: [results[9], results[10], results[11]],
+      cards: [results[9], results[10]],
     ),
   ];
 });
@@ -727,9 +793,10 @@ final demographyKpisProvider =
     FutureProvider<List<KpiSectionGroup>>((ref) async {
   final svc = ref.read(kpiSdmxServiceProvider);
 
+  // Population sub-category shows a single dataset (Population). The
+  // Population Growth card was removed per product decision.
   final results = await Future.wait([
     _resolve(_population, svc),
-    _resolve(_populationGrowth, svc),
     _resolve(_marriages, svc),
     _resolve(_divorces, svc),
     _resolve(_generalEducation, svc),
@@ -744,27 +811,27 @@ final demographyKpisProvider =
     KpiSectionGroup(
       titleEn: 'Population',
       titleAr: 'السكان',
-      cards: [results[0], results[1]],
+      cards: [results[0]],
     ),
     KpiSectionGroup(
       titleEn: 'Vital Statistics',
       titleAr: 'الإحصاءات الحيوية',
-      cards: [results[2], results[3]],
+      cards: [results[1], results[2]],
     ),
     KpiSectionGroup(
       titleEn: 'Education',
       titleAr: 'التعليم',
-      cards: [results[4], results[5]],
+      cards: [results[3], results[4]],
     ),
     KpiSectionGroup(
       titleEn: 'Health',
       titleAr: 'الصحة',
-      cards: [results[6], results[7]],
+      cards: [results[5], results[6]],
     ),
     KpiSectionGroup(
       titleEn: 'Labour Force',
       titleAr: 'القوى العاملة',
-      cards: [results[8], results[9]],
+      cards: [results[7], results[8]],
     ),
   ];
 });
@@ -784,7 +851,6 @@ final environmentKpisProvider =
     _resolve(_naturalReserves, svc),
     _resolve(_electricity, svc),
     _resolve(_renewableEnergy, svc),
-    _resolve(_crudeOilProduction, svc),
   ]);
 
   return [
@@ -801,7 +867,7 @@ final environmentKpisProvider =
     KpiSectionGroup(
       titleEn: 'Energy',
       titleAr: 'الطاقة',
-      cards: [results[6], results[7], results[8]],
+      cards: [results[6], results[7]],
     ),
   ];
 });

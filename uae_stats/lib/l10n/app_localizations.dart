@@ -113,13 +113,13 @@ abstract class AppLocalizations {
   /// No description provided for @fcscNameEn.
   ///
   /// In en, this message translates to:
-  /// **'Federal Competitiveness and Statistics Authority'**
+  /// **'Federal Competitiveness and Statistics Centre'**
   String get fcscNameEn;
 
   /// No description provided for @fcscNameAr.
   ///
   /// In en, this message translates to:
-  /// **'الهيئة الاتحادية للتنافسية والإحصاء'**
+  /// **'المركز الاتحادي للتنافسية والإحصاء'**
   String get fcscNameAr;
 
   /// No description provided for @splashTaglineEn.
@@ -551,7 +551,7 @@ abstract class AppLocalizations {
   /// No description provided for @popSource.
   ///
   /// In en, this message translates to:
-  /// **'Federal Competitiveness and Statistics Authority'**
+  /// **'Federal Competitiveness and Statistics Centre'**
   String get popSource;
 
   /// No description provided for @annualFrequency.

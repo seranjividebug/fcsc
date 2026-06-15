@@ -19,6 +19,19 @@ abstract final class NumberFormatter {
     return value.toStringAsFixed(0);
   }
 
+  /// Compact axis-tick label — ALWAYS uses K/M/B notation so chart axis
+  /// labels never wrap or clip on narrow mobile screens.
+  /// e.g. 9000 → "9K"  |  9500 → "9.5K"  |  105000 → "105K"  |  2.03e6 → "2M"
+  static String axisTick(double value) {
+    final v = value.abs();
+    String trim(double d) =>
+        d == d.roundToDouble() ? d.toInt().toString() : d.toStringAsFixed(1);
+    if (v >= 1e9) return '${trim(value / 1e9)}B';
+    if (v >= 1e6) return '${trim(value / 1e6)}M';
+    if (v >= 1e3) return '${trim(value / 1e3)}K';
+    return value.toStringAsFixed(0);
+  }
+
   /// For population: 9861007 → "9.86M" or full "9,861,007"
   static String population(double value, {String locale = 'en'}) {
     if (value >= 1e6) {

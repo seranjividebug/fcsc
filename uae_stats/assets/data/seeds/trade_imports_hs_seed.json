@@ -1,10 +1,300 @@
 [
-  { "timePeriod": "2017", "value": 946470.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2018", "value": 898480.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 914850.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 785110.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 991630.0,  "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 1215950.0, "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 1439030.0, "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" },
-  { "timePeriod": "2024", "value": 1633046.0, "measure": "IMP_HS", "refArea": "AE", "gender": "_T", "unitMeasure": "AED_MN", "sourceDetail": "FCSA" }
+ {
+  "timePeriod": "2017",
+  "value": 946470.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2018",
+  "value": 898480.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2019",
+  "value": 914850.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 785110.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2021",
+  "value": 991630.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2022",
+  "value": 1215950.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 1439030.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 1633046.0,
+  "measure": "IMP_HS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 421900.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "14",
+  "categoryLabel": "Pearls & Precious Metals",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 381551.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "16",
+  "categoryLabel": "Machinery & Electronics",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 142946.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "17",
+  "categoryLabel": "Vehicles of Transport",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 86312.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "5",
+  "categoryLabel": "Mineral Products",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 73315.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "15",
+  "categoryLabel": "Base Metals & Articles",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 78834.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "6",
+  "categoryLabel": "Chemicals & Allied Ind.",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 33788.0,
+  "measure": "TRADE_IMP_SEC",
+  "refArea": "AE",
+  "gender": "_T",
+  "level": "4",
+  "categoryLabel": "Foodstuffs & Beverages",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 308410.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "China",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 121600.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "India",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 96700.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "United States",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 71260.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Turkey",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 58620.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Japan",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 47780.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Switzerland",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 44120.0,
+  "measure": "TRADE_IMP_SUP",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Italy",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 404200.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "East Asia",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 309400.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Europe",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 184900.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Middle East",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 136800.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Africa",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 135700.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "South Asia",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 132700.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "Americas",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 102300.0,
+  "measure": "TRADE_IMP_REG",
+  "refArea": "AE",
+  "gender": "_T",
+  "categoryLabel": "SE Asia",
+  "unitMeasure": "AED_MN",
+  "sourceDetail": "FCSA"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 180.0,
+  "measure": "TRADE_IMP_PARTNERS",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "COUNT",
+  "sourceDetail": "FCSA"
+ }
 ]

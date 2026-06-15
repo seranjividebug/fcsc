@@ -1,0 +1,282 @@
+[
+ {
+  "timePeriod": "2015",
+  "value": 108947.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2016",
+  "value": 110645.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2017",
+  "value": 114485.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2018",
+  "value": 116389.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2019",
+  "value": 119941.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 118223.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2021",
+  "value": 129028.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2022",
+  "value": 134606.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 146182.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 155279.0,
+  "measure": "CONSUMPTION",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 63084.0,
+  "measure": "ELEC_COMMERCIAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": null,
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 48244.0,
+  "measure": "ELEC_RESIDENTIAL",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": null,
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 43.8,
+  "measure": "ELEC_AD_SHARE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "PCT",
+  "categoryLabel": null,
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 64000.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Abu Dhabi",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 50400.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Dubai",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 13994.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Sharjah",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 5508.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Ras Al Khaimah",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 5207.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Ajman",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 3685.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Fujairah",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 1785.0,
+  "measure": "ELEC_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Umm Al Quwain",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 51172.0,
+  "measure": "ELEC_SECTOR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Commercial",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 42941.0,
+  "measure": "ELEC_SECTOR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Residential",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 24591.0,
+  "measure": "ELEC_SECTOR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Ind. & Other",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 10324.0,
+  "measure": "ELEC_SECTOR",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Governmental",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 63084.0,
+  "measure": "ELEC_CONSUMER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Commercial",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 48244.0,
+  "measure": "ELEC_CONSUMER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Residential",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 22073.0,
+  "measure": "ELEC_CONSUMER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Gov. & Other",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 11050.0,
+  "measure": "ELEC_CONSUMER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Industrial",
+  "sourceDetail": "MEI"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 3601.0,
+  "measure": "ELEC_CONSUMER",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "GWH",
+  "categoryLabel": "Agriculture",
+  "sourceDetail": "MEI"
+ }
+]

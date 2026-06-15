@@ -1,0 +1,9 @@
+[
+  { "timePeriod": "2018", "value": 2089.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" },
+  { "timePeriod": "2019", "value": 2176.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" },
+  { "timePeriod": "2020", "value": 2243.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" },
+  { "timePeriod": "2021", "value": 2318.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" },
+  { "timePeriod": "2022", "value": 2401.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" },
+  { "timePeriod": "2023", "value": 2487.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" },
+  { "timePeriod": "2024", "value": 2563.0, "measure": "DESAL_WATER", "refArea": "AE", "gender": "_T", "unitMeasure": "MCM", "sourceDetail": "FCSC" }
+]

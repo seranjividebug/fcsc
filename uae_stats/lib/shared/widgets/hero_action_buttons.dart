@@ -75,7 +75,7 @@ class _HeroActionButtonsState extends ConsumerState<HeroActionButtons> {
     final text = StringBuffer()
       ..writeln('${widget.indicatorName} — UAE')
       ..writeln('$latest $unit ($period)')
-      ..writeln('Source: UAE Stats (FCSA)')
+      ..writeln('Source: UAE Stats (FCSC)')
       ..writeln(d.sourceUrl);
     try {
       await Share.share(text.toString(), subject: widget.indicatorName);
@@ -149,8 +149,8 @@ class _HeroActionButtonsState extends ConsumerState<HeroActionButtons> {
   // ─── View UAE Stats ─────────────────────────────────────────────────────────
 
   Future<void> _viewSource() async {
-    final d = widget.data;
-    final url = d?.sourceUrl ?? 'https://uaestat.fcsa.gov.ae';
+    // Open the public UAE Stats portal — not the raw SDMX REST file.
+    const url = 'https://uaestat.fcsc.gov.ae/en';
     final uri = Uri.tryParse(url);
     if (uri == null) {
       _toast('Source link unavailable');

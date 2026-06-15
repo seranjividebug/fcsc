@@ -43,6 +43,7 @@ class IndicatorChart extends ConsumerStatefulWidget {
     required this.indicatorName,
     this.indicatorId = '',
     this.unitCode = 'PS',
+    this.unitLabel = '',
     this.accentColor = AppColors.demBlue,
     this.femaleSeries = const [],
     this.maleSeries = const [],
@@ -52,6 +53,9 @@ class IndicatorChart extends ConsumerStatefulWidget {
   final String indicatorName;
   final String indicatorId;
   final String unitCode;
+
+  /// Human-readable unit appended to chart tooltip values (e.g. "MW", "GWh").
+  final String unitLabel;
   final Color accentColor;
   final List<DataPoint> femaleSeries;
   final List<DataPoint> maleSeries;
@@ -112,17 +116,36 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
   };
   bool get _isDecimal => _decimalIds.contains(widget.indicatorId);
 
+  // Y-axis tick label. Counts always use compact K/M/B notation so labels
+  // never wrap/clip in the narrow reserved axis width on mobile. Decimal
+  // indicators (mm / MCM) compact only when large, else keep one decimal.
   String _fmtValue(double v) => _isPercent
       ? '${v.toStringAsFixed(1)}%'
       : _isDecimal
-          ? v.toStringAsFixed(1)
-          : NumberFormatter.compact(v);
+          ? (v.abs() >= 1000 ? NumberFormatter.axisTick(v) : v.toStringAsFixed(1))
+          : NumberFormatter.axisTick(v);
+
+  /// Chart-card title shown above Line / Bar / Table, e.g.
+  /// "Annual Population in the UAE (Persons)".
+  String _chartCardTitle(bool isAr) {
+    final base = isAr
+        ? '${widget.indicatorName} السنوي في الإمارات'
+        : 'Annual ${widget.indicatorName} in the UAE';
+    final unit = (widget.unitLabel.isEmpty || _isPercent)
+        ? ''
+        : ' (${widget.unitLabel})';
+    return '$base$unit';
+  }
+
+  /// Suffix appended to tooltip values, e.g. " MW". Empty for percent series.
+  String get _unitSuffix =>
+      (_isPercent || widget.unitLabel.isEmpty) ? '' : ' ${widget.unitLabel}';
 
   String _fmtValueFull(double v) => _isPercent
       ? '${v.toStringAsFixed(1)}%'
       : _isDecimal
-          ? v.toStringAsFixed(1)
-          : NumberFormatter.full(v);
+          ? '${v.toStringAsFixed(1)}$_unitSuffix'
+          : '${NumberFormatter.full(v)}$_unitSuffix';
 
   List<DataPoint> get _series {
     final all = widget.allSeries;
@@ -163,6 +186,21 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
       children: [
         const SizedBox(height: 20),
 
+        // ── Section title ─────────────────────────────────────────────
+        // Sits between the hero card and the Line/Bar/Table selector; visible
+        // for all chart views. Matches the app's section-title styling.
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          child: Text(
+            isAr ? 'الاتجاه الزمني' : 'Period Trend',
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+              color: AppColors.slate900,
+            ),
+          ),
+        ),
+
         // ── Chart type toggle ─────────────────────────────────────────
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -180,6 +218,18 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
         if (_type == _ChartType.table) ...[
           // Table view (inside chart area, same padding as chart card)
           const SizedBox(height: 12),
+          // Same chart-card title as Line / Bar, for consistency.
+          Padding(
+            padding: const EdgeInsets.fromLTRB(26, 0, 20, 10),
+            child: Text(
+              _chartCardTitle(isAr),
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: AppColors.slate600,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _DataTableCard(
@@ -204,9 +254,7 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                   Padding(
                     padding: const EdgeInsets.only(left: 6),
                     child: Text(
-                      isAr
-                          ? '${widget.indicatorName} السنوي في الإمارات'
-                          : 'Annual ${widget.indicatorName} in the UAE',
+                      _chartCardTitle(isAr),
                       style: const TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
@@ -337,11 +385,19 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
           ),
         );
 
+    // Keep X bounds on exact integers so the bottom axis emits one tick per
+    // year (0,1,2,…) — fractional bounds make fl_chart step ticks off-integer
+    // and produced duplicate edge labels. clipData.none() lets the first/last
+    // dot markers paint past the plot edge without being clipped, so we get the
+    // breathing room without fractional padding.
+    final lastX = (spots.length - 1).toDouble();
     return LineChart(
       LineChartData(
+        minX: 0,
+        maxX: lastX,
         minY: chartMinY.toDouble(),
         maxY: chartMaxY,
-        clipData: const FlClipData.all(),
+        clipData: const FlClipData.none(),
         lineBarsData: [
           bar(spots, widget.accentColor, fill: true),
           if (_hasGender) bar(fSpots, const Color(0xFFC8973A), dashed: true),
@@ -398,6 +454,13 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
               reservedSize: 28,
               interval: 1,
               getTitlesWidget: (val, meta) {
+                // The plot is padded (minX<0, maxX>lastX) so the dots aren't
+                // clipped. fl_chart then emits fractional ticks at the padded
+                // edges which round to the first/last index → duplicate year
+                // labels (e.g. "2020 2020"). Render ONLY exact-integer ticks.
+                if ((val - val.roundToDouble()).abs() > 0.001) {
+                  return const SizedBox.shrink();
+                }
                 final idx = val.round();
                 if (idx < 0 || idx >= series.length) {
                   return const SizedBox.shrink();
@@ -581,6 +644,16 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                 const BorderSide(color: AppColors.silver, width: 1),
             getTooltipItem: (group, groupIdx, rod, rodIdx) {
               final pt = series[group.x];
+              // YoY delta vs the previous year — mirrors the line tooltip.
+              String deltaLine = '';
+              if (group.x > 0) {
+                final prev = series[group.x - 1];
+                if (prev.value != 0) {
+                  final delta = ((pt.value - prev.value) / prev.value) * 100;
+                  deltaLine =
+                      '\n${delta >= 0 ? '+' : ''}${delta.toStringAsFixed(1)}% vs ${prev.timePeriod}';
+                }
+              }
               return BarTooltipItem(
                 '${pt.timePeriod}\n',
                 const TextStyle(
@@ -598,6 +671,15 @@ class _IndicatorChartState extends ConsumerState<IndicatorChart> {
                       fontFeatures: [FontFeature.tabularFigures()],
                     ),
                   ),
+                  if (deltaLine.isNotEmpty)
+                    TextSpan(
+                      text: deltaLine,
+                      style: const TextStyle(
+                        color: AppColors.success,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                 ],
               );
             },
@@ -859,7 +941,7 @@ class _DataTableCard extends ConsumerWidget {
                           color: AppColors.slate600)),
                 ),
                 SizedBox(
-                  width: 60,
+                  width: 72,
                   child: Text(isAr ? 'س/س' : 'YOY',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
@@ -915,7 +997,7 @@ class _DataTableCard extends ConsumerWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 60,
+                    width: 72,
                     child: Center(
                       child: yoy == null
                           ? const Text('—',
@@ -931,7 +1013,10 @@ class _DataTableCard extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Text(
-                                '${yoy >= 0 ? '↑' : '↓'} ${yoy.abs().toStringAsFixed(1)}%',
+                                '${yoy >= 0 ? '↑' : '↓'} ${yoy.abs().round()}%',
+                                maxLines: 1,
+                                softWrap: false,
+                                overflow: TextOverflow.visible,
                                 style: TextStyle(
                                   fontSize: 11,
                                   fontWeight: FontWeight.w600,

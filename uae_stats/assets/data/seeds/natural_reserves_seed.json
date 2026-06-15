@@ -1,0 +1,9 @@
+[
+  { "timePeriod": "2018", "value": 12700.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" },
+  { "timePeriod": "2019", "value": 13150.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" },
+  { "timePeriod": "2020", "value": 13420.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" },
+  { "timePeriod": "2021", "value": 14860.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" },
+  { "timePeriod": "2022", "value": 15530.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" },
+  { "timePeriod": "2023", "value": 15880.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" },
+  { "timePeriod": "2024", "value": 16240.0, "measure": "NAT_RESERVE", "refArea": "AE", "gender": "_T", "unitMeasure": "KM2", "sourceDetail": "FCSC" }
+]

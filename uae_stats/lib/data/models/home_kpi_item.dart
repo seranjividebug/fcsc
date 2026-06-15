@@ -27,6 +27,7 @@ class HomeKpiItem {
     this.trendPercent,
     this.sparklinePoints = const [],
     this.isLoading = false,
+    this.valueUnit = '',
   });
 
   final String category;
@@ -34,6 +35,10 @@ class HomeKpiItem {
 
   /// Pre-formatted display string, e.g. "10.68M", "1.63%".
   final String displayValue;
+
+  /// Small unit suffix rendered next to [displayValue] (e.g. "GWh"). Empty
+  /// when the unit lives in the title instead.
+  final String valueUnit;
 
   /// Period label derived from API, e.g. "2024", "2023".
   final String year;

@@ -10,9 +10,28 @@ import 'package:uae_stats/core/utils/number_formatter.dart';
 import 'package:uae_stats/data/providers/indicator_providers.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/breadcrumb_bar.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/breakdown_section.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/cpi_division_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/crop_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/crude_oil_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/cultivated_area_breakdown.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/data_table_section.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/detail_hero_card.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/electricity_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/establishment_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/export_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/gdp_sector_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/generation_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/hotel_arrivals_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/import_breakdown.dart';
 import 'package:uae_stats/features/indicator_detail/presentation/widgets/indicator_chart.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/land_use_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/monthly_reexport_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/movement_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/produced_water_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/rainfall_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/temperature_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/tourism_breakdown.dart';
+import 'package:uae_stats/features/indicator_detail/presentation/widgets/trade_breakdown.dart';
 import 'package:uae_stats/shared/providers/locale_provider.dart';
 import 'package:uae_stats/shared/widgets/bottom_nav_bar.dart';
 import 'package:uae_stats/shared/widgets/flag_stripe.dart';
@@ -34,33 +53,32 @@ class _NavItem {
 const _navItems = [
   // ── Demography ──────────────────────────────────────────────────────────────
   // Population & Vitals
-  _NavItem(id: 'population',         label: 'Population Estimates',    group: 'demography'),
+  _NavItem(id: 'population',         label: 'Population',              group: 'demography'),
   _NavItem(id: 'births',             label: 'Births',                  group: 'demography'),
   _NavItem(id: 'deaths',             label: 'Deaths',                  group: 'demography'),
   _NavItem(id: 'marriages',          label: 'Marriages',               group: 'demography'),
   _NavItem(id: 'divorces',           label: 'Divorces',                group: 'demography'),
   // Education
-  _NavItem(id: 'student_enrolment',  label: 'Student',                 group: 'demography'),
-  _NavItem(id: 'teaching_staff',     label: 'Teaching',                group: 'demography'),
-  _NavItem(id: 'higher_education',   label: 'Higher Education',        group: 'demography'),
+  _NavItem(id: 'student_enrolment',  label: 'School Students',         group: 'demography'),
+  _NavItem(id: 'teaching_staff',     label: 'Qualified Teachers',      group: 'demography'),
+  _NavItem(id: 'higher_education',   label: 'Students by Level',       group: 'demography'),
   // Health
   _NavItem(id: 'hospitals',              label: 'Hospitals',           group: 'demography'),
   _NavItem(id: 'health_clinics_centers', label: 'Clinics & Centers',   group: 'demography'),
   _NavItem(id: 'health_hospital_beds',   label: 'Hospital Beds',       group: 'demography'),
   _NavItem(id: 'health_professionals',   label: 'Healthcare Professionals', group: 'demography'),
   // Labour
-  _NavItem(id: 'labour_economic_activity',      label: 'Economic Activity',        group: 'demography'),
-  _NavItem(id: 'labour_employed_age_gender',    label: 'Employed: Age & Gender',   group: 'demography'),
-  _NavItem(id: 'labour_employed_education',     label: 'Employed: Education',      group: 'demography'),
+  _NavItem(id: 'labour_economic_activity',      label: 'Employment by Activity',   group: 'demography'),
+  _NavItem(id: 'labour_employed_age_gender',    label: 'Labor Force by Age',       group: 'demography'),
+  _NavItem(id: 'labour_employed_education',     label: 'Labor Force: Education',   group: 'demography'),
   _NavItem(id: 'labour_employment_sector',      label: 'Employment by Sector',     group: 'demography'),
   _NavItem(id: 'labour_unemployment_education', label: 'Unemployment: Education',  group: 'demography'),
-  _NavItem(id: 'labour_workforce_occupation',   label: 'Workforce: Occupation',    group: 'demography'),
+  _NavItem(id: 'labour_workforce_occupation',   label: 'Employed by Occupation', group: 'demography'),
   _NavItem(id: 'labour_unemployment_age_gender',label: 'Unemployment: Age/Gender', group: 'demography'),
 
-  // ── Environment / Ecology ────────────────────────────────────────────────────
-  _NavItem(id: 'ecology_mean_temp', label: 'Mean Temperature',           group: 'environment'),
+  // ── Environment ──────────────────────────────────────────────────────────────
   // Agriculture
-  _NavItem(id: 'crop_production',   label: 'Crop Statistics by Emirate', group: 'environment'),
+  _NavItem(id: 'crop_production',   label: 'Crops by Emirate',           group: 'environment'),
   _NavItem(id: 'crop_area',         label: 'Cultivated Area',            group: 'environment'),
   _NavItem(id: 'crop_land_total',   label: 'Total Agricultural Area',    group: 'environment'),
   // Livestock
@@ -69,6 +87,7 @@ const _navItems = [
   _NavItem(id: 'livestock_goat',    label: 'Goat Population',            group: 'environment'),
   _NavItem(id: 'livestock_sheep',   label: 'Sheep Population',           group: 'environment'),
   // Ecology
+  _NavItem(id: 'ecology_mean_temp',        label: 'Mean Temperature',    group: 'environment'),
   _NavItem(id: 'ecology_rainfall',       label: 'Annual Rainfall',       group: 'environment'),
   _NavItem(id: 'ecology_produced_water', label: 'Produced Water',        group: 'environment'),
   _NavItem(id: 'ecology_natural_reserves', label: 'Protected Areas',     group: 'environment'),
@@ -77,11 +96,12 @@ const _navItems = [
   _NavItem(id: 'energy_generation_capacity', label: 'Generation Capacity', group: 'environment'),
   _NavItem(id: 'energy_crude_oil',           label: 'Crude Oil',           group: 'environment'),
   _NavItem(id: 'energy_renewable',           label: 'Renewable Energy',    group: 'environment'),
+  _NavItem(id: 'electricity',                label: 'Electricity Consumption', group: 'environment'),
 
   // ── Economy ─────────────────────────────────────────────────────────────────
   // National Accounts
-  _NavItem(id: 'gdp_current',            label: 'GDP (Current Prices)',    group: 'economy'),
-  _NavItem(id: 'gdp_constant',           label: 'GDP (Constant Prices)',   group: 'economy'),
+  _NavItem(id: 'gdp_current',            label: 'Yearly GDP (Current)',    group: 'economy'),
+  _NavItem(id: 'gdp_constant',           label: 'Yearly GDP (Constant)',   group: 'economy'),
   _NavItem(id: 'gdp_quarterly_current',  label: 'Quarterly GDP (Current)', group: 'economy'),
   _NavItem(id: 'gdp_quarterly_constant', label: 'Quarterly GDP (Constant)',group: 'economy'),
   // International Trade
@@ -94,9 +114,9 @@ const _navItems = [
   // Prices
   _NavItem(id: 'prices_cpi_annual',      label: 'CPI Annual',              group: 'economy'),
   // Tourism
-  _NavItem(id: 'tourism_hotel_arrivals',       label: 'Hotel Guest Arrivals', group: 'economy'),
+  _NavItem(id: 'tourism_hotel_arrivals',       label: 'Guest Arrivals', group: 'economy'),
   _NavItem(id: 'tourism_hotel_establishments', label: 'Hotel Establishments', group: 'economy'),
-  _NavItem(id: 'tourism_main_indicators',      label: 'Tourism Indicators',   group: 'economy'),
+  _NavItem(id: 'tourism_main_indicators',      label: 'Tourism Revenue',   group: 'economy'),
   // Air Transport
   _NavItem(id: 'aircraft_movement', label: 'Aircraft Movement', group: 'economy'),
 ];
@@ -240,6 +260,7 @@ class _IndicatorDetailScreenState
                       allSeries: data.uaeTotalSeries,
                       indicatorName: isAr ? data.meta.name.ar : data.meta.name.en,
                       indicatorId: data.meta.id,
+                      unitLabel: isAr ? data.meta.unit.ar : data.meta.unit.en,
                       accentColor: _accentFor(data.meta.category),
                       femaleSeries: _showGenderSeries(data.meta.id)
                           ? data.byGender['F'] ?? []
@@ -255,12 +276,124 @@ class _IndicatorDetailScreenState
 
                     // Breakdown
                     const SizedBox(height: 10),
-                    // BreakdownSection manages its own horizontal padding so
-                    // the tab bar can scroll edge-to-edge (full screen width).
-                    BreakdownSection(
-                      data: data,
-                      accentColor: _accentFor(data.meta.category),
-                    ),
+                    // GDP pages REPLACE the standard Overall/By Level breakdown
+                    // with a dedicated card (sector tabs for annual GDP; a
+                    // By Quarter card for Quarterly GDP Current).
+                    if (data.meta.id != 'gdp_current' &&
+                        data.meta.id != 'gdp_constant' &&
+                        data.meta.id != 'gdp_quarterly_current' &&
+                        data.meta.id != 'gdp_quarterly_constant' &&
+                        data.meta.id != 'trade_total' &&
+                        data.meta.id != 'trade_imports_hs' &&
+                        data.meta.id != 'trade_non_oil_exports' &&
+                        data.meta.id != 'trade_sector_country' &&
+                        data.meta.id != 'trade_reexports_annual' &&
+                        data.meta.id != 'trade_reexports_monthly' &&
+                        data.meta.id != 'prices_cpi_annual' &&
+                        data.meta.id != 'tourism_hotel_arrivals' &&
+                        data.meta.id != 'tourism_hotel_establishments' &&
+                        data.meta.id != 'tourism_main_indicators' &&
+                        data.meta.id != 'ecology_mean_temp' &&
+                        data.meta.id != 'ecology_rainfall' &&
+                        data.meta.id != 'ecology_produced_water' &&
+                        data.meta.id != 'energy_generation_capacity' &&
+                        data.meta.id != 'energy_renewable' &&
+                        data.meta.id != 'energy_crude_oil' &&
+                        data.meta.id != 'electricity' &&
+                        data.meta.id != 'crop_production' &&
+                        data.meta.id != 'crop_land_total' &&
+                        data.meta.id != 'crop_area' &&
+                        data.meta.id != 'aircraft_movement')
+                      // BreakdownSection manages its own horizontal padding so
+                      // the tab bar can scroll edge-to-edge (full screen width).
+                      BreakdownSection(
+                        data: data,
+                        accentColor: _accentFor(data.meta.category),
+                      ),
+
+                    // GDP pages: tabbed breakdown replaces the standard one.
+                    if (data.meta.id == 'gdp_current' ||
+                        data.meta.id == 'gdp_constant' ||
+                        data.meta.id == 'gdp_quarterly_current' ||
+                        data.meta.id == 'gdp_quarterly_constant')
+                      GdpSectorBreakdown(data: data),
+
+                    // Total Trade: 3-tab Trade Breakdown replaces the standard one.
+                    if (data.meta.id == 'trade_total')
+                      TradeBreakdown(data: data),
+
+                    // Imports by HS Section: Import Breakdown replaces it.
+                    if (data.meta.id == 'trade_imports_hs')
+                      ImportBreakdown(data: data),
+
+                    // Non-Oil Exports / Sector & Country / Annual Re-Exports:
+                    // Export (or Re-Export) Breakdown.
+                    if (data.meta.id == 'trade_non_oil_exports' ||
+                        data.meta.id == 'trade_sector_country' ||
+                        data.meta.id == 'trade_reexports_annual')
+                      ExportBreakdown(data: data),
+
+                    // Monthly Re-Exports: dedicated monthly breakdown.
+                    if (data.meta.id == 'trade_reexports_monthly')
+                      MonthlyReExportBreakdown(data: data),
+
+                    // CPI Annual: CPI by Division breakdown.
+                    if (data.meta.id == 'prices_cpi_annual')
+                      CpiDivisionBreakdown(data: data),
+
+                    // Hotel Guest Arrivals: by-nationality breakdown.
+                    if (data.meta.id == 'tourism_hotel_arrivals')
+                      HotelArrivalsBreakdown(data: data),
+
+                    // Hotel Establishments: establishment breakdown.
+                    if (data.meta.id == 'tourism_hotel_establishments')
+                      EstablishmentBreakdown(data: data),
+
+                    // Tourism Main Indicators: guest & revenue breakdown.
+                    if (data.meta.id == 'tourism_main_indicators')
+                      TourismBreakdown(data: data),
+
+                    // Mean Temperature: station/season/indicator breakdown.
+                    if (data.meta.id == 'ecology_mean_temp')
+                      TemperatureBreakdown(data: data),
+
+                    // Annual Rainfall: station/season/month breakdown.
+                    if (data.meta.id == 'ecology_rainfall')
+                      RainfallBreakdown(data: data),
+
+                    // Produced Water: entity/source/annual breakdown.
+                    if (data.meta.id == 'ecology_produced_water')
+                      ProducedWaterBreakdown(data: data),
+
+                    // Aircraft Movement: Movement Breakdown replaces it.
+                    if (data.meta.id == 'aircraft_movement')
+                      MovementBreakdown(data: data),
+
+                    // Generation Capacity / Renewable Energy: renewable
+                    // capacity / production / growth-trend tabs.
+                    if (data.meta.id == 'energy_generation_capacity' ||
+                        data.meta.id == 'energy_renewable')
+                      GenerationBreakdown(data: data),
+
+                    // Crude Oil: trade flow / top production / reserves growth.
+                    if (data.meta.id == 'energy_crude_oil')
+                      CrudeOilBreakdown(data: data),
+
+                    // Electricity: by emirate / sector / consumer.
+                    if (data.meta.id == 'electricity')
+                      ElectricityBreakdown(data: data),
+
+                    // Crop Statistics: by emirate / crop type / area.
+                    if (data.meta.id == 'crop_production')
+                      CropBreakdown(data: data),
+
+                    // Total Agricultural Land Use: emirate / use type / cover.
+                    if (data.meta.id == 'crop_land_total')
+                      LandUseBreakdown(data: data),
+
+                    // Cultivated Area: overall / by emirate / top growth.
+                    if (data.meta.id == 'crop_area')
+                      CultivatedAreaBreakdown(data: data),
 
                     // Related indicators
                     const SizedBox(height: 10),
@@ -331,6 +464,8 @@ class _IndicatorNavStrip extends StatefulWidget {
 class _IndicatorNavStripState extends State<_IndicatorNavStrip> {
   final _scrollController = ScrollController();
   final _itemKeys = <String, GlobalKey>{};
+  bool _canLeft = false;
+  bool _canRight = false;
 
   @override
   void initState() {
@@ -338,7 +473,32 @@ class _IndicatorNavStripState extends State<_IndicatorNavStrip> {
     for (final item in _navItems) {
       _itemKeys[item.id] = GlobalKey();
     }
-    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToActive());
+    _scrollController.addListener(_onScroll);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToActive();
+      _onScroll();
+    });
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+    final pos = _scrollController.position;
+    final left = _scrollController.offset > 4;
+    final right = _scrollController.offset < pos.maxScrollExtent - 4;
+    if (left != _canLeft || right != _canRight) {
+      setState(() {
+        _canLeft = left;
+        _canRight = right;
+      });
+    }
+  }
+
+  void _scrollBy(double delta) {
+    if (!_scrollController.hasClients) return;
+    final target = (_scrollController.offset + delta)
+        .clamp(0.0, _scrollController.position.maxScrollExtent);
+    _scrollController.animateTo(target,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
   }
 
   @override
@@ -382,7 +542,35 @@ class _IndicatorNavStripState extends State<_IndicatorNavStrip> {
           bottom: BorderSide(color: AppColors.silver, width: 1),
         ),
       ),
-      child: SingleChildScrollView(
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          _buildScroller(items, accentColor),
+          // Left scroll affordance
+          Positioned(
+            left: 0,
+            child: _NavArrow(
+              icon: Icons.chevron_left_rounded,
+              visible: _canLeft,
+              onTap: () => _scrollBy(-140),
+            ),
+          ),
+          // Right scroll affordance
+          Positioned(
+            right: 0,
+            child: _NavArrow(
+              icon: Icons.chevron_right_rounded,
+              visible: _canRight,
+              onTap: () => _scrollBy(140),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScroller(List<_NavItem> items, Color accentColor) {
+    return SingleChildScrollView(
         controller: _scrollController,
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -436,6 +624,60 @@ class _IndicatorNavStripState extends State<_IndicatorNavStrip> {
               ),
             );
           }).toList(),
+        ),
+      );
+  }
+}
+
+// ─── Nav strip scroll arrow ───────────────────────────────────────────────────
+class _NavArrow extends StatelessWidget {
+  const _NavArrow(
+      {required this.icon, required this.visible, required this.onTap});
+
+  final IconData icon;
+  final bool visible;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      ignoring: !visible,
+      child: AnimatedOpacity(
+        opacity: visible ? 1 : 0,
+        duration: const Duration(milliseconds: 180),
+        child: GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Container(
+            width: 36,
+            height: 52,
+            // Fade the strip edge into the arrow so chips slide under it.
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: icon == Icons.chevron_left_rounded
+                    ? Alignment.centerLeft
+                    : Alignment.centerRight,
+                end: icon == Icons.chevron_left_rounded
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                colors: [
+                  AppColors.white,
+                  AppColors.white.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+            alignment: Alignment.center,
+            child: Container(
+              width: 26,
+              height: 26,
+              decoration: const BoxDecoration(
+                color: AppColors.white,
+                shape: BoxShape.circle,
+                boxShadow: AppColors.shadowCard,
+              ),
+              child: Icon(icon, size: 18, color: AppColors.slate600),
+            ),
+          ),
         ),
       ),
     );
@@ -515,21 +757,21 @@ class _RelatedIndicators extends ConsumerWidget {
   }
 
   static const _allConfigs = {
-    'population': _RelatedConfig(label: 'Total Population', iconColor: AppColors.teal, bgColor: AppColors.tealTint),
+    'population': _RelatedConfig(label: 'Population', iconColor: AppColors.teal, bgColor: AppColors.tealTint),
     'births':     _RelatedConfig(label: 'Births',           iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
     'deaths':     _RelatedConfig(label: 'Deaths',           iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
-    'marriages':  _RelatedConfig(label: 'Marriages',        iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
-    'divorces':   _RelatedConfig(label: 'Divorces',         iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
-    'student_enrolment':      _RelatedConfig(label: 'Student',              iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
-    'teaching_staff':         _RelatedConfig(label: 'Teaching',             iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
-    'higher_education':       _RelatedConfig(label: 'Higher Education',      iconColor: AppColors.teal, bgColor: AppColors.tealTint),
+    'marriages':  _RelatedConfig(label: 'Marriages',        iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'divorces':   _RelatedConfig(label: 'Divorces',         iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'student_enrolment':      _RelatedConfig(label: 'School Students',      iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'teaching_staff':         _RelatedConfig(label: 'Qualified Teachers',   iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
+    'higher_education':       _RelatedConfig(label: 'Students by Level',    iconColor: AppColors.teal, bgColor: AppColors.tealTint),
     'hospitals':              _RelatedConfig(label: 'Hospitals',             iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
-    'health_clinics_centers': _RelatedConfig(label: 'Clinics and Centers',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'health_clinics_centers': _RelatedConfig(label: 'Clinics and Centers',   iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
     'health_hospital_beds':   _RelatedConfig(label: 'Hospital Beds',         iconColor: AppColors.teal, bgColor: AppColors.tealTint),
     'health_professionals':   _RelatedConfig(label: 'Healthcare Professionals', iconColor: AppColors.demBlue, bgColor: AppColors.demBlueTint),
     // Economy
-    'gdp_current':            _RelatedConfig(label: 'GDP (Current Prices)',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
-    'gdp_constant':           _RelatedConfig(label: 'GDP (Constant Prices)',  iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'gdp_current':            _RelatedConfig(label: 'Yearly GDP (Current)',   iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
+    'gdp_constant':           _RelatedConfig(label: 'Yearly GDP (Constant)',  iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'gdp_quarterly_current':  _RelatedConfig(label: 'Quarterly GDP (Current)',iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'gdp_quarterly_constant': _RelatedConfig(label: 'Quarterly GDP (Const.)',  iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),
     'trade_total':            _RelatedConfig(label: 'Total Trade',             iconColor: AppColors.champagneGold, bgColor: AppColors.royalSand),

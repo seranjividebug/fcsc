@@ -31,12 +31,17 @@ const _kBorder    = Color(0xFFE5E7EB);
 const _kSlate900  = Color(0xFF0F172A);
 const _kSlate600  = Color(0xFF4B5563);
 const _kSlate400  = Color(0xFF9CA3AF);
-const _kGreen     = Color(0xFF00594C);
 const _kGold      = Color(0xFF7A5A1A);
 const _kGoldBg    = Color(0xFFF5E9D3);
-const _kGreenBg   = Color(0xFFE8F1EE);
+// Page UI-chrome accent (search header, filter chips, empty-state, buttons).
+// Gold theme to match the rest of the app's primary accent.
+const _kAccent    = _kGold;
+const _kAccentBg  = _kGoldBg;
 const _kEnvBg     = Color(0xFFE0F4F1);
 const _kEnvColor  = Color(0xFF0F6E56);
+// Demography — blue theme (matches AppColors.demBlue / demBlueTint).
+const _kDemBlue   = Color(0xFF0073AB);
+const _kDemBlueBg = Color(0xFFEFFAFF);
 
 // Category config
 class _CatConfig {
@@ -46,7 +51,7 @@ class _CatConfig {
 }
 
 const _catConfigs = <String, _CatConfig>{
-  'demography':   _CatConfig('👥', _kGreenBg, _kGreen),
+  'demography':   _CatConfig('👥', _kDemBlueBg, _kDemBlue),
   'economy':      _CatConfig('📈', _kGoldBg,  _kGold),
   'environment':  _CatConfig('🌿', _kEnvBg,   _kEnvColor),
 };
@@ -75,7 +80,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) => _focusNode.requestFocus());
+    // Start every search session fresh: reset the category filter to 'All' and
+    // clear any leftover query so a previous selection never persists.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _focusNode.requestFocus();
+      ref.read(searchCategoryProvider.notifier).state = 'All';
+      ref.read(searchQueryProvider.notifier).state = '';
+    });
     _controller.addListener(_onTextChanged);
   }
 
@@ -222,7 +233,7 @@ class _AppBar extends StatelessWidget {
                         : const Padding(
                             padding: EdgeInsets.symmetric(horizontal: 10),
                             child: Icon(Icons.mic_none_rounded,
-                                size: 18, color: _kGreen),
+                                size: 18, color: _kAccent),
                           ),
                   ),
                 ],
@@ -234,7 +245,7 @@ class _AppBar extends StatelessWidget {
             onTap: onCancel,
             child: const Text('Cancel',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600,
-                    color: _kGreen)),
+                    color: _kAccent)),
           ),
         ],
       ),
@@ -376,12 +387,17 @@ class _TrendingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 4),
-              Text(
-                meta.name.en,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 12,
-                    fontWeight: FontWeight.w600, color: _kSlate900),
+              // Right padding reserves space for the rank badge so the title
+              // never renders underneath it (overlap fix).
+              Padding(
+                padding: const EdgeInsets.only(right: 26),
+                child: Text(
+                  meta.name.en,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 12,
+                      fontWeight: FontWeight.w600, color: _kSlate900),
+                ),
               ),
               const SizedBox(height: 2),
               Text(
@@ -506,10 +522,10 @@ class _ResultsState extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 14, vertical: 6),
                       decoration: BoxDecoration(
-                        color: active ? _kGreen : _kWhite,
+                        color: active ? _kAccent : _kWhite,
                         borderRadius: BorderRadius.circular(999),
                         border: Border.all(
-                            color: active ? _kGreen : _kBorder),
+                            color: active ? _kAccent : _kBorder),
                       ),
                       child: Text(
                         f == 'All' ? 'All ▾' : _capitalize(f),
@@ -698,10 +714,10 @@ class _NoResults extends ConsumerWidget {
             Container(
               width: 80, height: 80,
               decoration: BoxDecoration(
-                  color: _kGreenBg,
+                  color: _kAccentBg,
                   borderRadius: BorderRadius.circular(40)),
               child: const Icon(Icons.search_off_rounded,
-                  size: 40, color: _kGreen),
+                  size: 40, color: _kAccent),
             ),
             const SizedBox(height: 20),
             Text("No results for '$query'",
@@ -729,13 +745,13 @@ class _NoResults extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 12, vertical: 7),
                   decoration: BoxDecoration(
-                    color: _kGreenBg,
+                    color: _kAccentBg,
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(s,
                       style: const TextStyle(fontSize: 12,
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF003D33))),
+                          color: _kGold)),
                 ),
               )).toList(),
             ),
@@ -745,8 +761,8 @@ class _NoResults extends ConsumerWidget {
               child: OutlinedButton(
                 onPressed: () => context.go(AppRoutes.home),
                 style: OutlinedButton.styleFrom(
-                  side: const BorderSide(color: _kGreen),
-                  foregroundColor: _kGreen,
+                  side: const BorderSide(color: _kAccent),
+                  foregroundColor: _kAccent,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12)),
                 ),
@@ -789,7 +805,7 @@ class _SectionHeader extends StatelessWidget {
               onTap: onAction,
               child: Text(action!,
                   style: const TextStyle(fontSize: 11,
-                      fontWeight: FontWeight.w500, color: _kGreen)),
+                      fontWeight: FontWeight.w500, color: _kAccent)),
             ),
         ],
       ),
@@ -854,8 +870,8 @@ class _BrowseCategoryGrid extends StatelessWidget {
       subtitle: 'Population · Vitals · Education · Health · Labour',
       subtitleAr: 'السكان · الأحوال الحيوية · التعليم · الصحة · العمل',
       icon: Icons.people_rounded,
-      bg: _kGreenBg,
-      color: _kGreen,
+      bg: _kDemBlueBg,
+      color: _kDemBlue,
       route: AppRoutes.demography,
     ),
     _CatItem(

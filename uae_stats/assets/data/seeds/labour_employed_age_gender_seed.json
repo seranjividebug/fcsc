@@ -1,9 +1,772 @@
 [
-  { "timePeriod": "2019", "value": 5623000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 5467000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 5612000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 5843000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 6047000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 4589000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "M",  "unitMeasure": "PS", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 1458000.0, "measure": "EMP_AGE", "refArea": "AE", "gender": "F",  "unitMeasure": "PS", "sourceDetail": "FCSA" }
+  {
+    "timePeriod": "2024",
+    "value": 0.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.3,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 8.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 9.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 6.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 15.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 15.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 14.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 17.3,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 16.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 20.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 19.3,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 18.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 21.1,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 15.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 15.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 16.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 9.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 9.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 10.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 7.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 7.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 6.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3.1,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "M",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 0.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "F",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 0.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 9.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 15.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 18.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 21.1,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 16.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 10.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 6.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 3.1,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 0.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 0.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 0.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 9.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 16.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 18.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 20.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 15.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 9.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 5.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 2.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 0.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 0.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 0.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 10.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 16.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 18.1,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 19.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 15.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 9.5,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 5.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 2.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 1.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 0.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 0.9,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y15T19",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 10.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y20T24",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 16.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y25T29",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 17.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y30T34",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 19.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y35T39",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 14.6,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y40T44",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 9.2,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y45T49",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 5.4,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y50T54",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 2.7,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y55T59",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1.8,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y60T64",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1.0,
+    "measure": "EMP_AGE",
+    "refArea": "AE",
+    "gender": "_T",
+    "ageGroup": "Y_GE65",
+    "unitMeasure": "PCT",
+    "sourceDetail": "FCSC"
+  }
 ]

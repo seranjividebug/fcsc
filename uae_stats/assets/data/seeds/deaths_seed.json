@@ -1,12 +1,1202 @@
 [
-  { "timePeriod": "2015", "value": 9700.0,  "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2016", "value": 9800.0,  "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2017", "value": 10100.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2018", "value": 10300.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2019", "value": 10600.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2020", "value": 11200.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2021", "value": 10900.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2022", "value": 10400.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2023", "value": 10600.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" },
-  { "timePeriod": "2024", "value": 25482.0, "measure": "D", "refArea": "AE", "gender": "_T", "unitMeasure": "PS", "sourceDetail": "MHP" }
+  {
+    "timePeriod": "2015",
+    "value": 9700.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 3346.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 3346.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 1455.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 563.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 437.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 340.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 213.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 5044.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 4656.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 3104.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2015",
+    "value": 6596.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 9800.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 3381.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 3381.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 1470.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 568.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 441.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 343.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 216.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 5096.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 4704.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 3136.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 6664.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 10100.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 3484.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 3484.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1515.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 586.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 455.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 354.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 222.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 5252.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 4848.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 3232.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 6868.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 10300.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 3553.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 3553.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 1545.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 597.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 464.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 361.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 227.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 5356.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 4944.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 3296.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 7004.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 10600.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 3657.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 3657.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 1590.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 615.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 477.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 371.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 233.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 5512.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 5088.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 3392.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 7208.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 11200.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 3864.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 3864.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1680.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 650.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 504.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 392.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 246.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 5824.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 5376.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 3584.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 7616.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 10900.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 3760.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 3760.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 1635.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 632.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 491.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 382.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 240.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 5668.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 5232.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 3488.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 7412.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 10400.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 3588.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 3588.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 1560.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 603.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 468.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 364.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 229.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 5408.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 4992.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 3328.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 7072.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 10600.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 3657.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 3657.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 1590.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 615.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 477.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 371.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 233.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 5512.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 5088.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 3392.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 7208.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 25482.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 8791.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 8791.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 3822.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1478.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1147.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 892.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 561.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "gender": "_T",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 13251.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "M",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 12231.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "F",
+    "citizenship": "_T",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 8154.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 17328.0,
+    "measure": "D",
+    "refArea": "AE",
+    "gender": "_T",
+    "citizenship": "NON-EMIRATI",
+    "unitMeasure": "PS",
+    "sourceDetail": "MHP"
+  }
 ]

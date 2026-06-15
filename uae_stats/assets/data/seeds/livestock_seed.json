@@ -1,0 +1,9 @@
+[
+  { "timePeriod": "2018", "value": 3987000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" },
+  { "timePeriod": "2019", "value": 4102000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" },
+  { "timePeriod": "2020", "value": 4231000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" },
+  { "timePeriod": "2021", "value": 4358000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" },
+  { "timePeriod": "2022", "value": 4487000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" },
+  { "timePeriod": "2023", "value": 4612000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" },
+  { "timePeriod": "2024", "value": 4738000.0, "measure": "LIVESTOCK", "refArea": "AE", "gender": "_T", "unitMeasure": "HEAD", "sourceDetail": "FCSC" }
+]

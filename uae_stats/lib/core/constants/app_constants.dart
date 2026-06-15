@@ -8,8 +8,8 @@ abstract final class AppConstants {
   static const String bundleId     = 'ae.gov.fcsc.uaestats';
 
   // ─── Organisation ────────────────────────────────────────────────────────
-  static const String fcscNameEn = 'Federal Competitiveness and Statistics Authority';
-  static const String fcscNameAr = 'الهيئة الاتحادية للتنافسية والإحصاء';
+  static const String fcscNameEn = 'Federal Competitiveness and Statistics Centre';
+  static const String fcscNameAr = 'المركز الاتحادي للتنافسية والإحصاء';
   static const String fcscWebsite = 'uaestat.fcsa.gov.ae';
   static const String fcscUrl     = 'https://uaestat.fcsa.gov.ae';
 

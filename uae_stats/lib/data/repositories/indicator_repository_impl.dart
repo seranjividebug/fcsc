@@ -33,10 +33,38 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
 
   // ─── Public interface ─────────────────────────────────────────────────────
 
+  /// Indicators whose bundled seed is authoritative and preferred over the
+  /// live API. The live dataflow for these resolves the headline to a wrong
+  /// slice (e.g. Economic Activity's national row = "Unspecified" 0.5%), so we
+  /// serve the verified seed — which carries the full sector distribution and
+  /// yields the correct leading-sector headline (Construction 21.4%).
+  static const _seedFirstIds = {
+    'labour_economic_activity',
+    'labour_employed_age_gender',
+    'labour_employed_education',
+    'labour_employment_sector',
+    'labour_unemployment_education',
+    'labour_workforce_occupation',
+    'labour_unemployment_age_gender',
+  };
+
   @override
   Future<IndicatorData> getIndicator(String indicatorId) async {
     final meta = await _getMeta(indicatorId);
     final cacheKey = _cacheKey(indicatorId);
+
+    // Seed-first indicators: serve the bundled seed directly.
+    if (_seedFirstIds.contains(indicatorId)) {
+      final seed = await _loadSeed(indicatorId);
+      if (seed.isNotEmpty) {
+        return IndicatorData(
+          meta: meta,
+          allPoints: seed,
+          fetchedAt: DateTime.now(),
+          fromCache: true,
+        );
+      }
+    }
 
     // Population module: always fetch live, fall back to seed on failure
     if (_isPopulationModule(indicatorId)) {
@@ -193,17 +221,62 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     return data.toSummary();
   }
 
+  /// Every routable indicator id in the app (matches the `_fetchFromApi`
+  /// switch + section configs). This is the master catalog that powers Search;
+  /// the bundled indicators_index.json only carried the 12 Demography entries,
+  /// so searching "trade"/"gdp"/"energy"/etc. returned nothing. We build full
+  /// meta for each id via [_defaultMeta] and let any richer JSON entry win.
+  static const _allIndicatorIds = <String>[
+    // Demography · Population / Vitals / Education / Health
+    // (population_growth removed — single dataset under Population)
+    'population',
+    'births', 'deaths', 'marriages', 'divorces',
+    'student_enrolment', 'teaching_staff', 'higher_education',
+    'hospitals', 'health_clinics_centers', 'health_hospital_beds',
+    'health_professionals',
+    // Demography · Labour
+    'labour_economic_activity', 'labour_employed_age_gender',
+    'labour_employed_education', 'labour_employment_sector',
+    'labour_unemployment_education', 'labour_workforce_occupation',
+    'labour_unemployment_age_gender',
+    // Economy · National Accounts / Trade / Prices / Tourism / Air
+    'gdp_current', 'gdp_constant', 'gdp_quarterly_current',
+    'gdp_quarterly_constant',
+    'trade_total', 'trade_imports_hs', 'trade_non_oil_exports',
+    'trade_sector_country', 'trade_reexports_annual', 'trade_reexports_monthly',
+    'prices_cpi_annual',
+    'tourism_hotel_arrivals', 'tourism_hotel_establishments',
+    'tourism_main_indicators',
+    'aircraft_movement',
+    // Environment · Agriculture / Ecology / Energy
+    'crop_production', 'crop_area', 'crop_land_total',
+    'livestock_camel', 'livestock_cattle', 'livestock_goat', 'livestock_sheep',
+    'ecology_mean_temp', 'ecology_rainfall', 'ecology_produced_water',
+    'ecology_natural_reserves', 'ecology_ramsar_wetlands',
+    'energy_generation_capacity', 'energy_crude_oil', 'energy_renewable',
+    'electricity',
+  ];
+
   @override
   Future<List<IndicatorMeta>> getAllMeta() async {
     if (_metaIndex != null) return _metaIndex!;
+    // Richer entries from the bundled JSON (if present) take precedence.
+    final byId = <String, IndicatorMeta>{};
     try {
       final raw = await rootBundle.loadString('assets/data/indicators_index.json');
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final list = (json['indicators'] as List).cast<Map<String, dynamic>>();
-      _metaIndex = list.map(IndicatorMeta.fromJson).toList();
+      for (final m in list.map(IndicatorMeta.fromJson)) {
+        byId[m.id] = m;
+      }
     } catch (_) {
-      _metaIndex = [];
+      // No bundled index — fall back to the generated catalog below.
     }
+    // Ensure every routable indicator is searchable (generated meta as default).
+    for (final id in _allIndicatorIds) {
+      byId.putIfAbsent(id, () => _defaultMeta(id));
+    }
+    _metaIndex = byId.values.toList();
     return _metaIndex!;
   }
 
@@ -285,7 +358,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
     final isEcology = id.startsWith('ecology_');
     final isCrop    = id.startsWith('crop_');
     final isLivestock = id.startsWith('livestock_');
-    final isEnergy = id.startsWith('energy_');
+    final isEnergy = id.startsWith('energy_') || id == 'electricity';
     return IndicatorMeta(
       id: id,
       dataflowId: '',
@@ -304,9 +377,12 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           : isEnergy ? 'energy'
           : isEcology ? 'ecology'
           : (isCrop || isLivestock) ? 'agriculture'
+          : id.startsWith('labour_') ? 'labour_force'
           : 'vitals',
       unit: isGdp || isTrade
           ? const LocalizedString(en: 'AED Million', ar: 'مليون درهم')
+          : id == 'tourism_main_indicators'
+          ? const LocalizedString(en: 'AED', ar: 'درهم')
           : isTourism
           ? const LocalizedString(en: 'Persons', ar: 'أشخاص')
           : isPrices
@@ -321,6 +397,8 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           ? const LocalizedString(en: 'MW', ar: 'ميجاوات')
           : id == 'energy_crude_oil'
           ? const LocalizedString(en: 'Mn Bbl', ar: 'مليون برميل')
+          : id == 'electricity'
+          ? const LocalizedString(en: 'GWh', ar: 'جيجاواط/ساعة')
           : (id == 'ecology_natural_reserves' || id == 'ecology_ramsar_wetlands')
           ? const LocalizedString(en: 'km²', ar: 'كم²')
           : isEcology
@@ -331,18 +409,22 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
           ? const LocalizedString(en: 'Metric Tonnes', ar: 'طن متري')
           : isLivestock
           ? const LocalizedString(en: 'Head', ar: 'رأس')
+          : id.startsWith('labour_')
+          ? const LocalizedString(en: '%', ar: '٪')
           : const LocalizedString(en: 'Persons', ar: 'أشخاص'),
       unitCode: isGdp || isTrade ? 'AED_MN'
+          : id == 'tourism_main_indicators' ? 'AED'
           : isAir ? 'MOV'
           : id == 'ecology_rainfall' ? 'MM'
           : id == 'ecology_produced_water' ? 'MCM'
           : (id == 'energy_generation_capacity' || id == 'energy_renewable') ? 'MW'
           : id == 'energy_crude_oil' ? 'MILBAR'
+          : id == 'electricity' ? 'GWH'
           : (id == 'ecology_natural_reserves' || id == 'ecology_ramsar_wetlands') ? 'KM2'
           : isEcology ? 'CEL'
           : isLivestock ? 'HEAD' : 'PS',
       frequency: 'A',
-      sourceCode: 'FCSA',
+      sourceCode: 'FCSC',
       sourceName: const LocalizedString(
         en: 'Federal Competitiveness and Statistics Centre',
         ar: 'مركز الاتحادية للتنافسية والإحصاء',
@@ -353,26 +435,26 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
   }
 
   LocalizedString _nameFor(String id) => switch (id) {
-        'population'        => const LocalizedString(en: 'Population Estimates',      ar: 'تقديرات السكان'),
+        'population'        => const LocalizedString(en: 'Population',                 ar: 'السكان'),
         'births'            => const LocalizedString(en: 'Births',                    ar: 'المواليد'),
         'deaths'            => const LocalizedString(en: 'Deaths',                    ar: 'الوفيات'),
         'marriages'         => const LocalizedString(en: 'Marriages',                 ar: 'الزيجات'),
         'divorces'          => const LocalizedString(en: 'Divorces',                  ar: 'الطلاق'),
-        'student_enrolment' => const LocalizedString(en: 'Student',                   ar: 'الطلاب'),
-        'teaching_staff'    => const LocalizedString(en: 'Teaching',                  ar: 'التدريس'),
-        'higher_education'  => const LocalizedString(en: 'Higher Education',          ar: 'التعليم العالي'),
+        'student_enrolment' => const LocalizedString(en: 'School Students',           ar: 'طلاب المدارس'),
+        'teaching_staff'    => const LocalizedString(en: 'Qualified Teachers',        ar: 'المعلمون المؤهلون'),
+        'higher_education'  => const LocalizedString(en: 'Students by Level',         ar: 'الطلاب حسب المستوى'),
         'hospitals'         => const LocalizedString(en: 'Hospitals',                 ar: 'المستشفيات'),
         'health_services'   => const LocalizedString(en: 'Health Services',           ar: 'الخدمات الصحية'),
         'health_clinics_centers' => const LocalizedString(en: 'Clinics and Centers',  ar: 'العيادات والمراكز'),
         'health_hospital_beds'   => const LocalizedString(en: 'Hospital Beds',        ar: 'أسرة المستشفيات'),
         'health_professionals'           => const LocalizedString(en: 'Healthcare Professionals',        ar: 'المهنيون الصحيون'),
         'prices_cpi_annual'              => const LocalizedString(en: 'CPI Annual',                    ar: 'مؤشر أسعار المستهلك السنوي'),
-        'tourism_hotel_arrivals'         => const LocalizedString(en: 'Hotel Guest Arrivals by Nationality', ar: 'وصول ضيوف الفنادق حسب الجنسية'),
+        'tourism_hotel_arrivals'         => const LocalizedString(en: 'Guest Arrivals', ar: 'وصول الضيوف'),
         'tourism_hotel_establishments'   => const LocalizedString(en: 'Hotel Establishments',           ar: 'المنشآت الفندقية'),
-        'tourism_main_indicators'        => const LocalizedString(en: 'Main Indicators',                ar: 'المؤشرات الرئيسية للسياحة'),
+        'tourism_main_indicators'        => const LocalizedString(en: 'Tourism Revenue',                ar: 'إيرادات السياحة'),
         'aircraft_movement'              => const LocalizedString(en: 'Aircraft Movement',              ar: 'حركة الطائرات'),
         'ecology_mean_temp'              => const LocalizedString(en: 'Mean Temperature',                ar: 'متوسط درجة الحرارة'),
-        'crop_production'                => const LocalizedString(en: 'Crop Statistics by Emirate',      ar: 'إحصاءات المحاصيل حسب الإمارة'),
+        'crop_production'                => const LocalizedString(en: 'Crops by Emirate',                ar: 'المحاصيل حسب الإمارة'),
         'crop_area'                      => const LocalizedString(en: 'Agricultural Cultivated Area',    ar: 'المساحة الزراعية المزروعة'),
         'crop_land_total'                => const LocalizedString(en: 'Total Agricultural Land Use',     ar: 'إجمالي استخدام الأراضي الزراعية'),
         'trade_total'                    => const LocalizedString(en: 'Total Trade',                    ar: 'إجمالي التجارة'),
@@ -381,16 +463,16 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'trade_sector_country'           => const LocalizedString(en: 'Sector & Country',               ar: 'القطاع والدولة'),
         'trade_reexports_annual'         => const LocalizedString(en: 'Annual Re-Exports',              ar: 'إعادة التصدير السنوية'),
         'trade_reexports_monthly'        => const LocalizedString(en: 'Monthly Re-Exports',             ar: 'إعادة التصدير الشهرية'),
-        'gdp_current'                    => const LocalizedString(en: 'GDP (Current Prices)',           ar: 'الناتج المحلي بالأسعار الجارية'),
-        'gdp_constant'                   => const LocalizedString(en: 'GDP (Constant Prices)',          ar: 'الناتج المحلي بالأسعار الثابتة'),
+        'gdp_current'                    => const LocalizedString(en: 'Yearly GDP (Current)',            ar: 'الناتج المحلي السنوي (الجاري)'),
+        'gdp_constant'                   => const LocalizedString(en: 'Yearly GDP (Constant)',           ar: 'الناتج المحلي السنوي (الثابت)'),
         'gdp_quarterly_current'          => const LocalizedString(en: 'Quarterly GDP (Current)',        ar: 'الناتج المحلي الفصلي - جاري'),
         'gdp_quarterly_constant'         => const LocalizedString(en: 'Quarterly GDP (Constant)',       ar: 'الناتج المحلي الفصلي - ثابت'),
-        'labour_economic_activity'       => const LocalizedString(en: 'Economic Activity',              ar: 'النشاط الاقتصادي'),
-        'labour_employed_age_gender'     => const LocalizedString(en: 'Employed by Age & Gender',       ar: 'العاملون حسب العمر والجنس'),
-        'labour_employed_education'      => const LocalizedString(en: 'Employed by Education Status',   ar: 'العاملون حسب المستوى التعليمي'),
+        'labour_economic_activity'       => const LocalizedString(en: 'Employment by Activity',         ar: 'التوظيف حسب النشاط'),
+        'labour_employed_age_gender'     => const LocalizedString(en: 'Labor Force by Age',             ar: 'القوى العاملة حسب العمر'),
+        'labour_employed_education'      => const LocalizedString(en: 'Labor Force by Educational Status', ar: 'القوى العاملة حسب الحالة التعليمية'),
         'labour_employment_sector'       => const LocalizedString(en: 'Employment by Sector',           ar: 'التوظيف حسب القطاع'),
         'labour_unemployment_education'  => const LocalizedString(en: 'Unemployment by Education',      ar: 'البطالة حسب التعليم'),
-        'labour_workforce_occupation'    => const LocalizedString(en: 'Workforce by Occupation',        ar: 'القوى العاملة حسب المهنة'),
+        'labour_workforce_occupation'    => const LocalizedString(en: 'Employed by Occupation',         ar: 'المشتغلون حسب المهنة'),
         'livestock_camel'                => const LocalizedString(en: 'Camel Population',                ar: 'تعداد الإبل'),
         'livestock_cattle'               => const LocalizedString(en: 'Cattle Population',               ar: 'تعداد الأبقار'),
         'livestock_goat'                 => const LocalizedString(en: 'Goat Population',                 ar: 'تعداد الماعز'),
@@ -400,6 +482,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'energy_generation_capacity'     => const LocalizedString(en: 'Generation Capacity',             ar: 'طاقة توليد الكهرباء'),
         'energy_crude_oil'               => const LocalizedString(en: 'Crude Oil',                       ar: 'النفط الخام'),
         'energy_renewable'               => const LocalizedString(en: 'Renewable Energy',                ar: 'الطاقة المتجددة'),
+        'electricity'                    => const LocalizedString(en: 'Electricity Consumption',         ar: 'استهلاك الكهرباء'),
         'ecology_natural_reserves'       => const LocalizedString(en: 'Protected Natural Areas',         ar: 'المناطق الطبيعية المحمية'),
         'ecology_ramsar_wetlands'        => const LocalizedString(en: 'RAMSAR Wetlands',                 ar: 'مواقع رامسار'),
         'labour_unemployment_age_gender' => const LocalizedString(en: 'Unemployment by Age & Gender',   ar: 'البطالة حسب العمر والجنس'),
@@ -431,7 +514,16 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
   }
 
   bool _hasUsableSeries(IndicatorData data) {
-    return data.uaeTotalSeries.isNotEmpty;
+    if (data.uaeTotalSeries.isEmpty) return false;
+    // Total Trade: only accept a live result that actually carries the merged
+    // breakdown (flow totals + HS sections). A total-only response (e.g. when
+    // the section sub-fetches fail) is NOT cached, so the page retries instead
+    // of locking in a breakdown-less state.
+    if (data.meta.id == 'trade_total') {
+      return data.tradeByType.isNotEmpty &&
+          data.tradeImportSections.isNotEmpty;
+    }
+    return true;
   }
 
   /// Returns true for indicators in the Population module.
@@ -482,6 +574,7 @@ class IndicatorRepositoryImpl implements IndicatorRepository {
         'crop_production'                => 'assets/data/seeds/crop_production_seed.json',
         'crop_area'                      => 'assets/data/seeds/crop_area_seed.json',
         'crop_land_total'                => 'assets/data/seeds/crop_land_total_seed.json',
+        'electricity'                    => 'assets/data/seeds/electricity_seed.json',
         'trade_total'                    => 'assets/data/seeds/trade_total_seed.json',
         'trade_imports_hs'               => 'assets/data/seeds/trade_imports_hs_seed.json',
         'trade_non_oil_exports'          => 'assets/data/seeds/trade_non_oil_exports_seed.json',

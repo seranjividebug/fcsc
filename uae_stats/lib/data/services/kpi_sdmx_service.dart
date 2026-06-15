@@ -53,7 +53,7 @@ class KpiSdmxService {
 
   final Dio _dio;
 
-  static const String _boxName = 'kpi_cache_v5';
+  static const String _boxName = 'kpi_cache_v7';
   static const Duration _ttl = ApiConstants.cacheTtl;
 
   // ─── Public API ───────────────────────────────────────────────────────────

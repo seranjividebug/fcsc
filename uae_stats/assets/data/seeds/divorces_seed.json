@@ -1,12 +1,1982 @@
 [
-  { "timePeriod": "2015", "value": 7089.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2016", "value": 7226.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2017", "value": 7452.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2018", "value": 7684.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 7901.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 8134.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 8367.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 8612.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 8890.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" },
-  { "timePeriod": "2024", "value": 9156.0,  "measure": "DV", "refArea": "AE", "gender": "_T", "unitMeasure": "CASES", "sourceDetail": "FCSA" }
+  {
+    "timePeriod": "2016",
+    "value": 1518.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1484.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 1321.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 1308.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1868.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 14.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 10.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 12.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 10.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 3.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 66.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 55.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 76.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 67.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 61.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 204.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 181.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 176.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 182.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 175.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 199.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 225.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 191.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 174.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 59.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 81.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 97.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 77.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 56.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 33.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 44.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 41.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 42.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 57.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 80.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 64.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 93.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 69.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 75.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 104.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 91.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 82.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 90.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 74.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 25.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 20.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 19.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 16.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 17.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 609.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 520.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 602.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 644.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 391.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 919.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 879.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 887.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 829.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1251.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 13.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 15.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 25.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 14.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 16.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 335.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 358.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 376.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 375.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 238.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 49.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 46.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 36.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 47.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 47.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 736.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 766.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 766.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 728.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 618.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 816.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 796.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 785.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 714.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 176.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 187.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 130.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 132.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 172.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 12.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 10.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 15.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 12.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 13.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 96.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 140.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 139.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 138.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 80.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 124.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 81.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 98.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 117.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 74.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 139.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 110.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 85.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 105.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 94.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 367.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 372.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 269.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 300.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 358.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 4599.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 4403.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 4506.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 4554.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 4213.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 5450.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 5298.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 5218.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 4691.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 7.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 5.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 5.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 8.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 6.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 1879.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1739.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 1844.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 1845.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1897.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 2272.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 2266.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 2325.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 2039.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 193.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 186.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 164.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 187.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 184.0,
+    "measure": "D",
+    "refArea": "AE-AJ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 1780.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1717.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 1720.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 1799.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1523.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2021",
+    "value": 2163.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2022",
+    "value": 2011.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2023",
+    "value": 1917.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2024",
+    "value": 1764.0,
+    "measure": "D",
+    "refArea": "AE",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 56.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 46.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 35.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 47.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 87.0,
+    "measure": "D",
+    "refArea": "AE-DU",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 438.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 310.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 420.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 406.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 376.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 1922.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1859.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 2025.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 2086.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 1351.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 323.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 399.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 415.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 395.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 279.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_TOT",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 4.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 4.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 2.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 5.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 14.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 13.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 11.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 13.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 11.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEW_NEF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 113.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 111.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 102.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 104.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 63.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 37.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 29.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 32.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 39.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 27.0,
+    "measure": "D",
+    "refArea": "AE-UQ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 95.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 76.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 53.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 73.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 66.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 865.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 870.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 945.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 963.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 659.0,
+    "measure": "D",
+    "refArea": "AE-AZ",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 154.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 168.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 167.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 170.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 140.0,
+    "measure": "D",
+    "refArea": "AE-SH",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 229.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 158.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 213.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 212.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 216.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_EM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 5.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 7.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 16.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 8.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 11.0,
+    "measure": "D",
+    "refArea": "AE-RK",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2016",
+    "value": 5.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2017",
+    "value": 1.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2018",
+    "value": 2.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2019",
+    "value": 3.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  },
+  {
+    "timePeriod": "2020",
+    "value": 0.0,
+    "measure": "D",
+    "refArea": "AE-FJ",
+    "level": "D_NEM_EF",
+    "unitMeasure": "NUMBER",
+    "sourceDetail": "FCSAMD"
+  }
 ]

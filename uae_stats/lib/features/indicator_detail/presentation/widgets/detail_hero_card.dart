@@ -11,9 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uae_stats/core/theme/app_colors.dart';
 import 'package:uae_stats/core/utils/number_formatter.dart';
+import 'package:uae_stats/data/models/data_point.dart';
 import 'package:uae_stats/data/models/indicator_data.dart';
 import 'package:uae_stats/shared/providers/locale_provider.dart';
 import 'package:uae_stats/shared/widgets/hero_action_buttons.dart';
+import 'package:uae_stats/shared/widgets/trend_pill.dart';
 
 class DetailHeroCard extends ConsumerStatefulWidget {
   const DetailHeroCard({super.key, required this.data});
@@ -47,6 +49,7 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
     'education'         => 'التعليم',
     'health'            => 'الصحة',
     'labour'            => 'العمل',
+    'labour_force'      => 'القوى العاملة',
     'national_accounts' => 'الحسابات القومية',
     'international_trade' => 'التجارة الدولية',
     'tourism'           => 'السياحة',
@@ -58,6 +61,45 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
   };
 
   String get _period => widget.data.latestPeriod;
+
+  /// Hero title — the indicator's metadata name.
+  String get _title =>
+      _isArabic ? widget.data.meta.name.ar : widget.data.meta.name.en;
+
+  /// True when the hero trend pill should show a percentage-POINT delta
+  /// (share indicators) rather than a percent-change.
+  bool get _usePointDelta =>
+      widget.data.meta.id == 'labour_unemployment_education';
+
+  /// Reserved for indicators that compare against the PEAK (highest) year
+  /// rather than the earliest. None currently.
+  bool get _pointDeltaVsPeak => false;
+
+  /// The baseline point used for the pp-delta (peak year, or earliest year).
+  DataPoint? get _pointBase {
+    final series = widget.data.uaeTotalSeries;
+    if (series.length < 2) return null;
+    if (_pointDeltaVsPeak) {
+      return series.reduce((a, b) => b.value > a.value ? b : a);
+    }
+    return series.first;
+  }
+
+  /// Percentage-point change of the headline value vs the baseline year.
+  double get _pointDelta {
+    final base = _pointBase;
+    if (base == null) return 0;
+    return _value - base.value;
+  }
+
+  String get _pointVsLabel {
+    final base = _pointBase;
+    if (base == null) return '';
+    if (_pointDeltaVsPeak) {
+      return _isArabic ? 'مقارنة بذروة ${base.timePeriod}' : 'vs ${base.timePeriod} peak';
+    }
+    return _isArabic ? 'مقارنة بـ ${base.timePeriod}' : 'vs ${base.timePeriod}';
+  }
 
   String get _subtitle {
     // Economic Activity: name the leading sector dynamically.
@@ -76,15 +118,33 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
           ? 'من المتعطلين يحملون مؤهل $lvl ($_period)'
           : 'of unemployed population holds $lvl education ($_period)';
     }
-    // Workforce by Occupation: name the leading occupation group dynamically.
+    // Employed by Occupation: name the leading occupation group dynamically.
     if (widget.data.meta.id == 'labour_workforce_occupation') {
       final code = widget.data.topSectorCode;
       final occ = _occupationName(code);
       return _isArabic
-          ? 'أكبر مجموعة مهنية ($occ) في $_period'
-          : 'largest occupation group ($occ) in $_period';
+          ? '$occ — أكبر مجموعة مهنية في $_period'
+          : '$occ — largest occupation group in $_period';
+    }
+    // Unemployment by Age & Gender: name the peak age group dynamically.
+    if (widget.data.meta.id == 'labour_unemployment_age_gender') {
+      final band = _ageBandLabel(widget.data.topAgeBandCode);
+      return _isArabic
+          ? 'الفئة العمرية الأعلى بين المتعطلين ($band) في $_period'
+          : 'largest unemployed age group (aged $band) in $_period';
     }
     return _subtitleFor(widget.data.meta.id, _period, _isArabic);
+  }
+
+  /// "Y20T24" → "20–24", "Y_GE65" → "65+". For the age-peak subtitle.
+  static String _ageBandLabel(String? code) {
+    if (code == null) return '—';
+    final c = code.toUpperCase();
+    final ge = RegExp(r'GE_?(\d+)').firstMatch(c);
+    if (ge != null) return '${ge.group(1)}+';
+    final r = RegExp(r'(\d+)[T\-_](\d+)').firstMatch(c);
+    if (r != null) return '${r.group(1)}–${r.group(2)}';
+    return code;
   }
 
   static String _eduLevelName(String? code) {
@@ -92,7 +152,7 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
       'ILLIT': 'Illiterate', 'RANDW': 'Reads & Writes', 'PRI': 'Primary',
       'LSEC': 'Lower Secondary', 'SEC': 'Upper Secondary',
       'PSNT': 'Post-Secondary Non-Tertiary', 'SCTE': 'Short-Cycle Tertiary',
-      'BACH': 'Bachelor', 'HDIP': 'Higher Diploma', 'MAST': "Master's",
+      'BACH': 'Bachelor', 'HDIP': 'Higher Diploma', 'MAST': 'Master',
       'DOCT': 'Doctoral',
     };
     return code == null ? 'a given level' : (m[code.toUpperCase()] ?? code);
@@ -147,7 +207,28 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
         'labour_unemployment_age_gender',
       }.contains(widget.data.meta.id);
 
+  /// Indicators whose headline is in AED millions and should render compact
+  /// (e.g. tourism revenue 45,600 Mn → "45.6B").
+  bool get _isAedMillionsCompact => const {
+        'tourism_main_indicators',
+      }.contains(widget.data.meta.id);
+
+  /// Total Agricultural Land Use is stored in thousands of Donum (K Donum);
+  /// render it as compact Donum (1,185 K → "1.2M Donum").
+  bool get _isKDonumCompact => widget.data.meta.id == 'crop_land_total';
+
   double get _value => widget.data.latestValue;
+
+  /// Short unit label shown next to the hero value (e.g. "Persons", "MW",
+  /// "Numbers", "%"). Pulled from the indicator metadata so it matches the
+  /// per-indicator unit table.
+  String get _unitLabel {
+    // Share indicators already render "%" in the value — no redundant suffix.
+    if (_isShareIndicator) return '';
+    // K Donum is folded into the compact value (× 1000) → show plain "Donum".
+    if (_isKDonumCompact) return _isArabic ? 'دونم' : 'Donum';
+    return _isArabic ? widget.data.meta.unit.ar : widget.data.meta.unit.en;
+  }
 
   double get _yoy {
     final series = widget.data.uaeTotalSeries;
@@ -171,8 +252,12 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
     return _isArabic ? 'تم التحديث $period' : 'Updated $period';
   }
 
-  String _cap(String s) =>
-      s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
+  String _cap(String s) => s.isEmpty
+      ? s
+      : s
+          .split('_')
+          .map((w) => w.isEmpty ? w : w[0].toUpperCase() + w.substring(1))
+          .join(' ');
 
   static String _subtitleFor(String id, String period, bool ar) => switch (id) {
         'births'  => ar ? 'مولود حي مسجل في $period' : 'live births registered in $period',
@@ -204,9 +289,12 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
             : 'licensed clinics & health centers operating across the UAE in $period',
         'health_hospital_beds' => ar ? 'سرير مستشفى في دولة الإمارات في $period' : 'hospital beds across the UAE in $period',
         'health_professionals' => ar ? 'إجمالي العاملين في الرعاية الصحية في $period' : 'total healthcare professionals in $period',
+        'student_enrolment' => ar ? 'طالب مسجل في التعليم العام في $period' : 'students enrolled in general education in $period',
+        'teaching_staff' => ar ? 'إجمالي المعلمين في $period' : 'total teachers in $period',
+        'higher_education' => ar ? 'طالب ملتحق بالتعليم العالي في $period' : 'students enrolled in higher education in $period',
         'labour_employed_age_gender' => ar ? 'حصة الفئة العمرية الرئيسية (25–44 سنة) من المشتغلين في $period' : 'of UAE employed population aged 25–44 years in $period',
         'labour_employment_sector' => ar ? 'من المشتغلين (15 سنة فأكثر) يعملون في القطاع الخاص · $period' : 'of employed persons (15+) work in the private sector · $period',
-        'labour_employed_education' => ar ? 'من المشتغلين (15 سنة فأكثر) يحملون شهادة جامعية في $period' : 'of employed persons (15+) hold a university degree ($period)',
+        'labour_employed_education' => ar ? 'أكبر فئة تعليمية في القوى العاملة (15 سنة فأكثر) في $period' : 'largest education group in the labour force (15+) in $period',
         'labour_unemployment_age_gender' => ar ? 'من المتعطلين تتراوح أعمارهم بين 15 و34 سنة في $period' : 'of unemployed population aged 15–34 years in $period',
         'livestock_camel'  => ar ? 'رأس إبل مسجّل في الإمارات في $period' : 'camels registered across the UAE in $period',
         'livestock_cattle' => ar ? 'رأس أبقار مسجّل في الإمارات في $period' : 'cattle registered across the UAE in $period',
@@ -303,9 +391,9 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
 
                   const SizedBox(height: 16),
 
-                  // Indicator name
+                  // Indicator name (or headline segment for some indicators)
                   Text(
-                    _isArabic ? widget.data.meta.name.ar : widget.data.meta.name.en,
+                    _title,
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 22,
@@ -325,12 +413,31 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
                     builder: (_, val, __) => FittedBox(
                       fit: BoxFit.scaleDown,
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        _isShareIndicator
-                            ? '${val.toStringAsFixed(1)}%'
-                            : _isDecimalIndicator
-                                ? val.toStringAsFixed(1)
-                                : NumberFormatter.full(val),
+                      child: Text.rich(
+                        TextSpan(
+                          text: _isShareIndicator
+                              ? '${val.toStringAsFixed(1)}%'
+                              : _isDecimalIndicator
+                                  ? val.toStringAsFixed(1)
+                                  : _isAedMillionsCompact
+                                      ? NumberFormatter.aedMillionsCompact(val)
+                                      : _isKDonumCompact
+                                          ? NumberFormatter.compact(val * 1000)
+                                          : NumberFormatter.full(val),
+                          children: [
+                            // Unit shown next to the value (e.g. "MW", "GWh").
+                            if (_unitLabel.isNotEmpty)
+                              TextSpan(
+                                text: ' $_unitLabel',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 18,
+                                  color: Colors.white.withValues(alpha: 0.7),
+                                  letterSpacing: 0,
+                                ),
+                              ),
+                          ],
+                        ),
                         style: const TextStyle(
                           fontWeight: FontWeight.w800,
                           fontSize: 58,
@@ -360,45 +467,15 @@ class _DetailHeroCardState extends ConsumerState<DetailHeroCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Trend pill
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              _yoy >= 0
-                                  ? Icons.arrow_upward_rounded
-                                  : Icons.arrow_downward_rounded,
-                              size: 14,
-                              color: AppColors.white,
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              '${_yoy >= 0 ? '+' : ''}${_yoy.toStringAsFixed(1)}%',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.white,
-                                fontFeatures: [FontFeature.tabularFigures()],
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              _vsLabel,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white.withValues(alpha: 0.7),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      // Trend pill — green (up) / red (down) / grey (flat),
+                      // themed for the dark hero. Shared HeroTrendPill.
+                      _usePointDelta
+                          ? HeroTrendPill(
+                              value: _pointDelta,
+                              vsLabel: _pointVsLabel,
+                              pointDelta: true,
+                            )
+                          : HeroTrendPill(value: _yoy, vsLabel: _vsLabel),
 
                       // Bookmark + overflow circular buttons
                       HeroActionButtons(

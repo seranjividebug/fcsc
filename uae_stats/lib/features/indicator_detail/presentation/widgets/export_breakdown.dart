@@ -1,0 +1,264 @@
+// lib/features/indicator_detail/presentation/widgets/export_breakdown.dart
+//
+// "Export Breakdown · <year>" card for the Non-Oil Exports page.
+// Tabs (data-driven): By Trade Type · HS Sections · By Country · Annual Growth.
+// Horizontal gold bars; right-aligned "Mn" / "%". Negative growth → red stub.
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uae_stats/core/theme/app_colors.dart';
+import 'package:uae_stats/core/theme/app_spacing.dart';
+import 'package:uae_stats/core/utils/number_formatter.dart';
+import 'package:uae_stats/data/models/indicator_data.dart';
+import 'package:uae_stats/shared/providers/locale_provider.dart';
+
+class _Row {
+  const _Row({
+    required this.label,
+    required this.fraction,
+    required this.valueText,
+    this.positive,
+  });
+  final String label;
+  final double fraction;
+  final String valueText;
+  final bool? positive;
+}
+
+class ExportBreakdown extends ConsumerStatefulWidget {
+  const ExportBreakdown({super.key, required this.data});
+  final IndicatorData data;
+
+  @override
+  ConsumerState<ExportBreakdown> createState() => _ExportBreakdownState();
+}
+
+class _ExportBreakdownState extends ConsumerState<ExportBreakdown> {
+  int _activeTab = 0;
+  IndicatorData get data => widget.data;
+
+  List<_Row> _counts(List<({String label, double value})> items) {
+    if (items.isEmpty) return const [];
+    final max = items.map((e) => e.value).reduce((a, b) => a > b ? a : b);
+    return items
+        .map((e) => _Row(
+              label: e.label,
+              fraction: max > 0 ? e.value / max : 0,
+              valueText: '${NumberFormatter.full(e.value)} Mn',
+            ))
+        .toList();
+  }
+
+  List<_Row> _annualGrowth() {
+    final g = data.seriesAnnualGrowth;
+    if (g.isEmpty) return const [];
+    final pos = g.where((r) => r.growth > 0).map((r) => r.growth);
+    final maxPos = pos.isEmpty
+        ? g.map((r) => r.growth.abs()).reduce((a, b) => a > b ? a : b)
+        : pos.reduce((a, b) => a > b ? a : b);
+    return g
+        .take(8)
+        .map((r) => _Row(
+              label: r.year,
+              fraction:
+                  r.growth >= 0 ? (maxPos > 0 ? r.growth / maxPos : 0) : 0.06,
+              valueText: NumberFormatter.percent(r.growth),
+              positive: r.growth >= 0,
+            ))
+        .toList();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isAr = ref.watch(localeProvider).languageCode == 'ar';
+
+    final byType = _counts(data.exportByType);
+    final hs = _counts(data.exportSections);
+    final region = _counts(data.exportRegions);
+    final country = _counts(data.exportCountries);
+    final growth = _annualGrowth();
+    // Country tab is "Top Markets" when there's no Trade-Type tab (Sector &
+    // Country page), else "By Country" (Non-Oil Exports page).
+    final countryLabel = byType.isEmpty
+        ? (isAr ? 'أهم الأسواق' : 'Top Markets')
+        : (isAr ? 'حسب الدولة' : 'By Country');
+
+    final tabs = <({String label, List<_Row> rows})>[
+      if (byType.isNotEmpty)
+        (label: isAr ? 'حسب نوع التجارة' : 'By Trade Type', rows: byType),
+      if (hs.isNotEmpty)
+        (label: isAr ? 'أقسام النظام' : (byType.isEmpty ? 'By HS Section' : 'HS Sections'), rows: hs),
+      if (region.isNotEmpty)
+        (label: isAr ? 'حسب المنطقة' : 'By Region', rows: region),
+      if (country.isNotEmpty)
+        (label: countryLabel, rows: country),
+      if (growth.isNotEmpty)
+        (label: isAr ? 'النمو السنوي' : 'Annual Growth', rows: growth),
+    ];
+    if (tabs.isEmpty) return const SizedBox.shrink();
+    if (_activeTab >= tabs.length) _activeTab = 0;
+    final rows = tabs[_activeTab].rows;
+
+    // Re-Exports pages use "Re-Export Breakdown"; others "Export Breakdown".
+    final isReExport = data.meta.id.contains('reexport');
+    final enTitle = isReExport ? 'Re-Export Breakdown' : 'Export Breakdown';
+    final arTitle = isReExport ? 'تصنيف إعادة التصدير' : 'تصنيف الصادرات';
+    // Show the year suffix only for the dated Export Breakdown (Non-Oil /
+    // Sector & Country); Re-Exports omits it to match the reference.
+    final title = isReExport
+        ? (isAr ? arTitle : enTitle)
+        : (isAr ? '$arTitle · ${data.latestPeriod}' : '$enTitle · ${data.latestPeriod}');
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+          boxShadow: AppColors.shadowCard,
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+              child: Text(
+                title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                  color: AppColors.slate900,
+                ),
+              ),
+            ),
+            Container(
+              decoration: const BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(color: AppColors.silver, width: 1),
+                ),
+              ),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: tabs.asMap().entries.map((e) {
+                    final active = e.key == _activeTab;
+                    return GestureDetector(
+                      onTap: () => setState(() => _activeTab = e.key),
+                      behavior: HitTestBehavior.opaque,
+                      child: Container(
+                        margin: const EdgeInsets.only(right: 18),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: active
+                                  ? AppColors.champagneGold
+                                  : Colors.transparent,
+                              width: 2.5,
+                            ),
+                          ),
+                        ),
+                        child: Text(
+                          tabs[e.key].label,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight:
+                                active ? FontWeight.w700 : FontWeight.w500,
+                            color: active
+                                ? AppColors.slate900
+                                : AppColors.slate600,
+                          ),
+                        ),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+              child: Column(
+                children: [
+                  for (int i = 0; i < rows.length; i++) ...[
+                    if (i > 0) const SizedBox(height: 14),
+                    _ExportBar(row: rows[i]),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ExportBar extends StatelessWidget {
+  const _ExportBar({required this.row});
+  final _Row row;
+
+  @override
+  Widget build(BuildContext context) {
+    final valueColor = row.positive == null
+        ? AppColors.slate900
+        : (row.positive! ? AppColors.success : AppColors.error);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 104,
+          child: Text(
+            row.label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: AppColors.slate600,
+              height: 1.15,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(999),
+            child: Stack(
+              children: [
+                Container(height: 10, color: AppColors.pearlGray),
+                FractionallySizedBox(
+                  widthFactor: row.fraction.clamp(0.02, 1.0),
+                  child: Container(
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: row.positive == false
+                          ? AppColors.error
+                          : AppColors.champagneGold,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: 88,
+          child: Text(
+            row.valueText,
+            textAlign: TextAlign.right,
+            style: TextStyle(
+              fontSize: 12.5,
+              fontWeight: FontWeight.w700,
+              color: valueColor,
+              fontFeatures: const [FontFeature.tabularFigures()],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

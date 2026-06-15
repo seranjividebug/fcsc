@@ -10,7 +10,11 @@ import 'package:uae_stats/core/constants/api_constants.dart';
 import 'package:uae_stats/data/models/data_point.dart';
 
 class LocalCache {
-  static const _boxName = 'indicator_cache';
+  // Bump the version suffix to invalidate all previously-cached entries after
+  // a data-shape change (e.g. merged GDP/Trade breakdown rows). Old boxes are
+  // simply abandoned, so stale pre-merge data is never served again.
+  static const boxName = 'indicator_cache_v10';
+  static const _boxName = boxName;
   static const _metaSuffix = '_meta'; // stores fetch timestamp
 
   Box<String> get _box => Hive.box<String>(_boxName);

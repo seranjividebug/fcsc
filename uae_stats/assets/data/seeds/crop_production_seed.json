@@ -1,12 +1,243 @@
 [
-  { "timePeriod": "2015", "value": 813654.0,   "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2016", "value": 1108460.0,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2017", "value": 1239638.8,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2018", "value": 1090774.3,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2019", "value": 1262628.9,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2020", "value": 1208585.9,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2021", "value": 1298459.2,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2022", "value": 1132267.9,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2023", "value": 1086111.3,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" },
-  { "timePeriod": "2024", "value": 1083530.7,  "measure": "CROP_PROD", "refArea": "AE", "gender": "_T", "unitMeasure": "MT",    "sourceDetail": "FCSA" }
+ {
+  "timePeriod": "2016",
+  "value": 1108461.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2017",
+  "value": 1239638.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2018",
+  "value": 1090773.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2019",
+  "value": 1262629.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 1208586.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2021",
+  "value": 1298459.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2022",
+  "value": 1132268.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2023",
+  "value": 1086111.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 1083531.0,
+  "measure": "CROP_PROD",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 562275.0,
+  "measure": "CROP_FARMAREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": null,
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2020",
+  "value": 4090000000.0,
+  "measure": "CROP_FARMVALUE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "AED",
+  "categoryLabel": null,
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 7.0,
+  "measure": "CROP_EMIRATES",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "COUNT",
+  "categoryLabel": null,
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 641505.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Abu Dhabi",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 252904.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Ras Al Khaimah",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 164763.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Sharjah",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 113214.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Fujairah",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 84496.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Dubai",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 26624.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Ajman",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 14953.0,
+  "measure": "CROP_EMIRATE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Umm Al Quwain",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 385060.0,
+  "measure": "CROP_TYPE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Field Crops",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 369957.0,
+  "measure": "CROP_TYPE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Fruit Trees",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 328514.0,
+  "measure": "CROP_TYPE",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "MTON",
+  "categoryLabel": "Vegetables",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 414047.0,
+  "measure": "CROP_BYAREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Fruit Trees",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 85125.0,
+  "measure": "CROP_BYAREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Field Crops",
+  "sourceDetail": "MCE"
+ },
+ {
+  "timePeriod": "2024",
+  "value": 63103.0,
+  "measure": "CROP_BYAREA",
+  "refArea": "AE",
+  "gender": "_T",
+  "unitMeasure": "DONUM",
+  "categoryLabel": "Vegetables",
+  "sourceDetail": "MCE"
+ }
 ]
